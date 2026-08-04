@@ -48,5 +48,17 @@ target 'TikTakMobil' do
       )
       File.write(fmt_header, patched) if patched != contents
     end
+
+    # Workaround for "use of undeclared identifier 'memset_s'" in MMKVCore's
+    # AESCrypt.cpp: memset_s is a C11 Annex K function that newer iOS
+    # Simulator SDKs only declare when __STDC_WANT_LIB_EXT1__=1 is defined.
+    installer.pods_project.targets.each do |target|
+      if target.name == 'MMKVCore'
+        target.build_configurations.each do |config|
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << '__STDC_WANT_LIB_EXT1__=1'
+        end
+      end
+    end
   end
 end

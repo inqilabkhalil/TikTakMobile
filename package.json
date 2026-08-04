@@ -8,9 +8,13 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "asset": "npx react-native-asset"
+    "asset": "npx react-native-asset",
+    "upt-a": "cd android && ./gradlew clean && ./gradlew && cd ..",
+    "upt-i": "cd ios && pod install && pod update && cd ..",
+    "start-watchman": "watchman watch-del '.' && watchman watch-project '.' && react-native start"
   },
   "dependencies": {
+    "@ant-design/react-native": "^5.4.3",
     "@d11/react-native-fast-image": "^8.13.0",
     "@gorhom/bottom-sheet": "^5.2.14",
     "@react-native/new-app-screen": "0.83.0",
