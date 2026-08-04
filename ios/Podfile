@@ -1,0 +1,52 @@
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+target 'TikTakMobil' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false,
+      # :ccache_enabled => true
+    )
+
+    # Workaround for "call to consteval function ... is not a constant
+    # expression" build failures in the `fmt` pod (11.0.2, bundled by
+    # React Native). Newer Xcode/Clang always takes the
+    # `FMT_CLANG_VERSION >= 1101` branch and enables FMT_USE_CONSTEVAL,
+    # which then fails to compile fmt's own consteval format-string checks.
+    # This can't be disabled via a preprocessor define because fmt.h
+    # unconditionally re-#defines FMT_USE_CONSTEVAL itself, so we patch the
+    # Apple Clang version guard directly, every time pod install regenerates it.
+    fmt_header = File.join(installer.sandbox.pod_dir('fmt').to_s, 'include/fmt/base.h')
+    if File.exist?(fmt_header)
+      contents = File.read(fmt_header)
+      patched = contents.sub(
+        '#elif defined(__apple_build_version__) && __apple_build_version__ < 14000029L',
+        '#elif defined(__apple_build_version__)'
+      )
+      File.write(fmt_header, patched) if patched != contents
+    end
+  end
+end
