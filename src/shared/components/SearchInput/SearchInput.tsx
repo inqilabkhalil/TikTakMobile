@@ -1,11 +1,5 @@
 import SearchBar from '@ant-design/react-native/lib/search-bar';
-
-export interface SearchInputProps {
-  value?: string;
-  onChangeText?: (text: string) => void;
-  onSearch?: (text: string) => void;
-  placeholder?: string;
-}
+import type { SearchInputProps } from '../../types/searchInput';
 
 function SearchInput({
   value,
