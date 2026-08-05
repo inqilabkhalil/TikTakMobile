@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { HomeScreen, SearchScreen, AccountScreen } from '../screens';
 import { COLORS } from '../shared/constants/theme';
 import { TYPOGRAPHY } from '../shared/constants/typography';
-import type { MainTabParamList } from './types/navigation';
+import type { MainTabParamList } from '../shared/types/navigation';
 
 // Not exported — purely an internal detail of the 3 icon renderers below.
 type TabIconProps = { focused: boolean; color: string; size: number };

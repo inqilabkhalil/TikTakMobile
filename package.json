@@ -9,6 +9,7 @@
     "start": "react-native start",
     "test": "jest",
     "asset": "npx react-native-asset",
+    "android-upt": "cd android && .\\gradlew clean && .\\gradlew && cd ..",
     "upt-a": "cd android && ./gradlew clean && ./gradlew && cd ..",
     "upt-i": "cd ios && pod install && pod update && cd ..",
     "start-watchman": "watchman watch-del '.' && watchman watch-project '.' && react-native start"
