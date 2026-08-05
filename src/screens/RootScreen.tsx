@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
+import Header from '../shared/components/Header';
 
 function RootScreen() {
   return (
     <View style={styles.container}>
-      <Text>TikTakMobil</Text>
+      <Header/>
     </View>
   );
 }
@@ -11,8 +12,7 @@ function RootScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff'
   },
 });
 
