@@ -1,2 +1,3 @@
 export { default as RootNavigator } from './Navigation';
-export type { RootStackParamList } from './Navigation';
+export { default as MainTabs } from './BottomTabs';
+export type { RootStackParamList, MainTabParamList } from './types/navigation';
