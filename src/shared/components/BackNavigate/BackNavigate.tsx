@@ -4,9 +4,6 @@ import Svg, { Path } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import { gapHorizontal, gapVertical, pixelFont } from '../../utils/metrics';
 
-// Font-linking problemlərinin qarşısını almaq üçün ox SVG kimi çəkilir
-// (react-native-vector-icons əvəzinə). Əlavə paket lazım deyil, react-native-svg
-// artıq layihədə mövcuddur.
 const TEXT_COLOR = '#1A1A1A';
 const BACKGROUND_COLOR = '#FFFFFF';
 
@@ -28,9 +25,15 @@ export interface BackNavigateProps {
   title: string;
   onBack?: () => void;
   showDivider?: boolean;
+  showBack?: boolean;
 }
 
-function BackNavigate({ title, onBack, showDivider = true }: BackNavigateProps) {
+function BackNavigate({
+  title,
+  onBack,
+  showDivider = true,
+  showBack = true,
+}: BackNavigateProps) {
   const navigation = useNavigation();
 
   const handleBack = () => {
@@ -44,12 +47,16 @@ function BackNavigate({ title, onBack, showDivider = true }: BackNavigateProps) 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={[styles.header, showDivider && styles.headerDivider]}>
-        <TouchableOpacity
-          style={styles.side}
-          onPress={handleBack}
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
-          <ArrowLeftIcon size={pixelFont(22)} color={TEXT_COLOR} />
-        </TouchableOpacity>
+        {showBack ? (
+          <TouchableOpacity
+            style={styles.side}
+            onPress={handleBack}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+            <ArrowLeftIcon size={pixelFont(22)} color={TEXT_COLOR} />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.side} />
+        )}
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
@@ -72,7 +79,7 @@ const styles = StyleSheet.create({
   },
   headerDivider: {
     borderBottomWidth: 1,
-    borderBottomColor: '#EBEBEB',
+    borderBottomColor: '#FFFFFF',
   },
   side: {
     width: pixelFont(22),
