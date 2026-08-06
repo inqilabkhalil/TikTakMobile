@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import { gapHorizontal, gapVertical, pixelFont } from '../../utils/metrics';
+import type { BackNavigateProps } from '../../types/backNavigate';
 
 const TEXT_COLOR = '#1A1A1A';
 const BACKGROUND_COLOR = '#FFFFFF';
@@ -19,13 +20,6 @@ function ArrowLeftIcon({ size, color }: { size: number; color: string }) {
       />
     </Svg>
   );
-}
-
-export interface BackNavigateProps {
-  title: string;
-  onBack?: () => void;
-  showDivider?: boolean;
-  showBack?: boolean;
 }
 
 function BackNavigate({
