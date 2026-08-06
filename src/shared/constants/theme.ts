@@ -3,7 +3,9 @@ import type { PartialTheme } from '@ant-design/react-native/lib/style';
 export const COLORS = {
   primary: 'rgba(118, 203, 79, 1)',
   error: '#F4333C',
+  textPrimary: '#2B3043',
   textSecondary: '#8E8E93',
+  textDark: '#101142',
   border: '#E5E5EA',
   white: '#FFFFFF',
 };
