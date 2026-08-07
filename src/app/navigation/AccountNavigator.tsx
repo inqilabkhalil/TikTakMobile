@@ -5,7 +5,7 @@ import {
   OrderHistoryScreen,
   OrderDetailScreen,
   FavoritesScreen,
-} from './screens';
+} from '../screens';
 import type { AccountStackParamList } from '@/shared/types/navigation';
 
 const Stack = createNativeStackNavigator<AccountStackParamList>();

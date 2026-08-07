@@ -12,7 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import AntProvider from '@ant-design/react-native/lib/provider';
 import BootSplash from 'react-native-bootsplash';
 import Toast from 'react-native-toast-message';
-import { RootNavigator, DevNavigationSheet } from './src/app';
+import { RootNavigator, DevNavigationSheet } from './src/app/navigation';
 import { ANT_THEME } from './src/shared/constants/theme';
 
 enableScreens();
