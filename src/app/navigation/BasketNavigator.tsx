@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BasketScreen, CheckoutScreen, OrderSuccessScreen } from './screens';
+import { BasketScreen, CheckoutScreen, OrderSuccessScreen } from '../screens';
 import type { BasketStackParamList } from '@/shared/types/navigation';
 
 const Stack = createNativeStackNavigator<BasketStackParamList>();
