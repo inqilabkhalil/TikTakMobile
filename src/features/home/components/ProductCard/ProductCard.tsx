@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS } from '../../constants/theme';
-import { gapHorizontal, gapVertical, pixelFont } from '../../utils/metrics';
+import { COLORS } from '../../../../shared/constants/theme';
+import { gapHorizontal, gapVertical, pixelFont } from '../../../../shared/utils/metrics';
 import type { ProductCardProps } from '../../types/productCard';
 
 function ProductCard({

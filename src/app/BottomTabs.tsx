@@ -1,7 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { HomeScreen, SearchScreen, AccountScreen } from '../screens';
+import { SearchScreen } from './screens';
+import HomeNavigator from './HomeNavigator';
+import AccountNavigator from './AccountNavigator';
 import { COLORS } from '../shared/constants/theme';
 import { TYPOGRAPHY } from '../shared/constants/typography';
 import type { MainTabParamList } from '../shared/types/navigation';
@@ -32,6 +34,7 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 function MainTabs() {
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
@@ -41,8 +44,13 @@ function MainTabs() {
       }}>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeNavigator}
         options={{ tabBarLabel: 'Əsas', tabBarIcon: HomeTabIcon }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('Home', { screen: 'HomeMain' });
+          },
+        })}
       />
       <Tab.Screen
         name="Search"
@@ -51,8 +59,13 @@ function MainTabs() {
       />
       <Tab.Screen
         name="Account"
-        component={AccountScreen}
+        component={AccountNavigator}
         options={{ tabBarLabel: 'Hesabım', tabBarIcon: AccountTabIcon }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('Account', { screen: 'AccountHome' });
+          },
+        })}
       />
     </Tab.Navigator>
   );

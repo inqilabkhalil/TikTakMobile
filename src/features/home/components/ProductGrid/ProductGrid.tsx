@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import ProductCard from '../ProductCard';
-import { gapHorizontal, gapVertical } from '../../utils/metrics';
+import { gapHorizontal, gapVertical } from '../../../../shared/utils/metrics';
 import type { GridProduct, ProductGridProps } from '../../types/productGrid';
 
 function ProductGrid({

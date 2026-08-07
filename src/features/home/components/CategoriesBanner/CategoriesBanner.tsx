@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
-import { gapHorizontal, gapVertical, pixelFont } from '../../utils/metrics';
+import { gapHorizontal, gapVertical, pixelFont } from '../../../../shared/utils/metrics';
 import type { CategoriesBannerProps } from '../../types/categoriesBanner';
 
 const ACCENT_GREEN = 'rgba(118, 203, 79, 1)';

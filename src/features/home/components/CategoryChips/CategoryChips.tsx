@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { gapHorizontal, gapVertical, pixelFont } from '../../utils/metrics';
+import { gapHorizontal, gapVertical, pixelFont } from '../../../../shared/utils/metrics';
 import type { CategoryChipsProps } from '../../types/categoryChips';
 
 const ACCENT_GREEN = 'rgba(118, 203, 79, 1)';

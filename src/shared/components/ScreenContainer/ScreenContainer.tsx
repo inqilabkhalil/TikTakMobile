@@ -1,12 +1,13 @@
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LAYOUT } from '../../constants/layout';
 import type { ScreenContainerProps } from '../../types/screenContainer';
 
 function ScreenContainer({ children, style, ...rest }: ScreenContainerProps) {
   return (
-    <View style={[styles.container, style]} {...rest}>
+    <SafeAreaView style={[styles.container, style]} {...rest}>
       {children}
-    </View>
+    </SafeAreaView>
   );
 }
 
