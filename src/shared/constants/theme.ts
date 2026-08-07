@@ -8,6 +8,8 @@ export const COLORS = {
   textDark: '#101142',
   border: '#E5E5EA',
   white: '#FFFFFF',
+  inputBackground: '#F6F5FB',
+  inputButton: '#76CB4F',
 };
 
 function parseRgb(color: string): { r: number; g: number; b: number } {

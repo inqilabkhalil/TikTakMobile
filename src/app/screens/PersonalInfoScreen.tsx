@@ -1,11 +1,12 @@
-import { Text } from 'react-native';
-import ScreenContainer from '@/shared/components/ScreenContainer';
-
+import FormScreenContainer from '@/shared/components/FormScreenContainer';
+import BackNavigate from '@/shared/components/BackNavigate';
+import AccountInfoForm from '@/features/account/components/AccountInfoForm';
 function PersonalInfoScreen() {
   return (
-    <ScreenContainer>
-      <Text>PersonalInfoScreen</Text>
-    </ScreenContainer>
+      <FormScreenContainer>
+      <BackNavigate title="Hesab" />
+      <AccountInfoForm />
+    </FormScreenContainer>
   );
 }
 

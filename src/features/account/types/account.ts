@@ -29,3 +29,20 @@ export interface ProfileCardProps {
     phone: string;
     imgUrl?: string;
 }
+
+export interface ProfileFormValues {
+    full_name: string;
+    phone: string;
+    email: string;
+    address: string;
+    password: string;
+    password_repeat: string;
+}
+
+export interface UpdateProfilePayload {
+    full_name: string;
+    address: string;
+    img_url?: string;
+    password?: string;
+    password_repeat?: string;
+}
