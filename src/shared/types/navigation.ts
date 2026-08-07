@@ -1,9 +1,38 @@
-export type RootStackParamList = {
-  Main: undefined;
+import type { NavigatorScreenParams } from '@react-navigation/native';
+
+export type AuthStackParamList = {
+  Welcome: undefined;
+  Login: undefined;
+  Register: undefined;
+};
+
+export type HomeStackParamList = {
+  HomeMain: undefined;
+  Products: undefined;
+};
+
+export type AccountStackParamList = {
+  AccountHome: undefined;
+  PersonalInfo: undefined;
+  OrderHistory: undefined;
+  OrderDetail: undefined;
+  Favorites: undefined;
+};
+
+export type BasketStackParamList = {
+  BasketHome: undefined;
+  Checkout: undefined;
+  OrderSuccess: undefined;
 };
 
 export type MainTabParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<HomeStackParamList> | undefined;
   Search: undefined;
-  Account: undefined;
+  Account: NavigatorScreenParams<AccountStackParamList> | undefined;
+};
+
+export type RootStackParamList = {
+  Auth: NavigatorScreenParams<AuthStackParamList> | undefined;
+  Main: NavigatorScreenParams<MainTabParamList> | undefined;
+  Basket: NavigatorScreenParams<BasketStackParamList> | undefined;
 };

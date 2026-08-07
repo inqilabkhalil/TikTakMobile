@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native';
-import ScreenContainer from '../shared/components/ScreenContainer';
-import BackNavigate from '../shared/components/BackNavigate';
-import ProfileCard from '../features/account/components/ProfileCard';
-import { MOCK_USER } from '../features/account/mock/user';
-import { MENU_ITEMS } from '../features/account/mock/menuItems';
-import MenuItem from '../features/account/components/MenuItem';
-import { gapVertical } from '../shared/utils/metrics';
-import { COLORS } from '../shared/constants/theme';
+import ScreenContainer from '../../shared/components/ScreenContainer';
+import BackNavigate from '../../shared/components/BackNavigate';
+import ProfileCard from '../../features/account/components/ProfileCard';
+import { MOCK_USER } from '../../features/account/mock/user';
+import { MENU_ITEMS } from '../../features/account/mock/menuItems';
+import MenuItem from '../../features/account/components/MenuItem';
+import { gapVertical } from '../../shared/utils/metrics';
+import { COLORS } from '../../shared/constants/theme';
 
 function AccountScreen() {
   const handleMenuPress = (id: string) => {
@@ -15,8 +15,8 @@ function AccountScreen() {
   return (
     <ScreenContainer style={styles.container}>
       <BackNavigate title="Hesabım" showBack={false} />
-      <ProfileCard 
-      fullName={MOCK_USER.full_name} 
+      <ProfileCard
+      fullName={MOCK_USER.full_name}
       phone={MOCK_USER.phone} />
 
       <View style={styles.menuList}>

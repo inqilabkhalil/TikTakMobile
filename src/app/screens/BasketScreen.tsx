@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import BackNavigate from '../shared/components/BackNavigate';
+import BackNavigate from '../../shared/components/BackNavigate';
 
 function BasketScreen() {
   return (
