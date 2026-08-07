@@ -76,3 +76,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Auto-generated fonts (created by react-native-vector-icons)
+android/app/src/main/assets/fonts/
