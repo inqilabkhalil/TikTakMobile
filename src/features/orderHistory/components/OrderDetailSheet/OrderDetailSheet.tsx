@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native';
 import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { BottomSheetFlashList } from '@gorhom/bottom-sheet';
 import AppBottomSheet from '@/shared/components/AppBottomSheet';
-import { COLORS } from '@/shared/constants/theme';
 import { gapHorizontal, gapVertical } from '@/shared/utils/metrics';
 import OrderDetailInfo from './OrderDetailInfo';
 import OrderProductItem from './OrderProductItem';
@@ -13,7 +12,7 @@ const OrderDetailSheet = forwardRef<BottomSheetModal, OrderDetailSheetProps>(
   ({ order }, ref) => {
     if (!order) {
       return (
-        <AppBottomSheet ref={ref} snapPoints={['50%', '90%']}>
+        <AppBottomSheet ref={ref} snapPoints={['60%', '90%']}>
           <View />
         </AppBottomSheet>
       );
@@ -25,20 +24,18 @@ const OrderDetailSheet = forwardRef<BottomSheetModal, OrderDetailSheetProps>(
 
     const keyExtractor = (item: OrderProduct) => item.id.toString();
 
-    const renderHeader = () => (
-      <>
-        <OrderDetailInfo order={order} />
-        <View style={styles.divider} />
-      </>
-    );
+    const renderHeader = () => <OrderDetailInfo order={order} />;
+
+    const renderSeparator = () => <View style={styles.separator}/>
 
     return (
-      <AppBottomSheet ref={ref} snapPoints={['50%', '90%']}>
+      <AppBottomSheet ref={ref} snapPoints={['60%', '90%']}>
         <BottomSheetFlashList
           data={order.products}
           renderItem={renderProduct}
           keyExtractor={keyExtractor}
           ListHeaderComponent={renderHeader}
+          ItemSeparatorComponent={renderSeparator}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
         />
@@ -50,15 +47,12 @@ const OrderDetailSheet = forwardRef<BottomSheetModal, OrderDetailSheetProps>(
 OrderDetailSheet.displayName = 'OrderDetailSheet';
 
 const styles = StyleSheet.create({
-  divider: {
-    height: 1,
-    backgroundColor: '#F0F0F0',
-    marginHorizontal: gapHorizontal(16),
-    marginBottom: gapVertical(12),
-  },
   listContent: {
     paddingHorizontal: gapHorizontal(16),
     paddingBottom: gapVertical(20),
+  },
+   separator: {
+    height: gapVertical(12),
   },
 });
 

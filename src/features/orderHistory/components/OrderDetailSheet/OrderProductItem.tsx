@@ -14,13 +14,13 @@ function OrderProductItem({ product }: OrderProductItemProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.imageWrapper}>
+      <View style={styles.imageColumn}>
         {hasImage ? (
           <Image source={{ uri: product.img_url }} style={styles.image} />
         ) : (
           <OrangeIcon
-            width={pixelHorizontal(60)}
-            height={pixelHorizontal(60)}
+            width={pixelHorizontal(48)}
+            height={pixelHorizontal(48)}
           />
         )}
       </View>
@@ -41,35 +41,34 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: gapVertical(10),
+    paddingVertical: gapVertical(12),
+    paddingHorizontal: gapHorizontal(16),
   },
-  imageWrapper: {
-    width: pixelHorizontal(60),
-    height: pixelHorizontal(60),
-    borderRadius: 8,
-    backgroundColor: '#F6F5FB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
+  imageColumn: {
+    flex: 1,
+    paddingRight: gapHorizontal(8),
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: pixelHorizontal(48),
+    height: pixelHorizontal(48),
+    borderRadius: 8,
   },
   info: {
     flex: 1,
-    marginLeft: gapHorizontal(12),
     justifyContent: 'center',
   },
   name: {
+    fontFamily: 'Roboto',
     fontSize: pixelFont(14),
-    fontWeight: '500',
-    color: COLORS.textDark,
+    fontWeight: '400',
+    color: COLORS.textPrimary,
     marginBottom: gapVertical(4),
   },
   price: {
+    fontFamily: 'Roboto',
     fontSize: pixelFont(12),
     color: COLORS.textSecondary,
+    fontWeight: '300',
   },
 });
 
