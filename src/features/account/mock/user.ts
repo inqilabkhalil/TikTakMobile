@@ -1,4 +1,5 @@
-import type { UserProfile } from '../types/account';
+import { UserProfile } from "@/shared/types/user";
+
 
 export const MOCK_USER: UserProfile = {
   id: 97,
