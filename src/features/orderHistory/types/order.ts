@@ -40,3 +40,11 @@ export interface OrderDetailSheetProps {
 export interface OrderProductItemProps {
   product: OrderProduct;
 }
+
+export interface InfoRowProps {
+  leftLabel: string;
+  leftValue: string;
+  leftValueColor?: string;
+  rightLabel: string;
+  rightValue: string;
+}

@@ -2,6 +2,7 @@ import { HeaderProps } from '../../types/header';
 import { pixelHorizontal, pixelVertical, pixelFont } from '../../utils/metrics';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CartIcon from '../../../shared/assets/icons/cart.svg';
+import { COLORS } from '@/shared/constants/theme';
 
 function Header({ onCartPress }: HeaderProps) {
   return (
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: pixelHorizontal(16),
     paddingTop: pixelVertical(16),
     paddingBottom: pixelVertical(16),
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.white,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     lineHeight: pixelFont(24),
     letterSpacing: 0.72,
-    color: '#2B3043',
+    color: COLORS.textPrimary,
   },
 });
 

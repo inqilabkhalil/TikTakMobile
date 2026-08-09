@@ -10,16 +10,7 @@ import {
   getStatusColor,
   getStatusText,
 } from '../../utils/orderHelpers';
-import type { OrderDetailInfoProps } from '../../types/order';
-
-
-interface InfoRowProps {
-  leftLabel: string;
-  leftValue: string;
-  leftValueColor?: string;
-  rightLabel: string;
-  rightValue: string;
-}
+import type { InfoRowProps, OrderDetailInfoProps } from '../../types/order';
 
 function InfoRow({
   leftLabel,
@@ -81,26 +72,30 @@ function OrderDetailInfo({ order }: OrderDetailInfoProps) {
 
 const styles = StyleSheet.create({
   container: {
+    fontFamily: 'Roboto',
     paddingHorizontal: gapHorizontal(16),
-    paddingBottom: gapVertical(16),
+    paddingTop: gapVertical(24),
+    paddingBottom: gapVertical(20),
   },
   row: {
     flexDirection: 'row',
-    marginBottom: gapVertical(16),
+    marginBottom: gapVertical(20),
   },
   column: {
     flex: 1,
     paddingRight: gapHorizontal(8),
   },
   label: {
-    fontSize: pixelFont(12),
-    color: COLORS.textSecondary,
-    marginBottom: gapVertical(4),
+    fontFamily: 'Roboto',
+    fontSize: pixelFont(14),
+    color: COLORS.textPrimary,
+    marginBottom: gapVertical(6),
+    fontWeight: '400',
   },
   value: {
     fontSize: pixelFont(14),
-    color: COLORS.textDark,
-    fontWeight: '500',
+    color: COLORS.textPrimary,
+    fontWeight: '300',
   },
 });
 

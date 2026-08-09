@@ -27,7 +27,7 @@ const AppBottomSheet = forwardRef<BottomSheetModal, AppBottomSheetProps>(
         {...props}
         appearsOnIndex={0}
         disappearsOnIndex={-1}
-        opacity={0.5}
+        opacity={0.2}
         pressBehavior="close"
       />
     );
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   indicator: {
-    backgroundColor: '#D1D5DB',
+    backgroundColor: COLORS.white,
     width: 40,
     height: 4,
   },
