@@ -21,7 +21,7 @@ function AccountScreen() {
         navigation.navigate('PersonalInfo');
         break;
       case 'favorites':
-        // TODO: Favorites feature-i sonra əlavə ediləcək
+        navigation.navigate('Favorites');
         break;
       case 'order-history':
         navigation.navigate('OrderHistory');

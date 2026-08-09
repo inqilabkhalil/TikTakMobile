@@ -1,9 +1,9 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { gapHorizontal, gapVertical, pixelFont } from '../../../../shared/utils/metrics';
+import { COLORS } from '../../constants/theme';
+import { TYPOGRAPHY } from '../../constants/typography';
+import { gapHorizontal, gapVertical } from '../../utils/metrics';
 import type { CategoryChipsProps } from '../../types/categoryChips';
 
-const ACCENT_GREEN = 'rgba(118, 203, 79, 1)';
-const TEXT_COLOR = '#2B3043';
 const CHIP_BORDER = '#E0E0E0';
 
 function CategoryChips({ categories, selectedId, onSelect }: CategoryChipsProps) {
@@ -11,8 +11,7 @@ function CategoryChips({ categories, selectedId, onSelect }: CategoryChipsProps)
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.listContent}
-      style={styles.scrollView}>
+      contentContainerStyle={styles.listContent}>
       {categories.map(item => {
         const isSelected = item.id === selectedId;
         return (
@@ -31,9 +30,6 @@ function CategoryChips({ categories, selectedId, onSelect }: CategoryChipsProps)
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    marginBottom: 40,
-  },
   listContent: {
     alignItems: 'center',
   },
@@ -44,21 +40,19 @@ const styles = StyleSheet.create({
     borderRadius: gapHorizontal(15),
     paddingVertical: gapVertical(8),
     paddingHorizontal: gapHorizontal(16),
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.white,
     marginRight: gapHorizontal(8),
   },
   chipSelected: {
-    backgroundColor: ACCENT_GREEN,
-    borderColor: ACCENT_GREEN,
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
   },
   chipText: {
-    fontSize: pixelFont(14),
-    color: TEXT_COLOR,
-    fontWeight: '500',
+    ...TYPOGRAPHY.filterTag,
+    color: COLORS.textPrimary,
   },
   chipTextSelected: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    color: COLORS.white,
   },
 });
 
