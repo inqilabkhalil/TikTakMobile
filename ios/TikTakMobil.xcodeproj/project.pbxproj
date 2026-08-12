@@ -7,12 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		091D6D9DBEE94961AD070849 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC56E5D012414458B31C0E74 /* Roboto-Regular.ttf */; };
 		0C80B921A6F3F58F76C31292 /* libPods-TikTakMobil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-TikTakMobil.a */; };
+		0D9A4B7EEA0D4F45AE9B0F98 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AA1EE89ACBC4965BF1E2883 /* Roboto-Light.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		2438EB92E5AE40CE83D72F46 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B648E8B42034337BCA0E8F8 /* Roboto-Bold.ttf */; };
 		2E4FE141EF1F4DC6AD6A6A78 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC992FE900B74F55A10076BB /* Colors.xcassets */; };
+		365A32B4D5D34DD8A2DE439C /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49F6D0211F124CAD932AA07F /* Roboto-Black.ttf */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		8027076366984A4391C88024 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 414021FC69974441991B13AE /* BootSplash.storyboard */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B9C183DD70D947C98A5ABCDB /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80229C5C5304455CB10642B4 /* Roboto-Medium.ttf */; };
 		E737E3AC3139E6A92F6075F7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -23,10 +28,15 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = TikTakMobil/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-TikTakMobil.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TikTakMobil.debug.xcconfig"; path = "Target Support Files/Pods-TikTakMobil/Pods-TikTakMobil.debug.xcconfig"; sourceTree = "<group>"; };
 		414021FC69974441991B13AE /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = TikTakMobil/BootSplash.storyboard; sourceTree = "<group>"; };
+		49F6D0211F124CAD932AA07F /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../src/shared/assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
+		4AA1EE89ACBC4965BF1E2883 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../src/shared/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-TikTakMobil.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TikTakMobil.release.xcconfig"; path = "Target Support Files/Pods-TikTakMobil/Pods-TikTakMobil.release.xcconfig"; sourceTree = "<group>"; };
+		5B648E8B42034337BCA0E8F8 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../src/shared/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-TikTakMobil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TikTakMobil.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = TikTakMobil/AppDelegate.swift; sourceTree = "<group>"; };
+		80229C5C5304455CB10642B4 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../src/shared/assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = TikTakMobil/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		BC56E5D012414458B31C0E74 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../src/shared/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		EC992FE900B74F55A10076BB /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = TikTakMobil/Colors.xcassets; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -81,6 +91,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				E91739EABC504D5BB5899C24 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -102,6 +113,19 @@
 				5709B34CF0A7D63546082F79 /* Pods-TikTakMobil.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E91739EABC504D5BB5899C24 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				80229C5C5304455CB10642B4 /* Roboto-Medium.ttf */,
+				4AA1EE89ACBC4965BF1E2883 /* Roboto-Light.ttf */,
+				BC56E5D012414458B31C0E74 /* Roboto-Regular.ttf */,
+				5B648E8B42034337BCA0E8F8 /* Roboto-Bold.ttf */,
+				49F6D0211F124CAD932AA07F /* Roboto-Black.ttf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -169,6 +193,11 @@
 				8027076366984A4391C88024 /* BootSplash.storyboard in Resources */,
 				2E4FE141EF1F4DC6AD6A6A78 /* Colors.xcassets in Resources */,
 				E737E3AC3139E6A92F6075F7 /* PrivacyInfo.xcprivacy in Resources */,
+				B9C183DD70D947C98A5ABCDB /* Roboto-Medium.ttf in Resources */,
+				0D9A4B7EEA0D4F45AE9B0F98 /* Roboto-Light.ttf in Resources */,
+				091D6D9DBEE94961AD070849 /* Roboto-Regular.ttf in Resources */,
+				2438EB92E5AE40CE83D72F46 /* Roboto-Bold.ttf in Resources */,
+				365A32B4D5D34DD8A2DE439C /* Roboto-Black.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

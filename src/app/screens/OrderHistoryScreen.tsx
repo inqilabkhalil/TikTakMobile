@@ -7,12 +7,15 @@ import { MOCK_ORDERS } from '@/features/orderHistory/mock/orders';
 import { COLORS } from '@/shared/constants/theme';
 import type { Order } from '@/features/orderHistory/types/order';
 import OrderDetailSheet from '@/features/orderHistory/components/OrderDetailSheet/OrderDetailSheet';
+import EmptyState from '@/shared/components/EmptyState';
 
 function OrderHistoryScreen() {
   const sheetRef = useRef<BottomSheetModal>(null);
 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+  const orders = MOCK_ORDERS;
+  
   const handleOrderPress = (order: Order) => {
     setSelectedOrder(order);     
     sheetRef.current?.present();  
@@ -26,8 +29,14 @@ function OrderHistoryScreen() {
     <View style={styles.container}>
       <BackNavigate title="Sifariş tarixçəsi" />
 
-      <OrderList orders={MOCK_ORDERS} onOrderPress={handleOrderPress} />
-
+      {orders.length === 0 ? (
+        <EmptyState
+        title='Hələ heç bir sifariş verməmisiniz'
+        subtitle='Sifarişləriniz burada görünəcək'
+        />
+      ) : (
+        <OrderList orders={orders} onOrderPress={handleOrderPress} />
+      )}
       <OrderDetailSheet
         ref={sheetRef}
         order={selectedOrder}

@@ -10,4 +10,6 @@ export interface ProductCardProps {
   onIncrement: () => void;
   onDecrement: () => void;
   onPress?: () => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }

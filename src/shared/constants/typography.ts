@@ -14,6 +14,7 @@ export const TYPOGRAPHY = {
     lineHeight: pixelHeight(16),
     letterSpacing: 0,
     textTransform: 'capitalize' as const,
+    textAlign: 'center' as const,
   },
   bannerTitle: {
     fontFamily: 'Roboto-Black',
