@@ -10,6 +10,7 @@ import CategoryChips from '@/shared/components/CategoryChips';
 import ProductCard from '@/shared/components/ProductCard';
 import OrderSummaryBar from '@/shared/components/OrderSummaryBar';
 import ProductDetailSheet from '@/features/products/components/ProductDetailSheet';
+import EmptyState from '@/shared/components/EmptyState';
 import { PRODUCTS } from '@/features/products/mock/products';
 import { FILTER_TAGS } from '@/features/products/mock/filterTags';
 import { COLORS } from '@/shared/constants/theme';
@@ -88,41 +89,48 @@ function ProductsScreen() {
         <Header />
       </SafeAreaView>
       <ScreenContainer edges={['bottom', 'left', 'right']}>
-        <FlatList
-          data={products}
-          keyExtractor={item => item.id}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={styles.row}
-          contentContainerStyle={styles.listContent}
-          ListHeaderComponent={
-            <View style={styles.listHeader}>
-              <CategoriesBanner onPress={handleCategoriesPress} />
-              <View style={styles.filterTags}>
-                <CategoryChips
-                  categories={FILTER_TAGS}
-                  selectedId={selectedTagId}
-                  onSelect={setSelectedTagId}
-                />
+        {products.length === 0 ? (
+          <EmptyState
+            title="Hazırda məhsul yoxdur"
+            subtitle="Məhsullar burada görünəcək"
+          />
+        ) : (
+          <FlatList
+            data={products}
+            keyExtractor={item => item.id}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={styles.row}
+            contentContainerStyle={styles.listContent}
+            ListHeaderComponent={
+              <View style={styles.listHeader}>
+                <CategoriesBanner onPress={handleCategoriesPress} />
+                <View style={styles.filterTags}>
+                  <CategoryChips
+                    categories={FILTER_TAGS}
+                    selectedId={selectedTagId}
+                    onSelect={setSelectedTagId}
+                  />
+                </View>
               </View>
-            </View>
-          }
-          renderItem={({ item }) => (
-            <ProductCard
-              image={item.image}
-              title={item.title}
-              price={`${item.unitPrice.toFixed(2)} AZN`}
-              inBasket={item.inBasket}
-              quantityLabel={`${item.quantityKg} kq = ${(
-                item.unitPrice * item.quantityKg
-              ).toFixed(2)} AZN`}
-              onAdd={() => handleAdd(item.id)}
-              onIncrement={() => handleIncrement(item.id)}
-              onDecrement={() => handleDecrement(item.id)}
-              onPress={() => handleCardPress(item)}
-            />
-          )}
-        />
+            }
+            renderItem={({ item }) => (
+              <ProductCard
+                image={item.image}
+                title={item.title}
+                price={`${item.unitPrice.toFixed(2)} AZN`}
+                inBasket={item.inBasket}
+                quantityLabel={`${item.quantityKg} kq = ${(
+                  item.unitPrice * item.quantityKg
+                ).toFixed(2)} AZN`}
+                onAdd={() => handleAdd(item.id)}
+                onIncrement={() => handleIncrement(item.id)}
+                onDecrement={() => handleDecrement(item.id)}
+                onPress={() => handleCardPress(item)}
+              />
+            )}
+          />
+        )}
         <View style={styles.summaryBarWrapper}>
           <OrderSummaryBar
             itemCount={itemCount}

@@ -16,7 +16,7 @@ import {
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import Header from '@/shared/components/Header';
 
-const productImage = require('../../../assets/images/alma.png');
+const productImage = require('../../shared/assets/images/alma.png');
 
 const products = [
   {
