@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useRef, useState, type ComponentRef } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ScreenContainer from '@/shared/components/ScreenContainer';
@@ -7,91 +7,112 @@ import BackNavigate from '@/shared/components/BackNavigate';
 import ProductCard from '@/shared/components/ProductCard';
 import OrderSummaryBar from '@/shared/components/OrderSummaryBar';
 import ProductDetailSheet from '@/features/products/components/ProductDetailSheet';
-import { FAVORITE_PRODUCTS } from '@/features/account/mock/favorites';
+import EmptyState from '@/shared/components/EmptyState';
+import { useFavoriteStore } from '@/shared/store/favoriteStore';
 import { COLORS } from '@/shared/constants/theme';
+import { TYPOGRAPHY } from '@/shared/constants/typography';
 import { gapVertical, pixelWidth } from '@/shared/utils/metrics';
-import type { Product } from '@/features/products/types/product';
 import type { RootStackParamList } from '@/shared/types/navigation';
 
 type FavoritesNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const PRODUCT_DESCRIPTION =
-  'Lorem Ipsum is simply dummy text of the printing and typesetting industry.';
-
 function FavoritesScreen() {
   const navigation = useNavigation<FavoritesNavigationProp>();
-  const [products, setProducts] = useState<Product[]>(FAVORITE_PRODUCTS);
-  const [selectedProductId, setSelectedProductId] = useState(FAVORITE_PRODUCTS[0].id);
+  const { favorites, isLoading, error, fetchFavorites, toggleFavorite, isFavorite } =
+    useFavoriteStore();
+
+  const [quantities, setQuantities] = useState<Record<number, number>>({});
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const detailSheetRef = useRef<ComponentRef<typeof ProductDetailSheet>>(null);
 
+  useEffect(() => {
+    fetchFavorites();
+  }, [fetchFavorites]);
+
+  const getQuantity = useCallback((id: number) => quantities[id] ?? 0, [quantities]);
+
   const selectedProduct = useMemo(
-    () => products.find(item => item.id === selectedProductId) ?? FAVORITE_PRODUCTS[0],
-    [products, selectedProductId],
+    () => favorites.find(item => item.id === selectedProductId) ?? null,
+    [favorites, selectedProductId],
   );
 
-  const handleAdd = useCallback((id: string) => {
-    setProducts(prev =>
-      prev.map(item => (item.id === id ? { ...item, inBasket: true, quantityKg: 1 } : item)),
-    );
+  const handleAdd = useCallback((id: number) => {
+    setQuantities(prev => ({ ...prev, [id]: 1 }));
   }, []);
 
-  const handleIncrement = useCallback((id: string) => {
-    setProducts(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, quantityKg: item.quantityKg + 1 } : item,
-      ),
-    );
+  const handleIncrement = useCallback((id: number) => {
+    setQuantities(prev => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
   }, []);
 
-  const handleDecrement = useCallback((id: string) => {
-    setProducts(prev =>
-      prev.map(item => {
-        if (item.id !== id) return item;
-        const nextQty = item.quantityKg - 1;
-        return nextQty <= 0
-          ? { ...item, inBasket: false, quantityKg: 0 }
-          : { ...item, quantityKg: nextQty };
-      }),
-    );
+  const handleDecrement = useCallback((id: number) => {
+    setQuantities(prev => {
+      const nextQty = (prev[id] ?? 0) - 1;
+      if (nextQty <= 0) {
+        const rest = { ...prev };
+        delete rest[id];
+        return rest;
+      }
+      return { ...prev, [id]: nextQty };
+    });
   }, []);
 
-  const handleCardPress = useCallback((product: Product) => {
-    setSelectedProductId(product.id);
+  const handleCardPress = useCallback((id: number) => {
+    setSelectedProductId(id);
     detailSheetRef.current?.present();
   }, []);
 
-  const basketItems = useMemo(() => products.filter(item => item.inBasket), [products]);
-  const itemCount = basketItems.length;
+  const itemCount = useMemo(
+    () => favorites.filter(item => getQuantity(item.id) > 0).length,
+    [favorites, getQuantity],
+  );
   const totalPrice = useMemo(
-    () => basketItems.reduce((sum, item) => sum + item.unitPrice * item.quantityKg, 0),
-    [basketItems],
+    () =>
+      favorites.reduce((sum, item) => sum + Number(item.price) * getQuantity(item.id), 0),
+    [favorites, getQuantity],
   );
 
   return (
     <View style={styles.root}>
       <BackNavigate title="Siyahılarım" showBack={true} />
       <ScreenContainer edges={['bottom', 'left', 'right']}>
-        <FlatList
-          data={products}
-          keyExtractor={item => item.id}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={styles.row}
-          contentContainerStyle={styles.listContent}
-          renderItem={({ item }) => (
-            <ProductCard
-              image={item.image}
-              title={item.title}
-              price={`${item.unitPrice.toFixed(2)} AZN`}
-              inBasket={item.inBasket}
-              quantityLabel={`${item.quantityKg} kq = ${(item.unitPrice * item.quantityKg).toFixed(2)} AZN`}
-              onAdd={() => handleAdd(item.id)}
-              onIncrement={() => handleIncrement(item.id)}
-              onDecrement={() => handleDecrement(item.id)}
-              onPress={() => handleCardPress(item)}
-            />
-          )}
-        />
+        {isLoading && (
+          <ActivityIndicator style={styles.statusIndicator} size="large" color={COLORS.primary} />
+        )}
+
+        {!isLoading && error && <Text style={styles.errorText}>{error}</Text>}
+
+        {!isLoading && !error && favorites.length === 0 && (
+          <EmptyState title="Hələ heç bir sevimliniz yoxdur" subtitle="Sevimlilər burada görünəcək" />
+        )}
+
+        {!isLoading && !error && favorites.length > 0 && (
+          <FlatList
+            data={favorites}
+            keyExtractor={item => String(item.id)}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={styles.row}
+            contentContainerStyle={styles.listContent}
+            renderItem={({ item }) => {
+              const quantity = getQuantity(item.id);
+              return (
+                <ProductCard
+                  image={{ uri: item.img_url }}
+                  title={item.title}
+                  price={`${item.price} AZN`}
+                  inBasket={quantity > 0}
+                  quantityLabel={`${quantity} kq = ${(Number(item.price) * quantity).toFixed(2)} AZN`}
+                  onAdd={() => handleAdd(item.id)}
+                  onIncrement={() => handleIncrement(item.id)}
+                  onDecrement={() => handleDecrement(item.id)}
+                  onPress={() => handleCardPress(item.id)}
+                  isFavorite={isFavorite(item.id)}
+                  onToggleFavorite={() => toggleFavorite(item.id)}
+                />
+              );
+            }}
+          />
+        )}
         <View style={styles.summaryBarWrapper}>
           <OrderSummaryBar
             itemCount={itemCount}
@@ -100,18 +121,22 @@ function FavoritesScreen() {
           />
         </View>
       </ScreenContainer>
-      <ProductDetailSheet
-        ref={detailSheetRef}
-        image={selectedProduct.image}
-        title={`${selectedProduct.title} 1 kq`}
-        description={PRODUCT_DESCRIPTION}
-        price={selectedProduct.unitPrice}
-        inBasket={selectedProduct.inBasket}
-        quantityKg={selectedProduct.quantityKg}
-        onAdd={() => handleAdd(selectedProduct.id)}
-        onIncrement={() => handleIncrement(selectedProduct.id)}
-        onDecrement={() => handleDecrement(selectedProduct.id)}
-      />
+      {selectedProduct && (
+        <ProductDetailSheet
+          ref={detailSheetRef}
+          image={{ uri: selectedProduct.img_url }}
+          title={`${selectedProduct.title} 1 kq`}
+          description={selectedProduct.description}
+          price={Number(selectedProduct.price)}
+          inBasket={getQuantity(selectedProduct.id) > 0}
+          quantityKg={getQuantity(selectedProduct.id)}
+          onAdd={() => handleAdd(selectedProduct.id)}
+          onIncrement={() => handleIncrement(selectedProduct.id)}
+          onDecrement={() => handleDecrement(selectedProduct.id)}
+          isFavorite={isFavorite(selectedProduct.id)}
+          onToggleFavorite={() => toggleFavorite(selectedProduct.id)}
+        />
+      )}
     </View>
   );
 }
@@ -129,6 +154,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: pixelWidth(10),
     marginBottom: gapVertical(15),
+  },
+  statusIndicator: {
+    marginTop: gapVertical(40),
+  },
+  errorText: {
+    ...TYPOGRAPHY.categoryLabel,
+    color: COLORS.error,
+    textAlign: 'center',
+    marginTop: gapVertical(40),
   },
   summaryBarWrapper: {
     position: 'absolute',

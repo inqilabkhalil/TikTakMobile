@@ -11,7 +11,9 @@ function CategoryCard({ image, title, onPress, style }: CategoryCardProps) {
       onPress={onPress}
       activeOpacity={0.85}>
       <Image source={image} style={styles.image} resizeMode="contain" />
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title} numberOfLines={2}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -36,6 +38,7 @@ const styles = StyleSheet.create({
   title: {
     ...TYPOGRAPHY.categoryLabel,
     color: COLORS.textDark,
+    width: '100%',
   },
 });
 

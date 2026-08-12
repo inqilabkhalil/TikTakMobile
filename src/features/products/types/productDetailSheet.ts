@@ -10,4 +10,6 @@ export interface ProductDetailSheetProps {
   onAdd: () => void;
   onIncrement: () => void;
   onDecrement: () => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }

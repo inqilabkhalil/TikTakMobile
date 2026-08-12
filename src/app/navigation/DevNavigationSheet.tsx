@@ -25,7 +25,10 @@ const DEV_SCREENS: DevScreenItem[] = [
   {
     label: 'Products',
     onPress: nav =>
-      nav.navigate('Main', { screen: 'Home', params: { screen: 'Products' } }),
+      nav.navigate('Main', {
+        screen: 'Home',
+        params: { screen: 'Products', params: { categoryId: 1, categoryName: 'Dev' } },
+      }),
   },
   { label: 'Search', onPress: nav => nav.navigate('Main', { screen: 'Search' }) },
   { label: 'Basket', onPress: nav => nav.navigate('Basket', { screen: 'BasketHome' }) },

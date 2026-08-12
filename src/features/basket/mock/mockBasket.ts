@@ -1,6 +1,6 @@
 import type { BasketItem } from '../types/basket';
 
-const productImage = require('../../../../assets/images/alma.png');
+const productImage = require('../../../shared/assets/images/alma.png');
 
 export const MOCK_BASKET: BasketItem[] = [
   {

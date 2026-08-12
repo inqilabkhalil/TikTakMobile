@@ -1,8 +1,8 @@
 import { forwardRef, type ComponentRef } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { BottomSheetModal, BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '@/shared/components/Button';
-import FavoritesIcon from '@/shared/assets/icons/favorites.svg';
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
 import {
@@ -17,54 +17,81 @@ import type { ProductDetailSheetProps } from '../../types/productDetailSheet';
 const ProductDetailSheet = forwardRef<
   ComponentRef<typeof BottomSheetModal>,
   ProductDetailSheetProps
->(({ image, title, description, price, inBasket, quantityKg, onAdd, onIncrement, onDecrement }, ref) => {
-  const { dismiss } = useBottomSheetModal();
+>(
+  (
+    {
+      image,
+      title,
+      description,
+      price,
+      inBasket,
+      quantityKg,
+      onAdd,
+      onIncrement,
+      onDecrement,
+      isFavorite,
+      onToggleFavorite,
+    },
+    ref,
+  ) => {
+    const { dismiss } = useBottomSheetModal();
 
-  return (
-    <BottomSheetModal ref={ref}>
-      <BottomSheetView style={styles.container}>
-        <View style={styles.topRow}>
-          <TouchableOpacity
-            onPress={() => dismiss()}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Text style={styles.closeIcon}>✕</Text>
-          </TouchableOpacity>
-          <FavoritesIcon width={pixelWidth(20)} height={pixelHeight(18)} />
-        </View>
-        <Image source={image} style={styles.image} resizeMode="contain" />
-        <Text style={styles.title} numberOfLines={2}>
-          {title}
-        </Text>
-        {description ? (
-          <Text style={styles.description} numberOfLines={3}>
-            {description}
-          </Text>
-        ) : null}
-        <Text style={styles.price}>{price.toFixed(2)} AZN</Text>
-
-        {inBasket ? (
-          <View style={styles.stepper}>
+    return (
+      <BottomSheetModal ref={ref}>
+        <BottomSheetView style={styles.container}>
+          <View style={styles.topRow}>
             <TouchableOpacity
-              style={[styles.stepperButton, styles.decrementButton]}
-              onPress={onDecrement}
+              onPress={() => dismiss()}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Text style={styles.stepperIcon}>−</Text>
+              <Text style={styles.closeIcon}>✕</Text>
             </TouchableOpacity>
-            <Text style={styles.quantityText}>{quantityKg} kq</Text>
-            <TouchableOpacity
-              style={[styles.stepperButton, styles.incrementButton]}
-              onPress={onIncrement}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Text style={styles.stepperIcon}>+</Text>
-            </TouchableOpacity>
+            {onToggleFavorite && (
+              <TouchableOpacity
+                onPress={onToggleFavorite}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                <Ionicons
+                  name={isFavorite ? 'heart' : 'heart-outline'}
+                  size={pixelWidth(22)}
+                  color={isFavorite ? COLORS.error : COLORS.textDark}
+                />
+              </TouchableOpacity>
+            )}
           </View>
-        ) : (
-          <Button title="Səbətə əlavə et" type="primary" onPress={onAdd} />
-        )}
-      </BottomSheetView>
-    </BottomSheetModal>
-  );
-});
+          <Image source={image} style={styles.image} resizeMode="contain" />
+          <Text style={styles.title} numberOfLines={2}>
+            {title}
+          </Text>
+          {description ? (
+            <Text style={styles.description} numberOfLines={3}>
+              {description}
+            </Text>
+          ) : null}
+          <Text style={styles.price}>{price.toFixed(2)} AZN</Text>
+
+          {inBasket ? (
+            <View style={styles.stepper}>
+              <TouchableOpacity
+                style={[styles.stepperButton, styles.decrementButton]}
+                onPress={onDecrement}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                <Text style={styles.stepperIcon}>−</Text>
+              </TouchableOpacity>
+              <Text style={styles.quantityText}>{quantityKg} kq</Text>
+              <TouchableOpacity
+                style={[styles.stepperButton, styles.incrementButton]}
+                onPress={onIncrement}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                <Text style={styles.stepperIcon}>+</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <Button title="Səbətə əlavə et" type="primary" onPress={onAdd} />
+          )}
+        </BottomSheetView>
+      </BottomSheetModal>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
