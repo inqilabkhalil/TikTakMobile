@@ -1,10 +1,13 @@
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect } from 'react';
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Header from '@/shared/components/Header';
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import CategoryCard from '@/shared/components/CategoryCard';
 import DeliveryAddress from '@/features/home/components/DeliveryAddress';
-import { CATEGORIES } from '@/features/home/mock/categories';
+import { useCategoryStore } from '@/shared/store/categoryStore';
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
 import { LAYOUT } from '@/shared/constants/layout';
@@ -15,7 +18,12 @@ import {
   gapHorizontal,
   gapVertical,
 } from '@/shared/utils/metrics';
+import type { Category } from '@/shared/types/category';
+import type { HomeStackParamList } from '@/shared/types/navigation';
 
+type CategoryNavigationProp = NativeStackNavigationProp<HomeStackParamList>;
+
+// TODO(teammate): "Çatdırılma ünvanı" bloku profileService-ə qoşulacaq — hələ toxunulmayıb.
 const MOCK_ADDRESS = '55 Zarifa Aliyeva, Bakı, Azerbaijan';
 
 // The Figma category-card width (156) doesn't fit 3-per-row on top of the
@@ -29,7 +37,21 @@ const CARD_WIDTH =
 
 const bannerImage = require('@/shared/assets/images/maxfr.png');
 
-function HomeScreen() {
+function CategoryScreen() {
+  const navigation = useNavigation<CategoryNavigationProp>();
+  const { categories, isLoading, error, fetchCategories } = useCategoryStore();
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  const handleCategoryPress = useCallback(
+    (category: Category) => {
+      navigation.navigate('Products', { categoryId: category.id, categoryName: category.name });
+    },
+    [navigation],
+  );
+
   return (
     <View style={styles.root}>
       <SafeAreaView edges={['top']} style={styles.headerSafeArea}>
@@ -50,16 +72,29 @@ function HomeScreen() {
             </View>
           </View>
 
-          <View style={styles.grid}>
-            {CATEGORIES.map(category => (
-              <CategoryCard
-                key={category.id}
-                image={category.image}
-                title={category.title}
-                style={styles.categoryCard}
-              />
-            ))}
-          </View>
+          {isLoading && (
+            <ActivityIndicator
+              style={styles.statusIndicator}
+              size="large"
+              color={COLORS.primary}
+            />
+          )}
+
+          {!isLoading && error && <Text style={styles.errorText}>{error}</Text>}
+
+          {!isLoading && !error && (
+            <View style={styles.grid}>
+              {categories.map(category => (
+                <CategoryCard
+                  key={category.id}
+                  image={{ uri: category.img_url }}
+                  title={category.name}
+                  onPress={() => handleCategoryPress(category)}
+                  style={styles.categoryCard}
+                />
+              ))}
+            </View>
+          )}
         </ScrollView>
       </ScreenContainer>
     </View>
@@ -102,6 +137,15 @@ const styles = StyleSheet.create({
     ...TYPOGRAPHY.bannerTitle,
     color: COLORS.white,
   },
+  statusIndicator: {
+    marginTop: gapVertical(40),
+  },
+  errorText: {
+    ...TYPOGRAPHY.categoryLabel,
+    color: COLORS.error,
+    textAlign: 'center',
+    marginTop: gapVertical(40),
+  },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -114,4 +158,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default CategoryScreen;
