@@ -11,3 +11,4 @@ export {
 } from './userStore';
 
 export { storage } from './mmkv';
+export { useBasketStore } from './basketStore';

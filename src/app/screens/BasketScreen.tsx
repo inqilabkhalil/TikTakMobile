@@ -1,46 +1,57 @@
-import { StatusBar, StyleSheet, View, FlatList } from 'react-native';
-import { useState, useCallback } from 'react';
+import React, { useEffect } from 'react';
+import {
+  StatusBar,
+  StyleSheet,
+  View,
+  FlatList,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import BackNavigate from '@/shared/components/BackNavigate';
 import EmptyBasket from '@/shared/components/Basket/EmptyBasket';
 import BasketItem from '@/features/basket/components/BasketItem';
 import BasketSummary from '@/features/basket/components/BasketSummary';
-import { MOCK_BASKET } from '@/features/basket/mock/mockBasket';
 import type { BasketItem as BasketItemType } from '@/features/basket/types/basket';
+import { useBasketStore } from '@/shared/store';
 
 function BasketScreen() {
-  const [items, setItems] = useState<BasketItemType[]>(MOCK_BASKET);
+  const isFocused = useIsFocused();
+  const items = useBasketStore(state => state.items);
+  const isLoading = useBasketStore(state => state.isLoading);
+  const error = useBasketStore(state => state.error);
+  const getBasket = useBasketStore(state => state.getBasket);
+  const increment = useBasketStore(state => state.increment);
+  const decrement = useBasketStore(state => state.decrement);
 
-  const handleIncrement = useCallback((id: number) => {
-    setItems(prev =>
-      prev.map(i => (i.id === id ? { ...i, quantity: i.quantity + 1 } : i)),
-    );
-  }, []);
-
-  const handleDecrement = useCallback((id: number) => {
-    setItems(prev =>
-      prev
-        .map(i =>
-          i.id === id ? { ...i, quantity: Math.max(0, i.quantity - 1) } : i,
-        )
-        .filter(i => i.quantity > 0),
-    );
-  }, []);
+  useEffect(() => {
+    if (isFocused) {
+      getBasket();
+    }
+  }, [getBasket, isFocused]);
 
   const renderItem = ({ item }: { item: BasketItemType }) => (
     <BasketItem
       item={item}
-      onIncrement={() => handleIncrement(item.id)}
-      onDecrement={() => handleDecrement(item.id)}
+      onIncrement={() => increment(item.id)}
+      onDecrement={() => decrement(item.id)}
     />
   );
 
   return (
     <ScreenContainer style={styles.container}>
       <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
+
       <BackNavigate title="Səbətim" />
 
-      {items.length === 0 ? (
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4FC76E" />
+        </View>
+      ) : items.length === 0 ? (
         <EmptyBasket />
       ) : (
         <View style={styles.content}>
@@ -64,9 +75,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 0,
   },
+
   content: {
     flex: 1,
     paddingTop: 8,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  error: {
+    marginHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 8,
+    color: '#FF3B30',
+    textAlign: 'center',
   },
 });
 
