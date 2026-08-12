@@ -6,7 +6,10 @@ const Stack = createNativeStackNavigator<BasketStackParamList>();
 
 function BasketNavigator() {
   return (
-    <Stack.Navigator initialRouteName="BasketHome" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      initialRouteName="BasketHome"
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="BasketHome" component={BasketScreen} />
       <Stack.Screen name="Checkout" component={CheckoutScreen} />
       <Stack.Screen name="OrderSuccess" component={OrderSuccessScreen} />
