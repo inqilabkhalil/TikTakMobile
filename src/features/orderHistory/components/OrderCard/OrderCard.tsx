@@ -30,8 +30,8 @@ function OrderCard({ order, onPress }: OrderCardProps) {
 
       <View style={styles.rightSection}>
         <ArrowRightIcon
-          width={pixelHorizontal(20)}
-          height={pixelHorizontal(20)}
+          width={pixelHorizontal(8.32)}
+          height={pixelHorizontal(14)}
         />
       </View>
     </TouchableOpacity>
@@ -40,33 +40,34 @@ function OrderCard({ order, onPress }: OrderCardProps) {
 
 const styles = StyleSheet.create({
   container: {
+    fontFamily: 'Roboto',
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: gapVertical(14),
     paddingHorizontal: gapHorizontal(16),
     backgroundColor: COLORS.white,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
   },
   leftSection: {
     width: pixelHorizontal(80),
   },
   middleSection: {
     flex: 1,
-    marginLeft: gapHorizontal(12),
+    marginLeft: gapHorizontal(41),
   },
   rightSection: {
-    marginLeft: gapHorizontal(8),
+    marginLeft: gapHorizontal(28),
   },
   label: {
-    fontSize: pixelFont(12),
-    color: COLORS.textSecondary,
-    marginBottom: gapVertical(2),
+    fontFamily: 'Roboto',
+    fontSize: pixelFont(14),
+    color: COLORS.textPrimary,
+    marginBottom: gapVertical(4),
   },
   value: {
+    fontFamily: 'Roboto',
     fontSize: pixelFont(14),
-    color: COLORS.textDark,
-    fontWeight: '500',
+    color: COLORS.textPrimary,
+    fontWeight: '400',
   },
 });
 

@@ -1,6 +1,7 @@
 import { pixelHorizontal } from '../utils/metrics';
 
-// 12px chosen to match the ~10-12px side margin in the design screenshots.
+// 15px — matches the Figma "Left: 15px" position seen across several
+// components (DeliveryAddress, Banner, ProductsScreen grid math).
 export const LAYOUT = {
-  screenPaddingHorizontal: pixelHorizontal(12),
+  screenPaddingHorizontal: pixelHorizontal(15),
 };

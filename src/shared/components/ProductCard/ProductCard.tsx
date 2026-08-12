@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS } from '../../../../shared/constants/theme';
-import { gapHorizontal, gapVertical, pixelFont } from '../../../../shared/utils/metrics';
+import { COLORS } from '../../constants/theme';
+import { gapHorizontal, gapVertical, pixelFont, pixelWidth, pixelHeight } from '../../utils/metrics';
 import type { ProductCardProps } from '../../types/productCard';
 
 function ProductCard({
@@ -13,9 +13,14 @@ function ProductCard({
   onAdd,
   onIncrement,
   onDecrement,
+  onPress,
 }: ProductCardProps) {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+      activeOpacity={onPress ? 0.85 : 1}
+      disabled={!onPress}>
       <Image source={image} style={styles.image} resizeMode="cover" />
       <Text style={styles.title} numberOfLines={2}>
         {title}
@@ -43,76 +48,79 @@ function ProductCard({
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={onAdd}
-          activeOpacity={0.85}>
+        <TouchableOpacity style={styles.addButton} onPress={onAdd} activeOpacity={0.85}>
           <Text style={styles.addButtonText}>Səbətə əlavə et</Text>
         </TouchableOpacity>
       )}
-    </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-    borderRadius: gapHorizontal(16),
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: gapHorizontal(5),
+    width: pixelWidth(165),
+    height: pixelHeight(190),
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRadius: pixelWidth(10),
+    shadowColor: 'rgba(0, 0, 0, 0.11)',
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: pixelWidth(10),
+    shadowOpacity: 1,
+    elevation: 4,
+    padding: gapHorizontal(8),
     alignItems: 'center',
   },
   image: {
     width: '100%',
-    height: pixelFont(110),
+    height: pixelFont(90),
     borderRadius: gapHorizontal(8),
-    marginBottom: gapVertical(8),
+    marginBottom: gapVertical(6),
   },
   title: {
-    fontSize: pixelFont(14),
+    fontSize: pixelFont(13),
     fontWeight: '700',
     color: '#1A1A1A',
     textAlign: 'center',
     marginBottom: gapVertical(4),
   },
   price: {
-    fontSize: pixelFont(14),
+    fontSize: pixelFont(13),
     color: '#1A1A1A',
-    marginBottom: gapVertical(10),
+    marginBottom: gapVertical(8),
   },
   quantityLabel: {
-    fontSize: pixelFont(14),
+    fontSize: pixelFont(13),
     color: '#1A1A1A',
-    marginBottom: gapVertical(10),
+    marginBottom: gapVertical(8),
   },
   addButton: {
     backgroundColor: COLORS.primary,
     borderRadius: gapHorizontal(15),
-    paddingVertical: gapVertical(10),
+    paddingVertical: gapVertical(8),
     alignItems: 'center',
     width: '100%',
+    marginTop: 'auto',
   },
   addButtonText: {
     color: COLORS.white,
-    fontSize: pixelFont(13),
+    fontSize: pixelFont(12),
     fontWeight: '600',
   },
   stepper: {
     flexDirection: 'row',
     width: '100%',
     gap: gapHorizontal(8),
+    marginTop: 'auto',
   },
   stepperButton: {
     borderRadius: gapHorizontal(15),
-    paddingVertical: gapVertical(10),
+    paddingVertical: gapVertical(8),
     alignItems: 'center',
     justifyContent: 'center',
   },
   decrementButton: {
-    backgroundColor: '#F4333C',
-    width: gapHorizontal(40),
+    backgroundColor: COLORS.error,
+    width: gapHorizontal(36),
   },
   incrementButton: {
     backgroundColor: COLORS.primary,
@@ -120,12 +128,12 @@ const styles = StyleSheet.create({
   },
   stepperIcon: {
     color: COLORS.white,
-    fontSize: pixelFont(18),
+    fontSize: pixelFont(16),
     fontWeight: '700',
   },
   incrementText: {
     color: COLORS.white,
-    fontSize: pixelFont(13),
+    fontSize: pixelFont(12),
     fontWeight: '600',
   },
 });

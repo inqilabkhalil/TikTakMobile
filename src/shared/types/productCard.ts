@@ -1,5 +1,7 @@
+import type { ImageSourcePropType } from 'react-native';
+
 export interface ProductCardProps {
-  image: { uri: string };
+  image: ImageSourcePropType;
   title: string;
   price: string;
   inBasket: boolean;
@@ -7,4 +9,5 @@ export interface ProductCardProps {
   onAdd: () => void;
   onIncrement: () => void;
   onDecrement: () => void;
+  onPress?: () => void;
 }

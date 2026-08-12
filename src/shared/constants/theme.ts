@@ -10,6 +10,7 @@ export const COLORS = {
   white: '#FFFFFF',
   inputBackground: '#F6F5FB',
   inputButton: '#76CB4F',
+  bannerPurple: 'rgba(179, 128, 255, 1)',
 };
 
 function parseRgb(color: string): { r: number; g: number; b: number } {

@@ -1,9 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
-import { gapHorizontal, gapVertical, pixelFont } from '../../../../shared/utils/metrics';
+import { COLORS } from '../../constants/theme';
+import { gapHorizontal, pixelFont, pixelWidth, pixelHeight } from '../../utils/metrics';
 import type { CategoriesBannerProps } from '../../types/categoriesBanner';
-
-const ACCENT_GREEN = 'rgba(118, 203, 79, 1)';
 
 function GridIcon({ size, color }: { size: number; color: string }) {
   return (
@@ -23,7 +22,7 @@ function CategoriesBanner({
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.85}>
       <View style={styles.iconWrapper}>
-        <GridIcon size={pixelFont(18)} color="#FFFFFF" />
+        <GridIcon size={pixelFont(18)} color={COLORS.white} />
       </View>
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
@@ -34,20 +33,20 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: ACCENT_GREEN,
-    borderRadius: 10,
-    paddingVertical: gapVertical(14),
+    width: pixelWidth(345),
+    height: pixelHeight(50),
+    borderRadius: pixelWidth(12),
+    backgroundColor: COLORS.primary,
     paddingHorizontal: gapHorizontal(16),
-    marginTop: 16,
+    alignSelf: 'center',
   },
   iconWrapper: {
     marginRight: gapHorizontal(10),
   },
   label: {
-    fontFamily: 'Roboto',
-    color: '#FFFFFF',
+    fontFamily: 'Roboto-Medium',
+    color: COLORS.white,
     fontSize: pixelFont(15),
-    fontWeight: '600',
   },
 });
 
