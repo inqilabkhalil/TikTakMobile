@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -41,6 +41,7 @@ const products = [
 
 function SearchScreen() {
   const [searchText, setSearchText] = useState('');
+  const inputRef = useRef<TextInput | null>(null);
 
   const filteredProducts = useMemo(
     () =>
@@ -60,10 +61,12 @@ function SearchScreen() {
         <KeyboardAvoidingView
           style={styles.flex}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         >
           <View style={styles.innerContainer}>
             <View style={styles.searchBox}>
               <TextInput
+                ref={inputRef}
                 autoFocus={false}
                 value={searchText}
                 onChangeText={setSearchText}
@@ -76,6 +79,7 @@ function SearchScreen() {
             <FlatList
               data={filteredProducts}
               keyExtractor={item => item.id}
+              keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.listContent}
               ListEmptyComponent={
