@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { ProfileCardProps } from '../../types/account';
 import AvatarDefault from '../../../../shared/assets/images/avatar.svg';
 import {
@@ -8,14 +8,25 @@ import {
   pixelVertical,
 } from '../../../../shared/utils/metrics';
 import { COLORS } from '../../../../shared/constants/theme';
-function ProfileCard({ fullName, phone }: ProfileCardProps) {
+function ProfileCard({ fullName, phone, imgUrl }: ProfileCardProps) {
   return (
     <View style={styles.container}>
       <View style={styles.avatarWrapper}>
-        <AvatarDefault
+        {imgUrl ? (
+          <Image
+          source={{ uri: imgUrl }}
+          style={{
+            width: pixelHorizontal(152),
+            height: pixelHorizontal(152),
+            borderRadius: pixelHorizontal(76),
+          }}
+          />
+        ) : (
+          <AvatarDefault
           width={pixelHorizontal(152)}
           height={pixelHorizontal(152)}
         />
+        )}
       </View>
       <Text style={styles.name}>{fullName}</Text>
       <Text style={styles.phone}>{phone}</Text>

@@ -2,27 +2,50 @@ import { StyleSheet, View } from 'react-native';
 import { useFormik } from 'formik';
 import FormInput from '../../../../shared/components/FormInput';
 import Button from '../../../../shared/components/Button';
-import { MOCK_USER } from '../../mock/user';
 import { accountInfoSchema } from './accountInfoSchema';
-import { gapHorizontal, gapVertical, pixelFont, pixelVertical } from '../../../../shared/utils/metrics';
+import { gapHorizontal, pixelVertical } from '../../../../shared/utils/metrics';
 import type { ProfileFormValues } from '../../types/account';
 import { COLORS } from '@/shared/constants/theme';
+import { useUser } from '@/shared/store';
+import { useUpdateProfile } from '../../hooks/useProfile';
+import { UpdateProfilePayload } from '@/shared/types/user';
 
 function AccountInfoForm() {
+  const user = useUser();
+  const { updateProfile, isUpdating } = useUpdateProfile();
+
   const initialValues: ProfileFormValues = {
-    full_name: MOCK_USER.full_name,
-    email: MOCK_USER.email ?? '',
-    address: MOCK_USER.address,
-    phone: MOCK_USER.phone,
+    full_name: user?.full_name ?? '',
+    email: user?.email ?? '',
+    address: user?.address ?? '',
+    phone: user?.phone ?? '',
     password: '',
     password_repeat: '',
   };
 
   const formik = useFormik<ProfileFormValues>({
     initialValues,
+    enableReinitialize: true,
     validationSchema: accountInfoSchema,
-    onSubmit: (values) => {
-      // TODO: API-yə göndəriləcək
+    onSubmit: async values => {
+      const payload: UpdateProfilePayload = {
+        full_name: values.full_name.trim(),
+        address: values.address.trim(),
+        phone: values.phone.trim(),
+        email: values.email.trim(),
+      };
+
+      if (values.password && values.password.length > 0) {
+        payload.password = values.password;
+        payload.password_repeat = values.password_repeat;
+      }
+
+      const success = await updateProfile(payload);
+
+      if (success) {
+        formik.setFieldValue('password', '');
+        formik.setFieldValue('password_repeat', '');
+      }
     },
   });
 
@@ -64,7 +87,6 @@ function AccountInfoForm() {
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      
 
       <FormInput
         label="Şifrə"
@@ -89,7 +111,11 @@ function AccountInfoForm() {
       />
 
       <View style={styles.buttonWrapper}>
-        <Button title="Yadda saxla" onPress={() => formik.handleSubmit()} />
+        <Button
+          title="Yadda saxla"
+          onPress={() => formik.handleSubmit()}
+          disabled={isUpdating}
+        />
       </View>
     </View>
   );
