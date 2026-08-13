@@ -6,7 +6,11 @@ import {
   pixelFont,
 } from '@/shared/utils/metrics';
 import {
+  formatDeliveryFee,
   formatOrderDate,
+  formatOrderNumber,
+  formatTotal,
+  getPaymentMethodText,
   getStatusColor,
   getStatusText,
 } from '../../utils/orderHelpers';
@@ -43,20 +47,22 @@ function InfoRow({
 
 
 function OrderDetailInfo({ order }: OrderDetailInfoProps) {
+  if (!order) return null;
+  const subtotalDelivery = `${formatTotal(order.total)} / ${formatDeliveryFee(order.deliveryFee)}`
   return (
     <View style={styles.container}>
       <InfoRow
         leftLabel="Tarix"
-        leftValue={formatOrderDate(order.created_at)}
+        leftValue={formatOrderDate(order.createdAt)}
         rightLabel="No"
-        rightValue={order.order_no}
+        rightValue={formatOrderNumber(order.orderNumber)}
       />
 
       <InfoRow
         leftLabel="Məhsul sayı"
-        leftValue={order.product_count.toString()}
+        leftValue={order.items.length.toString()}
         rightLabel="Çatdırılma ünvanı"
-        rightValue={order.delivery_address}
+        rightValue={order.address}
       />
 
       <InfoRow
@@ -64,7 +70,14 @@ function OrderDetailInfo({ order }: OrderDetailInfoProps) {
         leftValue={getStatusText(order.status)}
         leftValueColor={getStatusColor(order.status)}
         rightLabel="Subtotal/Çatdırılma"
-        rightValue={`${order.subtotal}/${order.delivery_fee}`}
+        rightValue={subtotalDelivery}
+      />
+
+      <InfoRow
+      leftLabel='Ödəniş növü'
+      leftValue={getPaymentMethodText(order.paymentMethod)}
+      rightLabel='Telefon'
+      rightValue={order.phone}
       />
     </View>
   );
@@ -88,11 +101,12 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Roboto',
     fontSize: pixelFont(14),
-    color: COLORS.textPrimary,
+    color: COLORS.textDark,
     marginBottom: gapVertical(6),
-    fontWeight: '400',
+    fontWeight: '600',
   },
   value: {
+    fontFamily: 'Roboto',
     fontSize: pixelFont(14),
     color: COLORS.textPrimary,
     fontWeight: '300',

@@ -8,15 +8,20 @@ import {
   pixelHorizontal,
 } from '@/shared/utils/metrics';
 import type { OrderProductItemProps } from '../../types/order';
+import { formatTotal } from '../../utils/orderHelpers';
 
-function OrderProductItem({ product }: OrderProductItemProps) {
-  const hasImage = product.img_url && product.img_url.length > 0;
+function OrderProductItem({ item }: OrderProductItemProps) {
+  const hasImage = item.product.img_url && item.product.img_url.length > 0;
 
   return (
     <View style={styles.container}>
       <View style={styles.imageColumn}>
         {hasImage ? (
-          <Image source={{ uri: product.img_url }} style={styles.image} />
+          <Image 
+          source={{ uri: item.product.img_url }} 
+          style={styles.image} 
+          resizeMode='cover'
+          />
         ) : (
           <OrangeIcon
             width={pixelHorizontal(48)}
@@ -27,10 +32,10 @@ function OrderProductItem({ product }: OrderProductItemProps) {
 
       <View style={styles.info}>
         <Text style={styles.name} numberOfLines={1}>
-          {product.name} {product.weight}
+          {item.product.title} {item.quantity}
         </Text>
         <Text style={styles.price} numberOfLines={1}>
-          {product.price}
+          {formatTotal(item.product.price)}
         </Text>
       </View>
     </View>

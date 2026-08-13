@@ -8,6 +8,7 @@ import {
   pixelHorizontal,
 } from '@/shared/utils/metrics';
 import type { OrderCardProps } from '../../types/order';
+import { formatOrderNumber } from '../../utils/orderHelpers';
 
 function OrderCard({ order, onPress }: OrderCardProps) {
   return (
@@ -18,13 +19,15 @@ function OrderCard({ order, onPress }: OrderCardProps) {
     >
       <View style={styles.leftSection}>
         <Text style={styles.label}>No</Text>
-        <Text style={styles.value}>{order.order_no}</Text>
+        <Text style={styles.value} numberOfLines={1}>
+          {formatOrderNumber(order.orderNumber)}
+          </Text>
       </View>
 
       <View style={styles.middleSection}>
         <Text style={styles.label}>Çatdırılma ünvanı</Text>
         <Text style={styles.value} numberOfLines={1}>
-          {order.delivery_address}
+          {order.address}
         </Text>
       </View>
 
@@ -48,20 +51,21 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   leftSection: {
-    width: pixelHorizontal(80),
+    width: pixelHorizontal(56),
   },
   middleSection: {
     flex: 1,
-    marginLeft: gapHorizontal(41),
+    marginLeft: gapHorizontal(40),
   },
   rightSection: {
-    marginLeft: gapHorizontal(28),
+    marginRight: gapHorizontal(19),
   },
   label: {
     fontFamily: 'Roboto',
     fontSize: pixelFont(14),
-    color: COLORS.textPrimary,
+    color: COLORS.textSecondary,
     marginBottom: gapVertical(4),
+    fontWeight: '400',
   },
   value: {
     fontFamily: 'Roboto',
