@@ -28,7 +28,7 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      const response = await api.get('/basket');
+      const response = await api.get('/api/tiktak/basket');
 
       console.log('BASKET API RESPONSE:', response.data);
 
@@ -66,7 +66,7 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      const response = await api.post(`/basket/${productId}/add`);
+      const response = await api.post(`/api/tiktak/basket/${productId}/add`);
 
       console.log('ADD BASKET API RESPONSE:', response.data);
 
@@ -121,7 +121,7 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      const response = await api.delete('/basket/clear');
+      const response = await api.delete('/api/tiktak/basket/clear');
 
       console.log('CLEAR BASKET API RESPONSE:', response.data);
 

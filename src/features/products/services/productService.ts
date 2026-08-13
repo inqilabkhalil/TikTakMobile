@@ -7,6 +7,11 @@ export const productService = {
   // category — the category filter is a query param on the list endpoint.
   getProductsByCategory: (categoryId: number) =>
     api
-      .get<ApiResponse<Product[]>>('/products', { params: { categoryId } })
+      .get<ApiResponse<Product[]>>('/api/tiktak/products', { params: { categoryId } })
+      .then(res => res.data.data),
+
+  searchProducts: (query: string) =>
+    api
+      .get<ApiResponse<Product[]>>('/api/tiktak/products', { params: { search: query } })
       .then(res => res.data.data),
 };
