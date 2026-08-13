@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Keyboard,
@@ -15,41 +16,32 @@ import {
 
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import Header from '@/shared/components/Header';
+import EmptyState from '@/shared/components/EmptyState';
+import { useSearchStore } from '@/shared/store/searchStore';
+import { COLORS } from '@/shared/constants/theme';
 
-const productImage = require('../../shared/assets/images/alma.png');
-
-const products = [
-  {
-    id: '1',
-    title: 'Qizil əhmədi alması 1 kq',
-    price: '3.30 AZN',
-    image: productImage,
-  },
-  {
-    id: '2',
-    title: 'Qizil əhmədi alması 1 kq',
-    price: '3.30 AZN',
-    image: productImage,
-  },
-  {
-    id: '3',
-    title: 'Qizil əhmədi alması 1 kq',
-    price: '3.30 AZN',
-    image: productImage,
-  },
-];
+const placeholderImage = require('../../shared/assets/images/alma.png');
 
 function SearchScreen() {
   const [searchText, setSearchText] = useState('');
   const inputRef = useRef<TextInput | null>(null);
 
-  const filteredProducts = useMemo(
-    () =>
-      products.filter(product =>
-        product.title.toLowerCase().includes(searchText.toLowerCase()),
-      ),
-    [searchText],
-  );
+  const { results, isLoading, error, searchProducts, clearSearch } = useSearchStore();
+
+  useEffect(() => {
+    const trimmed = searchText.trim();
+
+    if (!trimmed) {
+      clearSearch();
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      searchProducts(trimmed);
+    }, 400);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchText, searchProducts, clearSearch]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -77,25 +69,37 @@ function SearchScreen() {
             </View>
 
             <FlatList
-              data={filteredProducts}
-              keyExtractor={item => item.id}
+              data={results}
+              keyExtractor={item => String(item.id)}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.listContent}
               ListEmptyComponent={
-                <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>
-                    Axtarışa uyğun məhsul tapılmadı
-                  </Text>
-                </View>
+                isLoading ? (
+                  <ActivityIndicator
+                    style={styles.statusIndicator}
+                    size="large"
+                    color={COLORS.primary}
+                  />
+                ) : error ? (
+                  <Text style={styles.errorText}>{error}</Text>
+                ) : searchText.trim() ? (
+                  <EmptyState
+                    title="Axtarışa uyğun məhsul tapılmadı"
+                    subtitle="Başqa açar söz ilə cəhd edin"
+                  />
+                ) : null
               }
               renderItem={({ item }) => (
                 <View style={styles.productItem}>
-                  <Image source={item.image} style={styles.productImage} />
+                  <Image
+                    source={item.img_url ? { uri: item.img_url } : placeholderImage}
+                    style={styles.productImage}
+                  />
 
                   <View style={styles.productInfo}>
                     <Text style={styles.productTitle}>{item.title}</Text>
-                    <Text style={styles.productPrice}>{item.price}</Text>
+                    <Text style={styles.productPrice}>{item.price} AZN</Text>
                   </View>
                 </View>
               )}
@@ -185,13 +189,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#2B3043',
   },
-  emptyContainer: {
-    marginTop: 24,
-    alignItems: 'center',
+  statusIndicator: {
+    marginTop: 40,
   },
-  emptyText: {
+  errorText: {
     fontSize: 14,
-    color: '#8E8E93',
+    color: COLORS.error,
+    textAlign: 'center',
+    marginTop: 40,
   },
   flex: {
     flex: 1,
