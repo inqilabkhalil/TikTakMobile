@@ -1,29 +1,36 @@
 import { useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import BackNavigate from '@/shared/components/BackNavigate';
 import OrderList from '@/features/orderHistory/components/OrderList';
-import { MOCK_ORDERS } from '@/features/orderHistory/mock/orders';
 import { COLORS } from '@/shared/constants/theme';
 import type { Order } from '@/features/orderHistory/types/order';
 import OrderDetailSheet from '@/features/orderHistory/components/OrderDetailSheet/OrderDetailSheet';
 import EmptyState from '@/shared/components/EmptyState';
+import { useOrders } from '@/features/orderHistory/hooks/useOrders';
 
 function OrderHistoryScreen() {
   const sheetRef = useRef<BottomSheetModal>(null);
 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const orders = MOCK_ORDERS;
+  const { orders, isLoading } = useOrders();
   
   const handleOrderPress = (order: Order) => {
     setSelectedOrder(order);     
     sheetRef.current?.present();  
   };
 
-  const handleSheetDismiss = () => {
-    setSelectedOrder(null);       
-  };
+  if (isLoading && orders.length === 0) {
+    return (
+      <View style={styles.container}>
+        <BackNavigate title='Sifariş tarixçəsi'/>
+        <View style={styles.loaderWrapper}>
+          <ActivityIndicator size="large" color={COLORS.primary}/>
+        </View>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -49,6 +56,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
+  },
+  loaderWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -6,7 +6,8 @@ import AppBottomSheet from '@/shared/components/AppBottomSheet';
 import { gapHorizontal, gapVertical } from '@/shared/utils/metrics';
 import OrderDetailInfo from './OrderDetailInfo';
 import OrderProductItem from './OrderProductItem';
-import type { OrderDetailSheetProps, OrderProduct } from '../../types/order';
+import type { OrderDetailSheetProps, OrderProductItem as OrderProductItemType,} from '../../types/order';
+import { COLORS } from '@/shared/constants/theme';
 
 const OrderDetailSheet = forwardRef<BottomSheetModal, OrderDetailSheetProps>(
   ({ order }, ref) => {
@@ -18,11 +19,11 @@ const OrderDetailSheet = forwardRef<BottomSheetModal, OrderDetailSheetProps>(
       );
     }
 
-    const renderProduct = ({ item }: { item: OrderProduct }) => (
-      <OrderProductItem product={item} />
+    const renderItem = ({ item }: { item: OrderProductItemType }) => (
+      <OrderProductItem item={item} />
     );
 
-    const keyExtractor = (item: OrderProduct) => item.id.toString();
+    const keyExtractor = (item: OrderProductItemType) => item.id.toString();
 
     const renderHeader = () => <OrderDetailInfo order={order} />;
 
@@ -31,8 +32,8 @@ const OrderDetailSheet = forwardRef<BottomSheetModal, OrderDetailSheetProps>(
     return (
       <AppBottomSheet ref={ref} snapPoints={['60%', '90%']}>
         <BottomSheetFlashList
-          data={order.products}
-          renderItem={renderProduct}
+          data={order.items}
+          renderItem={renderItem}
           keyExtractor={keyExtractor}
           ListHeaderComponent={renderHeader}
           ItemSeparatorComponent={renderSeparator}
@@ -52,7 +53,10 @@ const styles = StyleSheet.create({
     paddingBottom: gapVertical(20),
   },
    separator: {
-    height: gapVertical(12),
+    height: 1,
+    backgroundColor: COLORS.border,
+    marginVertical: gapVertical(12),
+    marginHorizontal: gapHorizontal(16),
   },
 });
 

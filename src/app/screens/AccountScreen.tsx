@@ -1,8 +1,7 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 import ScreenContainer from '../../shared/components/ScreenContainer';
 import BackNavigate from '../../shared/components/BackNavigate';
 import ProfileCard from '../../features/account/components/ProfileCard';
-import { MENU_ITEMS } from '../../features/account/mock/menuItems';
 import MenuItem from '../../features/account/components/MenuItem';
 import { gapVertical } from '../../shared/utils/metrics';
 import { COLORS } from '../../shared/constants/theme';
@@ -10,6 +9,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AccountStackParamList } from '../navigation';
 import { useNavigation } from '@react-navigation/native';
 import { useProfile } from '@/features/account/hooks/useProfile';
+import { MENU_ITEMS } from '@/features/account/constants/menuItems';
+import { useUserStore } from '@/shared/store';
+import Toast from 'react-native-toast-message';
 
 type AccountNavigationProp = NativeStackNavigationProp<AccountStackParamList>;
 
@@ -17,6 +19,30 @@ function AccountScreen() {
   const navigation = useNavigation<AccountNavigationProp>();
   const { user, isLoading } = useProfile();
   const showSpinner = isLoading && !user;
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Çıxış',
+      'Hesabdan çıxmaq istədiyinizə əminsiniz?',
+      [
+        { text: 'Ləğv et', style: 'cancel' },
+        {
+          text: 'Çıxış',
+          style: 'destructive',
+          onPress: () => {
+            useUserStore.getState().clearUser();
+            useUserStore.getState().clearTokens();
+            Toast.show({
+              type: 'success',
+              text1: 'Uğurlu',
+              text2: 'Hesabdan çıxış edildi',
+            });
+          },
+        },
+      ],
+    );
+  };
+
   const handleMenuPress = (id: string) => {
     switch (id) {
       case 'account-info':
@@ -29,7 +55,7 @@ function AccountScreen() {
         navigation.navigate('OrderHistory');
         break;
       case 'logout':
-        // TODO: Logout logic sonra əlavə ediləcək
+        handleLogout();
         break;
     }
   };
