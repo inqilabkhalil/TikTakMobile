@@ -10,8 +10,7 @@ type Props = {
 };
 
 function BasketItem({ item, onIncrement, onDecrement }: Props) {
-  const imageSource =
-    typeof item.image === 'string' ? { uri: item.image } : (item.image as any);
+  const imageSource = typeof item.image === 'string' ? { uri: item.image } : item.image;
 
   return (
     <View style={styles.container}>
