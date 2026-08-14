@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -14,23 +9,22 @@ import FormInput from '@/shared/components/FormInput/FormInput';
 import FormScreenContainer from '@/shared/components/FormScreenContainer';
 import { COLORS } from '@/shared/constants/theme';
 import { LAYOUT } from '@/shared/constants/layout';
+import { authService } from '../services/authService';
+import { useUserStore } from '@/shared/store/userStore';
+import axios from 'axios';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
 const loginSchema = Yup.object({
-  phone: Yup.string()
-    .required('Telefon nömrəsi tələb olunur'),
-  password: Yup.string()
-    .required('Şifrə tələb olunur'),
+  phone: Yup.string().required('Telefon nömrəsi tələb olunur'),
+  password: Yup.string().required('Şifrə tələb olunur'),
 });
 
 function LoginScreen({ navigation }: Props) {
   return (
     <FormScreenContainer>
       <View style={styles.container}>
-        <Text style={styles.title}>
-          Daxil ol
-        </Text>
+        <Text style={styles.title}>Daxil ol</Text>
 
         <Formik
           initialValues={{
@@ -38,8 +32,78 @@ function LoginScreen({ navigation }: Props) {
             password: '',
           }}
           validationSchema={loginSchema}
-          onSubmit={values => {
-            console.log('LOGIN VALUES:', values);
+          onSubmit={async (values, { setSubmitting }) => {
+            const setLoading = useUserStore.getState().setLoading;
+            const setError = useUserStore.getState().setError;
+            const setTokens = useUserStore.getState().setTokens;
+            const setUser = useUserStore.getState().setUser;
+
+            try {
+              setLoading(true);
+              setError(null);
+
+              const result = await authService.login(values);
+
+              if (result.tokens && result.profile) {
+                setTokens(
+                  result.tokens.access_token,
+                  result.tokens.refresh_token ?? '',
+                );
+                setUser(result.profile);
+                (navigation as any).reset({
+                  index: 0,
+                  routes: [{ name: 'Main' }],
+                });
+              } else {
+                setError('Giriş uğursuz oldu.');
+              }
+            } catch (error) {
+              if (axios.isAxiosError(error)) {
+                const status = error.response?.status;
+                const data = error.response?.data;
+
+                if (status === 401) {
+                  setError('Telefon nömrəsi və ya şifrə yanlışdır.');
+                } else if (status === 422) {
+                  const result = data?.result;
+                  const message = data?.message;
+                  if (result) {
+                    if (Array.isArray(result)) {
+                      setError(
+                        result
+                          .map(r =>
+                            r?.message ? String(r.message) : JSON.stringify(r),
+                          )
+                          .join('\n'),
+                      );
+                    } else if (typeof result === 'object') {
+                      const first = Object.values(result)[0];
+                      if (Array.isArray(first)) setError(first.join('\n'));
+                      else setError(String(first));
+                    } else {
+                      setError(String(result));
+                    }
+                  } else if (message) {
+                    setError(String(message));
+                  } else {
+                    setError(
+                      'Doğrulama xətası. Zəhmət olmasa məlumatları yoxlayın.',
+                    );
+                  }
+                } else if (data?.message) {
+                  setError(String(data.message));
+                } else {
+                  setError(
+                    'Giriş zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.',
+                  );
+                }
+              } else {
+                setError('Giriş zamanı gözlənilməz xəta meydana gəldi.');
+              }
+            } finally {
+              setLoading(false);
+              setSubmitting(false);
+            }
           }}
         >
           {({
@@ -48,19 +112,16 @@ function LoginScreen({ navigation }: Props) {
             values,
             errors,
             touched,
+            isSubmitting,
           }) => (
             <>
               <View style={styles.form}>
                 <FormInput
                   label="Telefon"
-                  placeholder="telefon"
+                  placeholder="+994"
                   value={values.phone}
                   onChangeText={handleChange('phone')}
-                  error={
-                    touched.phone
-                      ? errors.phone
-                      : undefined
-                  }
+                  error={touched.phone ? errors.phone : undefined}
                 />
 
                 <FormInput
@@ -69,11 +130,7 @@ function LoginScreen({ navigation }: Props) {
                   value={values.password}
                   onChangeText={handleChange('password')}
                   secureTextEntry
-                  error={
-                    touched.password
-                      ? errors.password
-                      : undefined
-                  }
+                  error={touched.password ? errors.password : undefined}
                 />
 
                 <Pressable
@@ -82,31 +139,33 @@ function LoginScreen({ navigation }: Props) {
                     pressed && styles.buttonPressed,
                   ]}
                   onPress={() => handleSubmit()}
+                  disabled={isSubmitting || useUserStore.getState().isLoading}
                 >
                   <Text style={styles.loginButtonText}>
-                    Daxil ol
+                    {isSubmitting || useUserStore.getState().isLoading
+                      ? 'Yüklənir...'
+                      : 'Daxil ol'}
                   </Text>
                 </Pressable>
               </View>
 
               <View style={styles.registerRow}>
-                <Text style={styles.registerText}>
-                  Hesabınız yoxdursa
-                </Text>
+                <Text style={styles.registerText}>Hesabınız yoxdursa</Text>
 
-                <Pressable
-                  onPress={() =>
-                    navigation.navigate('Register')
-                  }
-                >
-                  <Text style={styles.registerLink}>
-                    Qeydiyyatdan keç
-                  </Text>
+                <Pressable onPress={() => navigation.navigate('Register')}>
+                  <Text style={styles.registerLink}>Qeydiyyatdan keç</Text>
                 </Pressable>
               </View>
             </>
           )}
         </Formik>
+        {useUserStore.getState().error ? (
+          <Text
+            style={{ color: COLORS.primary, textAlign: 'center', marginTop: 8 }}
+          >
+            {useUserStore.getState().error}
+          </Text>
+        ) : null}
       </View>
     </FormScreenContainer>
   );
@@ -115,20 +174,20 @@ function LoginScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 130,
     paddingHorizontal: LAYOUT.screenPaddingHorizontal,
   },
 
   title: {
-    marginTop: 115,
     fontFamily: 'Roboto-Bold',
-    fontSize: 20,
+    fontSize: 28,
+    fontWeight: 700,
     lineHeight: 24,
     color: COLORS.textPrimary,
     textAlign: 'center',
   },
-
   form: {
-    marginTop: 42,
+    marginTop: 35,
     gap: 10,
   },
 

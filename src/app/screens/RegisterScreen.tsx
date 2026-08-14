@@ -2,27 +2,30 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { AuthStackParamList } from '../navigation';
 import { NativeStackScreenProps } from 'node_modules/@react-navigation/native-stack/lib/typescript/src/types';
 import * as Yup from 'yup';
-import BackNavigate from '@/shared/components/BackNavigate';
 import { Formik } from 'formik';
 import FormInput from '@/shared/components/FormInput/FormInput';
 import { LAYOUT } from '@/shared/constants/layout';
 import { COLORS } from '@/shared/constants/theme';
 import FormScreenContainer from '@/shared/components/FormScreenContainer';
-
+import { authService } from '../services/authService';
+import { useUserStore } from '@/shared/store/userStore';
+import axios from 'axios';
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
 const registerSchema = Yup.object({
-  full_name: Yup.string().required('Full name is required'),
+  full_name: Yup.string().required('Ad və soyad tələb olunur'),
+  phone: Yup.string()
+    .required('Telefon tələb olunur')
+    .matches(/^[+]994\d{9}$/, 'Telefon +994XXXXXXXXX formatında olmalıdır'),
   password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
+    .min(6, 'Şifrə ən az 6 simvoldan ibarət olmalıdır')
+    .required('Şifrə tələb olunur'),
 });
 
 function RegisterScreen({ navigation }: Props) {
   return (
     <FormScreenContainer>
       <View style={styles.container}>
-        <BackNavigate title="" />
         <Text style={styles.title}>Qeydiyyatdan keç</Text>
 
         <Text style={styles.description}>
@@ -35,8 +38,80 @@ function RegisterScreen({ navigation }: Props) {
             password: '',
           }}
           validationSchema={registerSchema}
-          onSubmit={values => {
-            console.log('REGISTER VALUES:', values);
+          onSubmit={async (values, { setSubmitting }) => {
+            const setLoading = useUserStore.getState().setLoading;
+            const setError = useUserStore.getState().setError;
+            const setTokens = useUserStore.getState().setTokens;
+            const setUser = useUserStore.getState().setUser;
+
+            try {
+              setLoading(true);
+              setError(null);
+
+              const result = await authService.register(values);
+
+              if (result.tokens && result.profile) {
+                setTokens(
+                  result.tokens.access_token,
+                  result.tokens.refresh_token ?? '',
+                );
+
+                setUser(result.profile);
+
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Main' }],
+                });
+              } else {
+                navigation.navigate('Login');
+              }
+            } catch (error) {
+              if (axios.isAxiosError(error)) {
+                const status = error.response?.status;
+                const data = error.response?.data;
+
+                if (status === 409) {
+                  setError('Bu telefon nömrəsi artıq qeydiyyatdan keçib.');
+                } else if (status === 422) {
+                  const result = data?.result;
+                  const message = data?.message;
+                  if (result) {
+                    if (Array.isArray(result)) {
+                      setError(
+                        result
+                          .map(r =>
+                            r?.message ? String(r.message) : JSON.stringify(r),
+                          )
+                          .join('\n'),
+                      );
+                    } else if (typeof result === 'object') {
+                      const first = Object.values(result)[0];
+                      if (Array.isArray(first)) setError(first.join('\n'));
+                      else setError(String(first));
+                    } else {
+                      setError(String(result));
+                    }
+                  } else if (message) {
+                    setError(String(message));
+                  } else {
+                    setError(
+                      'Doğrulama xətası. Zəhmət olmasa məlumatları yoxlayın.',
+                    );
+                  }
+                } else if (data?.message) {
+                  setError(String(data.message));
+                } else {
+                  setError(
+                    'Qeydiyyat zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.',
+                  );
+                }
+              } else {
+                setError('Qeydiyyat zamanı gözlənilməz xəta meydana gəldi.');
+              }
+            } finally {
+              setLoading(false);
+              setSubmitting(false);
+            }
           }}
         >
           {({
@@ -46,6 +121,7 @@ function RegisterScreen({ navigation }: Props) {
             values,
             errors,
             touched,
+            isSubmitting,
           }) => (
             <View style={styles.form}>
               <FormInput
@@ -73,12 +149,24 @@ function RegisterScreen({ navigation }: Props) {
               <Pressable
                 style={styles.registerButton}
                 onPress={() => handleSubmit()}
+                disabled={isSubmitting || useUserStore.getState().isLoading}
               >
-                <Text style={styles.registerButtonText}>Qeydiyyatdan keç</Text>
-              </Pressable>{' '}
+                <Text style={styles.registerButtonText}>
+                  {isSubmitting || useUserStore.getState().isLoading
+                    ? 'Yüklənir...'
+                    : 'Qeydiyyatdan keç'}
+                </Text>
+              </Pressable>
             </View>
           )}
         </Formik>
+        {useUserStore.getState().error ? (
+          <Text
+            style={{ color: COLORS.primary, textAlign: 'center', marginTop: 8 }}
+          >
+            {useUserStore.getState().error}
+          </Text>
+        ) : null}
         <View style={styles.loginRow}>
           <Text style={styles.loginText}>Hesabınız varsa</Text>
 
@@ -94,14 +182,11 @@ function RegisterScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 25,
+    marginTop: 120,
     paddingHorizontal: LAYOUT.screenPaddingHorizontal,
   },
-  icon: {
-    marginLeft: -5,
-  },
+
   title: {
-    marginTop: 35,
     fontFamily: 'Roboto-Bold',
     fontSize: 28,
     color: COLORS.textPrimary,
@@ -110,7 +195,7 @@ const styles = StyleSheet.create({
   },
 
   description: {
-    marginTop: 10,
+    marginTop: 25,
     fontFamily: 'Roboto-Regular',
     fontSize: 14,
     color: COLORS.textSecondary,
