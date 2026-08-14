@@ -13,7 +13,7 @@ api.interceptors.request.use(
   config => {
     const accessToken =
       useUserStore.getState().accessToken ||
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZSI6Iis5OTQ1MTY2Njc3NjYiLCJzdWIiOjk3LCJpYXQiOjE3ODY2MjM1MjcsImV4cCI6MTc4NjY2NjcyN30.5-A9fGbVPlu9ldu-tZgJu9BRV4kpqL7YKiLxniyxHAU';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZSI6Iis5OTQ1MTY2Njc3NjYiLCJzdWIiOjk3LCJpYXQiOjE3ODY2OTQ5NTksImV4cCI6MTc4NjczODE1OX0.e5SMeEvf1duOH5V2HD1mPJtdPheZF2Vb_7TgptfZnn0';
 
     console.log('API REQUEST:', config.method, config.url);
     console.log('HAS ACCESS TOKEN:', !!accessToken);

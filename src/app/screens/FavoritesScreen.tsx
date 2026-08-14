@@ -9,6 +9,7 @@ import OrderSummaryBar from '@/shared/components/OrderSummaryBar';
 import ProductDetailSheet from '@/features/products/components/ProductDetailSheet';
 import EmptyState from '@/shared/components/EmptyState';
 import { useFavoriteStore } from '@/shared/store/favoriteStore';
+import { useBasketStore } from '@/shared/store';
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
 import { gapVertical, pixelWidth } from '@/shared/utils/metrics';
@@ -20,8 +21,12 @@ function FavoritesScreen() {
   const navigation = useNavigation<FavoritesNavigationProp>();
   const { favorites, isLoading, error, fetchFavorites, toggleFavorite, isFavorite } =
     useFavoriteStore();
+  const basketItems = useBasketStore(state => state.items);
+  const getBasket = useBasketStore(state => state.getBasket);
+  const addToBasket = useBasketStore(state => state.addToBasket);
+  const incrementBasket = useBasketStore(state => state.increment);
+  const decrementBasket = useBasketStore(state => state.decrement);
 
-  const [quantities, setQuantities] = useState<Record<number, number>>({});
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const detailSheetRef = useRef<ComponentRef<typeof ProductDetailSheet>>(null);
 
@@ -29,46 +34,50 @@ function FavoritesScreen() {
     fetchFavorites();
   }, [fetchFavorites]);
 
-  const getQuantity = useCallback((id: number) => quantities[id] ?? 0, [quantities]);
+  useEffect(() => {
+    getBasket();
+  }, [getBasket]);
+
+  const getQuantity = useCallback(
+    (id: number) => basketItems.find(item => item.id === id)?.quantity ?? 0,
+    [basketItems],
+  );
 
   const selectedProduct = useMemo(
     () => favorites.find(item => item.id === selectedProductId) ?? null,
     [favorites, selectedProductId],
   );
 
-  const handleAdd = useCallback((id: number) => {
-    setQuantities(prev => ({ ...prev, [id]: 1 }));
-  }, []);
+  const handleAdd = useCallback(
+    (id: number) => {
+      addToBasket(id);
+    },
+    [addToBasket],
+  );
 
-  const handleIncrement = useCallback((id: number) => {
-    setQuantities(prev => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
-  }, []);
+  const handleIncrement = useCallback(
+    (id: number) => {
+      incrementBasket(id);
+    },
+    [incrementBasket],
+  );
 
-  const handleDecrement = useCallback((id: number) => {
-    setQuantities(prev => {
-      const nextQty = (prev[id] ?? 0) - 1;
-      if (nextQty <= 0) {
-        const rest = { ...prev };
-        delete rest[id];
-        return rest;
-      }
-      return { ...prev, [id]: nextQty };
-    });
-  }, []);
+  const handleDecrement = useCallback(
+    (id: number) => {
+      decrementBasket(id);
+    },
+    [decrementBasket],
+  );
 
   const handleCardPress = useCallback((id: number) => {
     setSelectedProductId(id);
     detailSheetRef.current?.present();
   }, []);
 
-  const itemCount = useMemo(
-    () => favorites.filter(item => getQuantity(item.id) > 0).length,
-    [favorites, getQuantity],
-  );
+  const itemCount = basketItems.length;
   const totalPrice = useMemo(
-    () =>
-      favorites.reduce((sum, item) => sum + Number(item.price) * getQuantity(item.id), 0),
-    [favorites, getQuantity],
+    () => basketItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [basketItems],
   );
 
   return (

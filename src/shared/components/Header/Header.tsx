@@ -1,15 +1,33 @@
 import { HeaderProps } from '../../types/header';
 import { pixelHorizontal, pixelVertical, pixelFont } from '../../utils/metrics';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CartIcon from '../../../shared/assets/icons/cart.svg';
 import { COLORS } from '@/shared/constants/theme';
+import { useBasketStore } from '@/shared/store';
+import type { RootStackParamList } from '@/shared/types/navigation';
+import CountBadge from '../CountBadge';
 
 function Header({ onCartPress }: HeaderProps) {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const items = useBasketStore(state => state.items);
+  const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleCartPress = () => {
+    if (onCartPress) {
+      onCartPress();
+      return;
+    }
+    navigation.navigate('Basket', { screen: 'BasketHome' });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>TIK TAK</Text>
-      <TouchableOpacity onPress={onCartPress}>
+      <TouchableOpacity onPress={handleCartPress} style={styles.cartButton}>
         <CartIcon width={pixelHorizontal(28)} height={pixelHorizontal(28)} />
+        <CountBadge count={totalCount} />
       </TouchableOpacity>
     </View>
   );
@@ -37,6 +55,9 @@ const styles = StyleSheet.create({
     lineHeight: pixelFont(24),
     letterSpacing: 0.72,
     color: COLORS.textPrimary,
+  },
+  cartButton: {
+    position: 'relative',
   },
 });
 

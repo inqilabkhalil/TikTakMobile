@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { productService } from '@/features/products/services/productService';
+import { getErrorMessage } from '@/shared/utils/getErrorMessage';
 import { INITIAL_SEARCH_STATE, type SearchState } from '../types/searchStore';
 
 export const useSearchStore = create<SearchState>(set => ({
@@ -16,18 +17,14 @@ export const useSearchStore = create<SearchState>(set => ({
 
       const results = await productService.searchProducts(query);
 
-      console.log('SEARCH API RESPONSE:', results);
-
       set({
         results,
         isLoading: false,
       });
-    } catch (error: any) {
-      console.log('SEARCH ERROR:', error?.response?.data || error?.message);
-
+    } catch (error: unknown) {
       set({
         isLoading: false,
-        error: error?.response?.data?.message || 'Axtarış nəticələri yüklənmədi',
+        error: getErrorMessage(error, 'Axtarış nəticələri yüklənmədi'),
       });
     }
   },

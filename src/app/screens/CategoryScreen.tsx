@@ -7,6 +7,8 @@ import Header from '@/shared/components/Header';
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import CategoryCard from '@/shared/components/CategoryCard';
 import DeliveryAddress from '@/features/home/components/DeliveryAddress';
+import { useProfile } from '@/features/account/hooks/useProfile';
+import { useUserAddress } from '@/shared/store';
 import { useCategoryStore } from '@/shared/store/categoryStore';
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
@@ -23,9 +25,6 @@ import type { HomeStackParamList } from '@/shared/types/navigation';
 
 type CategoryNavigationProp = NativeStackNavigationProp<HomeStackParamList>;
 
-// TODO(teammate): "Çatdırılma ünvanı" bloku profileService-ə qoşulacaq — hələ toxunulmayıb.
-const MOCK_ADDRESS = '55 Zarifa Aliyeva, Bakı, Azerbaijan';
-
 // The Figma category-card width (156) doesn't fit 3-per-row on top of the
 // screen padding — it was overflowing the container. Computed here instead
 // so 3 columns always fit inside the available content width.
@@ -40,6 +39,8 @@ const bannerImage = require('@/shared/assets/images/maxfr.png');
 function CategoryScreen() {
   const navigation = useNavigation<CategoryNavigationProp>();
   const { categories, isLoading, error, fetchCategories } = useCategoryStore();
+  useProfile();
+  const address = useUserAddress();
 
   useEffect(() => {
     fetchCategories();
@@ -61,7 +62,7 @@ function CategoryScreen() {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}>
-          <DeliveryAddress address={MOCK_ADDRESS} />
+          <DeliveryAddress address={address} />
 
           <View style={styles.banner}>
             <Image source={bannerImage} style={styles.bannerImage} resizeMode="contain" />
