@@ -3,11 +3,12 @@ import MainTabs from './BottomTabs';
 import AuthNavigator from './AuthNavigator';
 import BasketNavigator from './BasketNavigator';
 import type { RootStackParamList } from '../../shared/types/navigation';
+import { useIsAuthenticated } from '../../shared/store/userStore';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const isLoggedIn = false; // TODO: real auth qoşulanda authStore-dan oxu
+  const isLoggedIn = useIsAuthenticated();
 
   return (
     <Stack.Navigator
