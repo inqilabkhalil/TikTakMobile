@@ -1,4 +1,3 @@
-import { useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,172 +5,358 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
+
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import BackNavigate from '@/shared/components/BackNavigate';
-import { useNavigation } from '@react-navigation/native';
-import { MOCK_BASKET } from '@/features/basket/mock/mockBasket';
-import { calculateSubtotal } from '@/features/basket/utils/basketCalculations';
+
+import { useCheckout } from '@/features/checkout/hooks/useCheckout';
+import { COLORS } from '@/shared/constants/theme';
+import {
+  pixelHorizontal,
+  pixelVertical,
+  pixelFont,
+} from '@/shared/utils/metrics';
 
 function CheckoutScreen() {
-  const navigation = useNavigation();
-  const nameRef = useRef<TextInput | null>(null);
-  const [payment, setPayment] = useState<'cash' | 'card'>('cash');
-
-  const subtotal = calculateSubtotal(MOCK_BASKET);
-  const delivery = 0.0;
-  const total = subtotal + delivery;
+  const {
+    fullName,
+    address,
+    phone,
+    note,
+    setNote,
+    payment,
+    setPayment,
+    items,
+    subtotal,
+    delivery,
+    total,
+    handleSubmit,
+    isLoading,
+    canSubmit,
+  } = useCheckout();
 
   return (
     <ScreenContainer style={styles.container}>
       <BackNavigate title="Sifarişi tamamla" />
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.label}>Adınız</Text>
-        <TextInput
-          ref={nameRef}
-          style={styles.input}
-          placeholder="Ad Soyad"
-          autoFocus
-        />
+        <Text style={styles.value}>{fullName || '—'}</Text>
 
         <Text style={styles.label}>Ünvanınız</Text>
-        <TextInput style={styles.input} placeholder="Şəhər, ünvan" />
+        <Text style={styles.value}>{address || '—'}</Text>
 
-        <Text style={styles.label}>Telefon</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="+994 XX XXX XX XX"
-          keyboardType="phone-pad"
-        />
+        <Text style={styles.label}>Telefon nömrəniz</Text>
+        <Text style={styles.value}>{phone || '—'}</Text>
 
-        <Text style={styles.label}>Əlavə qeyd</Text>
+        <Text style={styles.label}>Əlavə qeydiniz</Text>
         <TextInput
-          style={[styles.input, styles.textArea]}
-          placeholder="Qeyd"
+          style={styles.textArea}
+          placeholder="Əlavə qeydiniz varsa buraya daxil edin"
+          placeholderTextColor={COLORS.textSecondary}
+          value={note}
+          onChangeText={setNote}
           multiline
+          scrollEnabled
+          maxLength={500}
+          textAlignVertical="top"
         />
 
-        <Text style={[styles.label, { marginTop: 20 }]}>Ödəniş üsulu</Text>
+        <Text style={styles.label}>Ödəniş üsulu</Text>
         <View style={styles.radioRow}>
           <TouchableOpacity
             style={styles.radioItem}
-            onPress={() => setPayment('cash')}
+            onPress={() => setPayment('CASH')}
+            activeOpacity={0.7}
           >
             <View
               style={[
                 styles.radioCircle,
-                payment === 'cash' && styles.radioChecked,
+                payment === 'CASH' && styles.radioCircleChecked,
               ]}
-            />
-            <Text style={styles.radioLabel}>Qapıda nağd</Text>
+            >
+              {payment === 'CASH' && <View style={styles.radioInnerDot} />}
+            </View>
+            <Text
+              style={[
+                styles.radioLabel,
+                payment === 'CASH' && styles.radioLabelChecked,
+              ]}
+            >
+              Qapıda nağd
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.radioItem}
-            onPress={() => setPayment('card')}
+            onPress={() => setPayment('CARD')}
+            activeOpacity={0.7}
           >
             <View
               style={[
                 styles.radioCircle,
-                payment === 'card' && styles.radioChecked,
+                payment === 'CARD' && styles.radioCircleChecked,
               ]}
-            />
-            <Text style={styles.radioLabel}>Qapıda kart</Text>
+            >
+              {payment === 'CARD' && <View style={styles.radioInnerDot} />}
+            </View>
+            <Text
+              style={[
+                styles.radioLabel,
+                payment === 'CARD' && styles.radioLabelChecked,
+              ]}
+            >
+              Qapıda kart
+            </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.summaryCard}>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Ümumi:</Text>
-            <Text style={styles.summaryValue}>{subtotal.toFixed(2)} AZN</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Çatdırılma:</Text>
-            <Text style={styles.summaryValue}>{delivery.toFixed(2)} AZN</Text>
-          </View>
-          <View style={styles.summaryRowTotal}>
-            <Text style={styles.summaryTotalLabel}>Yekun məbləğ</Text>
-            <Text style={styles.summaryTotalValue}>{total.toFixed(2)} AZN</Text>
+          <ScrollView
+            style={styles.productsScroll}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator={true}
+          >
+            {items.map(item => (
+              <View key={item.id} style={styles.summaryRow}>
+                <Text style={styles.productText} numberOfLines={2}>
+                  {item.quantity} x {item.name}
+                </Text>
+                <Text style={styles.productPrice}>
+                  {(Number(item.price) * item.quantity).toFixed(2)} AZN
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+
+          <View style={styles.divider} />
+
+          <View style={styles.totalsRow}>
+            <View style={styles.totalsColLeft}>
+              <View style={styles.smallRow}>
+                <Text style={styles.smallLabel}>Ümumi: </Text>
+                <Text style={styles.smallValue}>
+                  {subtotal.toFixed(2)} AZN
+                </Text>
+              </View>
+              <View style={styles.smallRow}>
+                <Text style={styles.smallLabel}>Çatdırılma: </Text>
+                <Text style={styles.smallValue}>
+                  {delivery === 0 ? 'Pulsuz' : `${delivery.toFixed(2)} AZN`}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.totalsColRight}>
+              <Text style={styles.totalLabel}>Yekun məbləğ:</Text>
+              <Text style={styles.totalValue}>{total.toFixed(2)} AZN</Text>
+            </View>
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={() => {
-            // proceed to success screen
-            // @ts-ignore
-            navigation.navigate('OrderSuccess');
-          }}
-        >
-          <Text style={styles.submitText}>Sifarişi tamamla</Text>
-        </TouchableOpacity>
+        {(!address || !phone) && (
+          <Text style={styles.warning}>
+            Sifariş vermək üçün hesabınızda ünvan və telefon nömrəniz olmalıdır
+          </Text>
+        )}
       </ScrollView>
+
+      <View style={styles.submitWrapper}>
+        <TouchableOpacity
+          style={[styles.submitButton, !canSubmit && styles.submitDisabled]}
+          onPress={handleSubmit}
+          disabled={!canSubmit}
+          activeOpacity={0.8}
+        >
+          {isLoading ? (
+            <ActivityIndicator color={COLORS.white} />
+          ) : (
+            <Text style={styles.submitText}>Sifarişi tamamla</Text>
+          )}
+        </TouchableOpacity>
+      </View>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { paddingHorizontal: 0, backgroundColor: '#FFFFFF' },
-  content: { padding: 16 },
-  label: { marginTop: 12, marginBottom: 8, color: '#6B6B6B' },
-  input: {
-    height: 44,
-    borderRadius: 10,
-    backgroundColor: '#F8F8F8',
-    paddingHorizontal: 12,
+  container: {
+    flex: 1,
+    paddingHorizontal: 0,
+    backgroundColor: COLORS.white,
   },
-  textArea: { height: 96, paddingTop: 12 },
-  paymentRow: {
-    marginTop: 16,
+  scrollView: {
+    flex: 1,
+  },
+  content: {
+    padding: pixelHorizontal(16),
+    paddingBottom: pixelVertical(24),
+  },
+
+  label: {
+    fontFamily: 'Roboto',
+    marginTop: pixelVertical(20),
+    marginBottom: pixelVertical(10),
+    fontSize: pixelFont(16),
+    fontWeight: '700',
+    color: COLORS.textPrimary,
+  },
+  value: {
+    fontFamily: 'Roboto',
+    fontSize: pixelFont(14),
+    fontWeight: '300',
+    color: COLORS.textPrimary,
+  },
+
+  textArea: {
+    height: pixelVertical(100),
+    borderRadius: pixelHorizontal(10),
+    backgroundColor: COLORS.inputBackground,
+    paddingHorizontal: pixelHorizontal(12),
+    paddingTop: pixelVertical(12),
+    paddingBottom: pixelVertical(12),
+    fontSize: pixelFont(14),
+    color: COLORS.textPrimary,
+    textAlignVertical: 'top',
+  },
+
+  radioRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginTop: pixelVertical(4),
+    gap: pixelHorizontal(24),
+  },
+  radioItem: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  paymentLabel: { color: '#6B6B6B' },
-  paymentOption: { fontWeight: '600' },
-  submitButton: {
-    marginTop: 24,
-    backgroundColor: '#4FC76E',
-    paddingVertical: 14,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  submitText: { color: '#FFFFFF', fontWeight: '700' },
-  radioRow: { flexDirection: 'row', marginTop: 8, gap: 12 },
-  radioItem: { flexDirection: 'row', alignItems: 'center', marginRight: 16 },
   radioCircle: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+    width: pixelHorizontal(18),
+    height: pixelHorizontal(18),
+    borderRadius: pixelHorizontal(9),
     borderWidth: 1,
-    borderColor: '#D9D9D9',
-    marginRight: 10,
+    borderColor: COLORS.border,
+    marginRight: pixelHorizontal(8),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  radioChecked: { backgroundColor: '#4FC76E', borderColor: '#4FC76E' },
-  radioLabel: { color: '#1A1A1A' },
+  radioCircleChecked: {
+    borderColor: COLORS.primary,
+  },
+  radioInnerDot: {
+    width: pixelHorizontal(10),
+    height: pixelHorizontal(10),
+    borderRadius: pixelHorizontal(5),
+    backgroundColor: COLORS.primary,
+  },
+  radioLabel: {
+    fontSize: pixelFont(14),
+    color: COLORS.textPrimary,
+  },
+  radioLabelChecked: {
+    color: COLORS.primary,
+    fontWeight: '600',
+  },
+
   summaryCard: {
-    marginTop: 18,
-    padding: 12,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#F2F2F2',
+    marginTop: pixelVertical(20),
+  },
+  productsScroll: {
+    maxHeight: pixelVertical(140),
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    alignItems: 'flex-start',
+    marginBottom: pixelVertical(8),
+    gap: pixelHorizontal(12),
   },
-  summaryLabel: { color: '#6B6B6B' },
-  summaryValue: { fontWeight: '600' },
-  summaryRowTotal: {
+  productText: {
+    flex: 1,
+    fontSize: pixelFont(14),
+    color: COLORS.textPrimary,
+  },
+  productPrice: {
+    fontSize: pixelFont(14),
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+    flexShrink: 0,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: COLORS.border,
+    marginVertical: pixelVertical(12),
+  },
+
+  totalsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 6,
+    alignItems: 'flex-start',
   },
-  summaryTotalLabel: { fontWeight: '700' },
-  summaryTotalValue: { fontWeight: '700' },
+  totalsColLeft: {
+    flex: 1,
+  },
+  totalsColRight: {
+    alignItems: 'flex-end',
+  },
+  smallRow: {
+    flexDirection: 'row',
+    marginBottom: pixelVertical(4),
+  },
+  smallLabel: {
+    fontSize: pixelFont(13),
+    color: COLORS.labelText,
+  },
+  smallValue: {
+    fontSize: pixelFont(13),
+    color: COLORS.labelText,
+  },
+  totalLabel: {
+    fontSize: pixelFont(14),
+    fontWeight: '700',
+    color: COLORS.textPrimary,
+  },
+  totalValue: {
+    fontSize: pixelFont(14),
+    fontWeight: '700',
+    color: COLORS.textPrimary,
+    marginTop: pixelVertical(2),
+  },
+
+  warning: {
+    marginTop: pixelVertical(12),
+    color: COLORS.error,
+    fontSize: pixelFont(12),
+    textAlign: 'center',
+  },
+
+  submitWrapper: {
+    paddingHorizontal: pixelHorizontal(16),
+    paddingTop: pixelVertical(12),
+    paddingBottom: pixelVertical(20),
+    backgroundColor: COLORS.white,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  submitButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: pixelVertical(14),
+    borderRadius: pixelHorizontal(10),
+    alignItems: 'center',
+  },
+  submitDisabled: {
+    opacity: 0.5,
+  },
+  submitText: {
+    color: COLORS.white,
+    fontWeight: '700',
+    fontSize: pixelFont(16),
+  },
 });
 
 export default CheckoutScreen;

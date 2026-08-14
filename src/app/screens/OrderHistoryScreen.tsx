@@ -4,10 +4,10 @@ import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import BackNavigate from '@/shared/components/BackNavigate';
 import OrderList from '@/features/orderHistory/components/OrderList';
 import { COLORS } from '@/shared/constants/theme';
-import type { Order } from '@/features/orderHistory/types/order';
 import OrderDetailSheet from '@/features/orderHistory/components/OrderDetailSheet/OrderDetailSheet';
 import EmptyState from '@/shared/components/EmptyState';
 import { useOrders } from '@/features/orderHistory/hooks/useOrders';
+import { Order } from '@/shared/types/order';
 
 function OrderHistoryScreen() {
   const sheetRef = useRef<BottomSheetModal>(null);

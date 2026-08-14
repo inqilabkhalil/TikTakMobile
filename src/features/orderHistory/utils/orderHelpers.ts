@@ -1,5 +1,5 @@
 import { COLORS } from '@/shared/constants/theme';
-import type { OrderStatus, PaymentMethod } from '../types/order';
+import { OrderStatus, PaymentMethod } from '@/shared/types/order';;
 
 export function getStatusText(status: OrderStatus): string {
   switch (status) {

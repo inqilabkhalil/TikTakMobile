@@ -2,8 +2,9 @@ import { StyleSheet, View } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import OrderCard from '../OrderCard';
 import { COLORS } from '@/shared/constants/theme';
-import type { OrderListProps, Order } from '../../types/order';
+import type { OrderListProps} from '../../types/order';
 import { gapHorizontal, gapVertical } from '@/shared/utils/metrics';
+import { Order } from '@/shared/types/order';
 
 function OrderList({ orders, onOrderPress }: OrderListProps) {
   const renderItem = ({ item }: { item: Order }) => (
