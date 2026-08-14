@@ -4,5 +4,5 @@ import type { Category } from '@/shared/types/category';
 
 export const categoryService = {
   getCategories: () =>
-    api.get<ApiResponse<Category[]>>('/api/tiktak/categories').then(res => res.data.data),
+    api.get<ApiResponse<Category[]>>('/categories').then(res => res.data.data),
 };

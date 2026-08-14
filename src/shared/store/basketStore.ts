@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 import { api } from '@/shared/services/api';
+import { getErrorMessage } from '@/shared/utils/getErrorMessage';
 import type { BasketItem } from '@/features/basket/types/basket';
+
+interface BasketApiItem {
+  product: { id: number; title: string; price: string; img_url: string };
+  quantity: number;
+}
 
 type BasketStore = {
   items: BasketItem[];
@@ -28,13 +34,11 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      const response = await api.get('/api/tiktak/basket');
+      const response = await api.get('/basket');
 
-      console.log('BASKET API RESPONSE:', response.data);
+      const apiItems: BasketApiItem[] = response.data?.data?.items ?? [];
 
-      const apiItems = response.data?.data?.items ?? [];
-
-      const items: BasketItem[] = apiItems.map((item: any) => ({
+      const items: BasketItem[] = apiItems.map(item => ({
         id: item.product.id,
         name: item.product.title,
         price: Number(item.product.price),
@@ -46,14 +50,10 @@ export const useBasketStore = create<BasketStore>(set => ({
         items,
         isLoading: false,
       });
-    } catch (error: any) {
-      console.log('GET BASKET STATUS:', error?.response?.status);
-      console.log('GET BASKET DATA:', error?.response?.data);
-      console.log('GET BASKET MESSAGE:', error?.message);
-
+    } catch (error: unknown) {
       set({
         isLoading: false,
-        error: error?.response?.data?.message || 'Basket yüklənmədi',
+        error: getErrorMessage(error, 'Basket yüklənmədi'),
       });
     }
   },
@@ -66,9 +66,7 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      const response = await api.post(`/api/tiktak/basket/${productId}/add`);
-
-      console.log('ADD BASKET API RESPONSE:', response.data);
+      await api.post(`/basket/${productId}/add`);
 
       // API-dən səbətin son vəziyyətini yenidən götürürük
       await useBasketStore.getState().getBasket();
@@ -76,12 +74,10 @@ export const useBasketStore = create<BasketStore>(set => ({
       set({
         isLoading: false,
       });
-    } catch (error: any) {
-      console.log('ADD BASKET ERROR:', error?.response?.data || error?.message);
-
+    } catch (error: unknown) {
       set({
         isLoading: false,
-        error: error?.response?.data?.message || 'Məhsul səbətə əlavə olunmadı',
+        error: getErrorMessage(error, 'Məhsul səbətə əlavə olunmadı'),
       });
     }
   },
@@ -121,23 +117,16 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      const response = await api.delete('/api/tiktak/basket/clear');
-
-      console.log('CLEAR BASKET API RESPONSE:', response.data);
+      await api.delete('/basket/clear');
 
       set({
         items: [],
         isLoading: false,
       });
-    } catch (error: any) {
-      console.log(
-        'CLEAR BASKET ERROR:',
-        error?.response?.data || error?.message,
-      );
-
+    } catch (error: unknown) {
       set({
         isLoading: false,
-        error: error?.response?.data?.message || 'Basket təmizlənmədi',
+        error: getErrorMessage(error, 'Basket təmizlənmədi'),
       });
     }
   },
