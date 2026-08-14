@@ -9,6 +9,7 @@ export const COLORS = {
   border: '#E5E5EA',
   white: '#FFFFFF',
   emptyText: '#E6E6E6',
+  labelText: '#000000',
   inputBackground: '#F6F5FB',
   inputButton: '#76CB4F',
   bannerPurple: 'rgba(179, 128, 255, 1)',

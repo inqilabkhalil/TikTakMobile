@@ -1,6 +1,7 @@
 import { api } from "@/shared/services/api";
 import { ApiResponse } from "@/shared/types/api";
-import { Order } from "../types/order";
+import { Order } from "@/shared/types/order";
+
 
 const ORDERS_ENDPOINT = '/orders/user';
 

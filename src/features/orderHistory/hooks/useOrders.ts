@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { Order } from "../types/order";
 import { orderService } from "../services/orderService";
 import Toast from "react-native-toast-message";
+import { Order } from "@/shared/types/order";
 
 export function useOrders() {
     const [orders, setOrders] = useState<Order[]>([]);

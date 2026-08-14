@@ -6,7 +6,8 @@ import AppBottomSheet from '@/shared/components/AppBottomSheet';
 import { gapHorizontal, gapVertical } from '@/shared/utils/metrics';
 import OrderDetailInfo from './OrderDetailInfo';
 import OrderProductItem from './OrderProductItem';
-import type { OrderDetailSheetProps, OrderProductItem as OrderProductItemType,} from '../../types/order';
+import type { OrderDetailSheetProps } from '../../types/order';
+import type { OrderProductItem as OrderProductItemType } from '@/shared/types/order';
 import { COLORS } from '@/shared/constants/theme';
 
 const OrderDetailSheet = forwardRef<BottomSheetModal, OrderDetailSheetProps>(
