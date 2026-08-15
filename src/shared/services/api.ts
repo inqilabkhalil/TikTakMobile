@@ -5,15 +5,12 @@ import { useUserStore } from '../store/userStore';
 export const api = axios.create({
   baseURL: Config.API_URL,
   timeout: 10000,
-  
 });
 
-console.log('API BASE URL:', Config.API_URL);
 if (!Config.API_URL) {
   // Helpful developer warning — do not commit .env to source control.
   // This warns when API_URL is missing locally.
   // Keep as debug-level to avoid noisy logs in production.
-  // eslint-disable-next-line no-console
   console.debug('[api] API_URL is not set. Requests will be relative.');
 }
 api.interceptors.request.use(
@@ -29,5 +26,3 @@ api.interceptors.request.use(
   },
   error => Promise.reject(error),
 );
-
-console.log('API BASE URL:', Config.API_URL);

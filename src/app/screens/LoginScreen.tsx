@@ -4,11 +4,12 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import type { AuthStackParamList } from '../navigation';
+import type { AuthStackParamList } from '@/shared/types/navigation';
 import FormInput from '@/shared/components/FormInput/FormInput';
 import FormScreenContainer from '@/shared/components/FormScreenContainer';
 import { COLORS } from '@/shared/constants/theme';
 import { LAYOUT } from '@/shared/constants/layout';
+import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 import { authService } from '../services/authService';
 import { useUserStore } from '@/shared/store/userStore';
 import axios from 'axios';
@@ -28,7 +29,7 @@ function LoginScreen({ navigation }: Props) {
 
         <Formik
           initialValues={{
-            phone: '',
+            phone: '+994',
             password: '',
           }}
           validationSchema={loginSchema}
@@ -50,10 +51,6 @@ function LoginScreen({ navigation }: Props) {
                   result.tokens.refresh_token ?? '',
                 );
                 setUser(result.profile);
-                (navigation as any).reset({
-                  index: 0,
-                  routes: [{ name: 'Main' }],
-                });
               } else {
                 setError('Giriş uğursuz oldu.');
               }
@@ -122,11 +119,12 @@ function LoginScreen({ navigation }: Props) {
                   value={values.phone}
                   onChangeText={handleChange('phone')}
                   error={touched.phone ? errors.phone : undefined}
+                  keyboardType="phone-pad"
                 />
 
                 <FormInput
                   label="Parol"
-                  placeholder="parol"
+                  placeholder="Parol"
                   value={values.password}
                   onChangeText={handleChange('password')}
                   secureTextEntry
@@ -160,11 +158,7 @@ function LoginScreen({ navigation }: Props) {
           )}
         </Formik>
         {useUserStore.getState().error ? (
-          <Text
-            style={{ color: COLORS.primary, textAlign: 'center', marginTop: 8 }}
-          >
-            {useUserStore.getState().error}
-          </Text>
+          <Text style={styles.errorText}>{useUserStore.getState().error}</Text>
         ) : null}
       </View>
     </FormScreenContainer>
@@ -174,28 +168,28 @@ function LoginScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 130,
+    marginTop: pixelVertical(130),
     paddingHorizontal: LAYOUT.screenPaddingHorizontal,
   },
 
   title: {
     fontFamily: 'Roboto-Bold',
-    fontSize: 28,
+    fontSize: pixelFont(28),
     fontWeight: 700,
-    lineHeight: 24,
+    lineHeight: pixelVertical(24),
     color: COLORS.textPrimary,
     textAlign: 'center',
   },
   form: {
-    marginTop: 35,
-    gap: 10,
+    marginTop: pixelVertical(35),
+    gap: pixelHorizontal(10),
   },
 
   loginButton: {
     width: '100%',
-    height: 48,
-    marginTop: 38,
-    borderRadius: 11,
+    height: pixelVertical(48),
+    marginTop: pixelVertical(38),
+    borderRadius: pixelHorizontal(11),
     backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
@@ -208,27 +202,33 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: COLORS.white,
     fontFamily: 'Roboto-Bold',
-    fontSize: 14,
+    fontSize: pixelFont(14),
   },
 
   registerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 15,
+    marginTop: pixelVertical(15),
   },
 
   registerText: {
     color: COLORS.textPrimary,
     fontFamily: 'Roboto-Regular',
-    fontSize: 12,
+    fontSize: pixelFont(12),
   },
 
   registerLink: {
     color: COLORS.primary,
     fontFamily: 'Roboto-Regular',
-    fontSize: 12,
-    marginLeft: 4,
+    fontSize: pixelFont(12),
+    marginLeft: pixelHorizontal(4),
+  },
+
+  errorText: {
+    color: COLORS.primary,
+    textAlign: 'center',
+    marginTop: pixelVertical(8),
   },
 });
 

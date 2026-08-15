@@ -79,3 +79,6 @@ yarn-error.log
 
 # Auto-generated fonts (created by react-native-vector-icons)
 android/app/src/main/assets/fonts/
+
+# Accidental local archives
+shared.zip

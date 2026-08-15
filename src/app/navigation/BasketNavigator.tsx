@@ -1,6 +1,11 @@
+import { lazy } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BasketScreen, CheckoutScreen, OrderSuccessScreen } from '../screens';
+import { withSuspense } from '@/shared/utils/withSuspense';
 import type { BasketStackParamList } from '@/shared/types/navigation';
+
+const BasketScreen = withSuspense(lazy(() => import('../screens/BasketScreen')));
+const CheckoutScreen = withSuspense(lazy(() => import('../screens/CheckoutScreen')));
+const OrderSuccessScreen = withSuspense(lazy(() => import('../screens/OrderSuccessScreen')));
 
 const Stack = createNativeStackNavigator<BasketStackParamList>();
 

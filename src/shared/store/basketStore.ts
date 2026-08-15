@@ -1,12 +1,7 @@
 import { create } from 'zustand';
-import { api } from '@/shared/services/api';
+import { basketService } from '@/features/basket/services/basketService';
 import { getErrorMessage } from '@/shared/utils/getErrorMessage';
 import type { BasketItem } from '@/features/basket/types/basket';
-
-interface BasketApiItem {
-  product: { id: number; title: string; price: string; img_url: string };
-  quantity: number;
-}
 
 type BasketStore = {
   items: BasketItem[];
@@ -34,11 +29,9 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      const response = await api.get('/basket');
+      const data = await basketService.getBasket();
 
-      const apiItems: BasketApiItem[] = response.data?.data?.items ?? [];
-
-      const items: BasketItem[] = apiItems.map(item => ({
+      const items: BasketItem[] = (data?.items ?? []).map(item => ({
         id: item.product.id,
         name: item.product.title,
         price: Number(item.product.price),
@@ -66,7 +59,7 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      await api.post(`/basket/${productId}/add`);
+      await basketService.addToBasket(productId);
 
       // API-dən səbətin son vəziyyətini yenidən götürürük
       await useBasketStore.getState().getBasket();
@@ -117,7 +110,7 @@ export const useBasketStore = create<BasketStore>(set => ({
         error: null,
       });
 
-      await api.delete('/basket/clear');
+      await basketService.clearBasket();
 
       set({
         items: [],

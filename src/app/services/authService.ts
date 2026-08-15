@@ -1,39 +1,18 @@
 import { api } from '@/shared/services/api';
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 import type {
   RegisterRequest,
   LoginRequest,
   AuthResult,
+  AuthApiResponse,
 } from '@/shared/types/auth';
 
-async function normalizeResponse(response: any): Promise<AuthResult> {
-  const data = response?.data ?? response;
+function normalizeResponse(
+  response: AxiosResponse<AuthApiResponse>,
+): AuthResult {
+  const { tokens, profile } = response.data.data;
 
-  // Try common shapes without guessing fields too aggressively
-  const tokens =
-    data?.data?.tokens ?? data?.tokens ?? data?.data?.token ?? undefined;
-
-  const profile =
-    data?.data?.profile ??
-    data?.profile ??
-    data?.data?.user ??
-    data?.user ??
-    undefined;
-
-  return {
-    tokens: tokens
-      ? {
-          access_token:
-            tokens.access_token ??
-            tokens.accessToken ??
-            tokens.access ??
-            undefined,
-          refresh_token:
-            tokens.refresh_token ?? tokens.refreshToken ?? undefined,
-        }
-      : undefined,
-    profile,
-  };
+  return { tokens, profile };
 }
 
 export const authService = {
@@ -45,7 +24,7 @@ export const authService = {
     }
 
     try {
-      const response = await api.post('/auth/signup', payload);
+      const response = await api.post<AuthApiResponse>('/auth/signup', payload);
       // safe debug: show status and top-level keys
       console.debug(
         '[authService.register] status=',
@@ -54,10 +33,9 @@ export const authService = {
         Object.keys(response.data || {}),
       );
       return normalizeResponse(response);
-    } catch (err) {
-      const e = err as any;
-      if (axios.isAxiosError(e)) {
-        const resp = e.response;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const resp = err.response;
         if (resp?.status === 422) {
           try {
             console.debug(
@@ -78,7 +56,7 @@ export const authService = {
           );
         }
       } else {
-        console.debug('[authService.register] error (non-axios) =', e);
+        console.debug('[authService.register] error (non-axios) =', err);
       }
       throw err;
     }
@@ -92,7 +70,7 @@ export const authService = {
     }
 
     try {
-      const response = await api.post('/auth/login', payload);
+      const response = await api.post<AuthApiResponse>('/auth/login', payload);
       console.debug(
         '[authService.login] status=',
         response.status,
@@ -100,10 +78,9 @@ export const authService = {
         Object.keys(response.data || {}),
       );
       return normalizeResponse(response);
-    } catch (err) {
-      const e = err as any;
-      if (axios.isAxiosError(e)) {
-        const resp = e.response;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const resp = err.response;
         if (resp?.status === 422) {
           try {
             console.debug(
@@ -124,7 +101,7 @@ export const authService = {
           );
         }
       } else {
-        console.debug('[authService.login] error (non-axios) =', e);
+        console.debug('[authService.login] error (non-axios) =', err);
       }
       throw err;
     }
@@ -135,5 +112,3 @@ export const authService = {
     return Promise.resolve();
   },
 };
-
-export default authService;

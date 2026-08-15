@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { orderService } from "../services/orderService";
 import Toast from "react-native-toast-message";
 import { Order } from "@/shared/types/order";
+import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
 export function useOrders() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -15,7 +16,7 @@ export function useOrders() {
             const data = await orderService.getOrders();
             setOrders(data);
         } catch (err) {
-            const message = 'Sifarişləri yükləmək mümkün olmadı';
+            const message = getErrorMessage(err, 'Sifarişləri yükləmək mümkün olmadı');
             setError(message);
             Toast.show({
                 type: 'error',

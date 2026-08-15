@@ -8,7 +8,7 @@ function PersonalInfoScreen() {
   const { user, isLoading } = useProfile();
   const showSpinner = isLoading && !user;
   return (
-      <FormScreenContainer>
+      <FormScreenContainer edges={['bottom', 'left', 'right']}>
       <BackNavigate title="Hesab" />
       {showSpinner ? (
         <View style={styles.loaderWrapper}>

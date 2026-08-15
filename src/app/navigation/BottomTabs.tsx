@@ -1,12 +1,15 @@
+import { lazy } from 'react';
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { SearchScreen } from '../screens';
+import { withSuspense } from '@/shared/utils/withSuspense';
 import HomeNavigator from './HomeNavigator';
 import AccountNavigator from './AccountNavigator';
 import { COLORS } from '../../shared/constants/theme';
 import { TYPOGRAPHY } from '../../shared/constants/typography';
 import type { MainTabParamList } from '../../shared/types/navigation';
+
+const SearchScreen = withSuspense(lazy(() => import('../screens/SearchScreen')));
 
 // Not exported — purely an internal detail of the 3 icon renderers below.
 type TabIconProps = { focused: boolean; color: string; size: number };

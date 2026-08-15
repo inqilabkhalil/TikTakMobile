@@ -11,11 +11,12 @@ function RootNavigator() {
   const isLoggedIn = useIsAuthenticated();
 
   return (
-    <Stack.Navigator
-      initialRouteName={isLoggedIn ? 'Main' : 'Auth'}
-      screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Auth" component={AuthNavigator} />
-      <Stack.Screen name="Main" component={MainTabs} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {isLoggedIn ? (
+        <Stack.Screen name="Main" component={MainTabs} />
+      ) : (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+      )}
       <Stack.Screen name="Basket" component={BasketNavigator} />
     </Stack.Navigator>
   );

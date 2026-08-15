@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 // Header/Back handled by `BasketScreen`
 
 function EmptyBasket() {
@@ -28,35 +29,35 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: pixelHorizontal(24),
   },
 
   iconContainer: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: pixelHorizontal(72),
+    height: pixelVertical(72),
+    borderRadius: pixelHorizontal(36),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#F5F5F5',
-    marginBottom: 16,
+    marginBottom: pixelVertical(16),
   },
 
   icon: {
-    fontSize: 42,
+    fontSize: pixelFont(42),
     fontWeight: '300',
     color: '#999999',
-    lineHeight: 48,
+    lineHeight: pixelVertical(48),
   },
 
   title: {
-    fontSize: 18,
+    fontSize: pixelFont(18),
     fontWeight: '700',
     color: '#1A1A1A',
-    marginBottom: 8,
+    marginBottom: pixelVertical(8),
   },
 
   description: {
-    fontSize: 14,
+    fontSize: pixelFont(14),
     color: '#777777',
     textAlign: 'center',
   },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { BasketItem as BasketItemType } from '../types/basket';
-import { pixelFont } from '@/shared/utils/metrics';
+import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 
 type Props = {
   item: BasketItemType;
@@ -48,23 +48,23 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: pixelVertical(12),
+    paddingHorizontal: pixelHorizontal(16),
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#F2F2F2',
   },
   image: {
-    width: 56,
-    height: 56,
-    borderRadius: 8,
-    marginRight: 50,
+    width: pixelHorizontal(56),
+    height: pixelVertical(56),
+    borderRadius: pixelHorizontal(8),
+    marginRight: pixelHorizontal(50),
   },
   imagePlaceholder: {
-    width: 56,
-    height: 56,
-    borderRadius: 8,
-    marginRight: 12,
+    width: pixelHorizontal(56),
+    height: pixelVertical(56),
+    borderRadius: pixelHorizontal(8),
+    marginRight: pixelHorizontal(12),
     backgroundColor: '#F5F5F5',
   },
   info: {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     color: '#1A1A1A',
   },
   price: {
-    marginTop: 6,
+    marginTop: pixelVertical(6),
     fontSize: pixelFont(13),
     color: '#8E8E93',
   },
@@ -85,9 +85,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   controlButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
+    width: pixelHorizontal(32),
+    height: pixelVertical(32),
+    borderRadius: pixelHorizontal(8),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -98,11 +98,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#4FC76E',
   },
   controlText: {
-    fontSize: 18,
+    fontSize: pixelFont(18),
     color: '#FFFFFF',
   },
   qty: {
-    marginHorizontal: 8,
+    marginHorizontal: pixelHorizontal(8),
     fontSize: pixelFont(15),
   },
 });

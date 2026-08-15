@@ -19,6 +19,7 @@ import Header from '@/shared/components/Header';
 import EmptyState from '@/shared/components/EmptyState';
 import { useSearchStore } from '@/shared/store/searchStore';
 import { COLORS } from '@/shared/constants/theme';
+import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 
 const placeholderImage = require('../../shared/assets/images/alma.png');
 
@@ -119,24 +120,24 @@ const styles = StyleSheet.create({
   },
   headerSection: {
     backgroundColor: '#FFFFFF',
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingTop: pixelVertical(12),
+    paddingBottom: pixelVertical(12),
   },
   innerContainer: {
     flex: 1,
-    paddingTop: 16,
+    paddingTop: pixelVertical(16),
     paddingHorizontal: 0,
     backgroundColor: '#FFFFFF',
   },
   searchBox: {
-    marginTop: 16,
-    marginBottom: 24,
-    marginHorizontal: 16,
+    marginTop: pixelVertical(16),
+    marginBottom: pixelVertical(24),
+    marginHorizontal: pixelHorizontal(16),
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 8,
+    borderRadius: pixelHorizontal(16),
+    paddingHorizontal: pixelHorizontal(16),
+    paddingTop: pixelVertical(16),
+    paddingBottom: pixelVertical(8),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
@@ -144,59 +145,59 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   searchInput: {
-    height: 44,
-    fontSize: 16,
+    height: pixelVertical(44),
+    fontSize: pixelFont(16),
     color: '#1A1A1A',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#E5E5EA',
-    paddingBottom: 8,
+    paddingBottom: pixelVertical(8),
   },
   listContent: {
-    paddingTop: 8,
-    paddingBottom: 100,
+    paddingTop: pixelVertical(8),
+    paddingBottom: pixelVertical(100),
   },
   productItem: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F8F8FA',
-    borderRadius: 16,
-    padding: 14,
-    marginHorizontal: 16,
-    marginBottom: 12,
+    borderRadius: pixelHorizontal(16),
+    padding: pixelHorizontal(14),
+    marginHorizontal: pixelHorizontal(16),
+    marginBottom: pixelVertical(12),
   },
   productImage: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    marginRight: 50,
+    width: pixelHorizontal(56),
+    height: pixelVertical(56),
+    borderRadius: pixelHorizontal(16),
+    marginRight: pixelHorizontal(50),
   },
   productInfo: {
     flex: 1,
   },
   productTitle: {
-    fontSize: 15,
+    fontSize: pixelFont(15),
     fontWeight: '700',
     color: '#1A1A1A',
-    marginBottom: 6,
+    marginBottom: pixelVertical(6),
   },
   productQuantity: {
-    fontSize: 13,
+    fontSize: pixelFont(13),
     color: '#8E8E93',
-    marginBottom: 6,
+    marginBottom: pixelVertical(6),
   },
   productPrice: {
-    fontSize: 13,
+    fontSize: pixelFont(13),
     fontWeight: '600',
     color: '#2B3043',
   },
   statusIndicator: {
-    marginTop: 40,
+    marginTop: pixelVertical(40),
   },
   errorText: {
-    fontSize: 14,
+    fontSize: pixelFont(14),
     color: COLORS.error,
     textAlign: 'center',
-    marginTop: 40,
+    marginTop: pixelVertical(40),
   },
   flex: {
     flex: 1,
