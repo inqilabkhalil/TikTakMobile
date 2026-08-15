@@ -8,6 +8,10 @@ import type { BackNavigateProps } from '../../types/backNavigate';
 const TEXT_COLOR = '#1A1A1A';
 const BACKGROUND_COLOR = '#FFFFFF';
 
+
+
+
+
 function ArrowLeftIcon({ size, color }: { size: number; color: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -69,7 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: gapVertical(48),
-    paddingHorizontal: gapHorizontal(16),
+    paddingHorizontal: gapHorizontal(8),
   },
   headerDivider: {
     borderBottomWidth: 1,
