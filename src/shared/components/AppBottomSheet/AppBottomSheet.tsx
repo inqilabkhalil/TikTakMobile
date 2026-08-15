@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   indicator: {
-    backgroundColor: COLORS.white,
-    width: 40,
+    backgroundColor: COLORS.emptyText,
+    width: 60,
     height: 4,
   },
   indicatorHidden: {
