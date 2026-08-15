@@ -13,13 +13,18 @@ import { useOrderSuccess } from '@/features/checkout/hooks/useOrderSuccess';
 import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 
 function OrderSuccessScreen() {
-  const { buttonOpacity, goToOrders } = useOrderSuccess();
+  const { iconScale, iconOpacity, buttonOpacity, goToOrders } = useOrderSuccess();
   return (
     <ScreenContainer style={styles.container} edges={['bottom', 'left', 'right']}>
       <BackNavigate title="Sifarişi tamamla" />
 
       <View style={styles.content}>
+        <Animated.View style={{
+          opacity: iconOpacity,
+          transform: [{ scale: iconScale }],
+        }}>
         <SuccessIcon width={155} height={155} />
+        </Animated.View>
         <Text style={styles.title}>Sifariş uğurla tamamlandı</Text>
         <Text style={styles.subtitle}>
           Əməkdaşlarımız sizinlə əlaqə saxlayıb sifarişinizi göndərəcəklər.

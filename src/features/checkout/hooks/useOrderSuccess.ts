@@ -8,12 +8,31 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const BUTTON_APPEAR_DELAY = 1000;
 const FADE_DURATION = 500;
+const ICON_ANIMATION_DURATION = 600;
 
 export function useOrderSuccess() {
   const navigation = useNavigation<NavigationProp>();
+
+  const iconScale = useRef(new Animated.Value(0.3)).current;
+  const iconOpacity = useRef(new Animated.Value(0)).current;
+
   const buttonOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    Animated.parallel([
+      Animated.timing(iconOpacity, {
+        toValue: 1,
+        duration: ICON_ANIMATION_DURATION,
+        useNativeDriver: true,
+      }),
+      Animated.spring(iconScale, {
+        toValue: 1,
+        friction: 4,
+        tension: 80,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
     const timer = setTimeout(() => {
       Animated.timing(buttonOpacity, {
         toValue: 1,
@@ -23,7 +42,7 @@ export function useOrderSuccess() {
     }, BUTTON_APPEAR_DELAY);
 
     return () => clearTimeout(timer);
-  }, [buttonOpacity]);
+  }, [buttonOpacity, iconOpacity, iconScale]);
 
   const goToOrders = () => {
     navigation.dispatch(
@@ -49,6 +68,8 @@ export function useOrderSuccess() {
   };
 
   return {
+    iconScale,
+    iconOpacity,
     buttonOpacity,
     goToOrders,
   };

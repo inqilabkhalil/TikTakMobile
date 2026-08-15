@@ -3,6 +3,7 @@ import { Order, OrderProductItem } from "@/shared/types/order";
 export interface OrderCardProps {
   order: Order;
   onPress: (order: Order) => void;
+  index?: number;
 }
 
 export interface OrderListProps {
