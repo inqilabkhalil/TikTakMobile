@@ -15,7 +15,7 @@ import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metric
 function OrderSuccessScreen() {
   const { buttonOpacity, goToOrders } = useOrderSuccess();
   return (
-    <ScreenContainer style={styles.container}>
+    <ScreenContainer style={styles.container} edges={['bottom', 'left', 'right']}>
       <BackNavigate title="Sifarişi tamamla" />
 
       <View style={styles.content}>

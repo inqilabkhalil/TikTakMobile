@@ -6,7 +6,7 @@ import MenuItem from '../../features/account/components/MenuItem';
 import { gapVertical } from '../../shared/utils/metrics';
 import { COLORS } from '../../shared/constants/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AccountStackParamList } from '../navigation';
+import { AccountStackParamList } from '@/shared/types/navigation';
 import { useNavigation } from '@react-navigation/native';
 import { useProfile } from '@/features/account/hooks/useProfile';
 import { MENU_ITEMS } from '@/features/account/constants/menuItems';
@@ -31,7 +31,6 @@ function AccountScreen() {
           style: 'destructive',
           onPress: () => {
             useUserStore.getState().clearUser();
-            useUserStore.getState().clearTokens();
             Toast.show({
               type: 'success',
               text1: 'Uğurlu',
@@ -60,7 +59,7 @@ function AccountScreen() {
     }
   };
   return (
-    <ScreenContainer style={styles.container}>
+    <ScreenContainer style={styles.container} edges={['bottom', 'left', 'right']}>
       <BackNavigate title="Hesabım" showBack={false} />
 
       {showSpinner ? (

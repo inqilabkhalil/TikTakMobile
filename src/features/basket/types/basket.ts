@@ -7,3 +7,12 @@ export type BasketItem = {
   image: string | ImageSourcePropType;
   quantity: number;
 };
+
+export interface BasketApiItem {
+  product: { id: number; title: string; price: string; img_url: string };
+  quantity: number;
+}
+
+export interface BasketApiData {
+  items: BasketApiItem[];
+}

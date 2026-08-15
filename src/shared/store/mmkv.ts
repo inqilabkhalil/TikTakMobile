@@ -11,8 +11,9 @@ function getStorage(): MMKV | null {
   } catch (error) {
     // MMKV initialization can fail when remote JS debugger is active (no JSI).
     // Fall back to in-memory Map for development/testing only.
-    console.debug(
+    console.warn(
       '[MMKV] Initialization failed — falling back to memory store.',
+      error,
     );
     return null;
   }

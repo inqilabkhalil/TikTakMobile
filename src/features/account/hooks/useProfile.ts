@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { profileService } from '../services/profileService';
 import Toast from 'react-native-toast-message';
 import { UpdateProfilePayload } from '@/shared/types/user';
+import { getErrorMessage } from '@/shared/utils/getErrorMessage';
 
 export function useProfile() {
   const user = useUserStore(state => state.user);
@@ -17,12 +18,12 @@ export function useProfile() {
       const userData = await profileService.getProfile();
       setUser(userData);
     } catch (err) {
-      const message = 'Məlumatları yükləmək mümkün olmadı';
+      const message = getErrorMessage(err, 'Məlumatları yükləmək mümkün olmadı');
       setError(message);
       Toast.show({
         type: 'error',
         text1: 'Xəta',
-        text2: 'message',
+        text2: message,
       });
     } finally {
       setIsLoading(false);
@@ -63,7 +64,7 @@ export function useUpdateProfile() {
         Toast.show({
           type: 'error',
           text1: 'Xəta',
-          text2: 'Məlumatları yeniləmək mümkün olmadı',
+          text2: getErrorMessage(err, 'Məlumatları yeniləmək mümkün olmadı'),
         });
         return false;
       } finally {

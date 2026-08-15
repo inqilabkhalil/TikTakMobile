@@ -4,6 +4,7 @@ import Button from '@/shared/components/Button';
 import type { BasketItem } from '../types/basket';
 import { calculateSubtotal } from '../utils/basketCalculations';
 import { useNavigation } from '@react-navigation/native';
+import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 
 type Props = {
   items: BasketItem[];
@@ -46,7 +47,7 @@ function BasketSummary({ items, onCheckout }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    padding: pixelHorizontal(16),
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#F2F2F2',
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: pixelVertical(8),
   },
   label: {
     color: '#8E8E93',
@@ -66,8 +67,8 @@ const styles = StyleSheet.create({
   rowTotal: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 8,
-    marginBottom: 12,
+    marginTop: pixelVertical(8),
+    marginBottom: pixelVertical(12),
   },
   totalLabel: {
     fontWeight: '700',
@@ -84,39 +85,39 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '84%',
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: pixelHorizontal(12),
+    padding: pixelHorizontal(20),
     alignItems: 'center',
   },
   checkCircle: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
+    width: pixelHorizontal(88),
+    height: pixelVertical(88),
+    borderRadius: pixelHorizontal(44),
     backgroundColor: '#E9F7EF',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginBottom: pixelVertical(12),
   },
   checkMark: {
-    fontSize: 40,
+    fontSize: pixelFont(40),
     color: '#1A9C2B',
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: pixelFont(18),
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: pixelVertical(8),
   },
   modalText: {
-    fontSize: 14,
+    fontSize: pixelFont(14),
     color: '#6B6B6B',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: pixelVertical(16),
   },
   modalButton: {
     width: '100%',
     backgroundColor: '#4FC76E',
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: pixelVertical(12),
+    borderRadius: pixelHorizontal(10),
     alignItems: 'center',
   },
   modalButtonText: {

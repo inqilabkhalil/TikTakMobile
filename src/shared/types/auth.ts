@@ -13,12 +13,21 @@ export interface LoginRequest {
 
 export interface AuthTokens {
   access_token: string;
-  refresh_token?: string | null;
+  refresh_token: string;
+}
+
+export interface AuthApiData {
+  tokens: AuthTokens;
+  profile: UserProfile;
+}
+
+export interface AuthApiResponse {
+  message: string;
+  data: AuthApiData;
+  result: boolean;
 }
 
 export interface AuthResult {
   tokens?: AuthTokens;
   profile?: UserProfile | null;
 }
-
-export default AuthResult;

@@ -5,6 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../shared/types/navigation';
 import { COLORS } from '../../shared/constants/theme';
 import { LAYOUT } from '../../shared/constants/layout';
+import { pixelFont, pixelHorizontal, pixelVertical } from '../../shared/utils/metrics';
 
 ;type Props = NativeStackScreenProps<AuthStackParamList, 'Welcome'>;
 
@@ -55,29 +56,29 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: LAYOUT.screenPaddingHorizontal,
     alignItems: 'center',
-     marginTop: 110,
+    marginTop: pixelVertical(110),
   },
 
-heroImage: {
-  width: 300,
-  height: 300,
-  marginTop: 70,
-  marginLeft: -120,
-},
+  heroImage: {
+    width: pixelHorizontal(300),
+    height: pixelVertical(300),
+    marginTop: pixelVertical(70),
+    marginLeft: pixelHorizontal(-120),
+  },
   description: {
-    marginTop: 62,
+    marginTop: pixelVertical(62),
     textAlign: 'center',
     color: COLORS.textPrimary,
     fontFamily: 'Roboto-Regular',
-    fontSize: 12,
-    lineHeight: 20,
+    fontSize: pixelFont(12),
+    lineHeight: pixelVertical(20),
   },
 
   registerButton: {
     width: '100%',
-    height: 48,
-    marginTop: 24,
-    borderRadius: 11,
+    height: pixelVertical(48),
+    marginTop: pixelVertical(24),
+    borderRadius: pixelHorizontal(11),
     backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
@@ -90,26 +91,26 @@ heroImage: {
   registerButtonText: {
     color: COLORS.white,
     fontFamily: 'Roboto-Bold',
-    fontSize: 16,
+    fontSize: pixelFont(16),
   },
 
   loginRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 15,
+    marginTop: pixelVertical(15),
   },
 
   loginText: {
     color: COLORS.textPrimary,
     fontFamily: 'Roboto-Regular',
-    fontSize: 12,
+    fontSize: pixelFont(12),
   },
 
   loginLink: {
     color: COLORS.primary,
     fontFamily: 'Roboto-Regular',
-    fontSize: 12,
+    fontSize: pixelFont(12),
   },
 });
 

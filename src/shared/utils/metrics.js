@@ -1,6 +1,6 @@
 import { Dimensions, PixelRatio, Platform } from 'react-native';
 const { height, width } = Dimensions.get('window');
-export const deviceHeight = height;
+const deviceHeight = height;
 export const deviceWidth = width;
 
 const layoutWidth = 390;
@@ -59,20 +59,10 @@ const pixelHorizontal = (size) => pixelWidth(size);
 const gapHorizontal = (size) => pixelWidth(size);
 const gapVertical = (size) => pixelHeight(size);
 
-function isTab() {
-  return deviceWidth > 550;
-}
-
-function isScreenHeight770() {
-  return deviceHeight > 740 && height < 760;
-}
-
 export {
   pixelWidth,
   gapHorizontal,
   gapVertical,
-  isTab,
-  isScreenHeight770,
   pixelHeight,
   pixelFont,
   pixelVertical,

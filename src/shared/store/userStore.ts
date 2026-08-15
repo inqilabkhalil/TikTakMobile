@@ -70,9 +70,3 @@ export const useUserPhone = () =>
 
 export const useIsAuthenticated = () =>
   useUserStore(state => state.isAuthenticated);
-
-export const useAccessToken = () => useUserStore(state => state.accessToken);
-
-export const useUserLoading = () => useUserStore(state => state.isLoading);
-
-export const useUserError = () => useUserStore(state => state.error);

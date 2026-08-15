@@ -4,9 +4,9 @@ import { FormScreenContainerProps } from '@/shared/types/formScreenContainer';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-function FormScreenContainer({ children, style }: FormScreenContainerProps) {
+function FormScreenContainer({ children, style, edges }: FormScreenContainerProps) {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={edges}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

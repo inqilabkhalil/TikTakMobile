@@ -1,11 +1,12 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { AuthStackParamList } from '../navigation';
-import { NativeStackScreenProps } from 'node_modules/@react-navigation/native-stack/lib/typescript/src/types';
+import { AuthStackParamList } from '@/shared/types/navigation';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import FormInput from '@/shared/components/FormInput/FormInput';
 import { LAYOUT } from '@/shared/constants/layout';
 import { COLORS } from '@/shared/constants/theme';
+import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 import FormScreenContainer from '@/shared/components/FormScreenContainer';
 import { authService } from '../services/authService';
 import { useUserStore } from '@/shared/store/userStore';
@@ -57,11 +58,6 @@ function RegisterScreen({ navigation }: Props) {
                 );
 
                 setUser(result.profile);
-
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: 'Main' }],
-                });
               } else {
                 navigation.navigate('Login');
               }
@@ -161,11 +157,7 @@ function RegisterScreen({ navigation }: Props) {
           )}
         </Formik>
         {useUserStore.getState().error ? (
-          <Text
-            style={{ color: COLORS.primary, textAlign: 'center', marginTop: 8 }}
-          >
-            {useUserStore.getState().error}
-          </Text>
+          <Text style={styles.errorText}>{useUserStore.getState().error}</Text>
         ) : null}
         <View style={styles.loginRow}>
           <Text style={styles.loginText}>Hesabınız varsa</Text>
@@ -182,34 +174,34 @@ function RegisterScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 120,
+    marginTop: pixelVertical(120),
     paddingHorizontal: LAYOUT.screenPaddingHorizontal,
   },
 
   title: {
     fontFamily: 'Roboto-Bold',
-    fontSize: 28,
+    fontSize: pixelFont(28),
     color: COLORS.textPrimary,
     textAlign: 'center',
     fontWeight: '700',
   },
 
   description: {
-    marginTop: 25,
+    marginTop: pixelVertical(25),
     fontFamily: 'Roboto-Regular',
-    fontSize: 14,
+    fontSize: pixelFont(14),
     color: COLORS.textSecondary,
     textAlign: 'center',
   },
 
   form: {
-    marginTop: 35,
-    gap: 10,
+    marginTop: pixelVertical(35),
+    gap: pixelHorizontal(10),
   },
   registerButton: {
-    height: 48,
+    height: pixelVertical(48),
     width: '100%',
-    borderRadius: 11,
+    borderRadius: pixelHorizontal(11),
     backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
@@ -218,26 +210,32 @@ const styles = StyleSheet.create({
   registerButtonText: {
     color: COLORS.white,
     fontFamily: 'Roboto-Bold',
-    fontSize: 16,
+    fontSize: pixelFont(16),
   },
   loginRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 15,
+    marginTop: pixelVertical(15),
   },
 
   loginText: {
     color: COLORS.textPrimary,
     fontFamily: 'Roboto-Regular',
-    fontSize: 12,
+    fontSize: pixelFont(12),
   },
 
   loginLink: {
     color: COLORS.primary,
     fontFamily: 'Roboto-Medium',
-    fontSize: 12,
-    marginLeft: 4,
+    fontSize: pixelFont(12),
+    marginLeft: pixelHorizontal(4),
+  },
+
+  errorText: {
+    color: COLORS.primary,
+    textAlign: 'center',
+    marginTop: pixelVertical(8),
   },
 });
 

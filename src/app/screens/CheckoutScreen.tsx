@@ -38,7 +38,7 @@ function CheckoutScreen() {
   } = useCheckout();
 
   return (
-    <ScreenContainer style={styles.container}>
+    <ScreenContainer style={styles.container} edges={['bottom', 'left', 'right']}>
       <BackNavigate title="Sifarişi tamamla" />
 
       <ScrollView

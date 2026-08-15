@@ -15,6 +15,7 @@ import BasketItem from '@/features/basket/components/BasketItem';
 import BasketSummary from '@/features/basket/components/BasketSummary';
 import type { BasketItem as BasketItemType } from '@/features/basket/types/basket';
 import { useBasketStore } from '@/shared/store';
+import { pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 
 function BasketScreen() {
   const isFocused = useIsFocused();
@@ -40,7 +41,7 @@ function BasketScreen() {
   );
 
   return (
-    <ScreenContainer style={styles.container}>
+    <ScreenContainer style={styles.container} edges={['bottom', 'left', 'right']}>
       <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
 
       <BackNavigate title="Səbətim" />
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    paddingTop: 8,
+    paddingTop: pixelVertical(8),
   },
 
   loadingContainer: {
@@ -88,9 +89,9 @@ const styles = StyleSheet.create({
   },
 
   error: {
-    marginHorizontal: 16,
-    marginTop: 12,
-    marginBottom: 8,
+    marginHorizontal: pixelHorizontal(16),
+    marginTop: pixelVertical(12),
+    marginBottom: pixelVertical(8),
     color: '#FF3B30',
     textAlign: 'center',
   },

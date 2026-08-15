@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../../constants/theme';
 import {
   gapHorizontal,
@@ -25,6 +26,7 @@ function FormInput({
   autoCapitalize = 'sentences',
 }: FormInputProps) {
   const [isFocused, setIsFocused] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -43,15 +45,34 @@ function FormInput({
           onChangeText={onChangeText}
           placeholder={placeholder}
           placeholderTextColor={COLORS.textSecondary}
-          secureTextEntry={secureTextEntry}
-          keyboardType={keyboardType}
+          secureTextEntry={secureTextEntry && !isPasswordVisible}
+          keyboardType={
+            secureTextEntry && Platform.OS === 'android'
+              ? 'visible-password'
+              : keyboardType
+          }
+          textContentType={secureTextEntry ? 'password' : undefined}
+          autoCorrect={!secureTextEntry}
           editable={editable}
           maxLength={maxLength}
-          autoCapitalize={autoCapitalize}
+          autoCapitalize={secureTextEntry ? 'none' : autoCapitalize}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           style={styles.input}
         />
+
+        {secureTextEntry && (
+          <TouchableOpacity
+            onPress={() => setIsPasswordVisible(prev => !prev)}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Ionicons
+              name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+              size={20}
+              color={COLORS.textSecondary}
+            />
+          </TouchableOpacity>
+        )}
       </View>
 
       {error && <FormInputError message={error} />}
@@ -64,12 +85,13 @@ const styles = StyleSheet.create({
     marginBottom: gapVertical(16),
   },
   inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderColor: COLORS.border,
     borderRadius: 10,
     backgroundColor: COLORS.inputBackground,
     paddingHorizontal: gapHorizontal(14),
     height: pixelVertical(50),
-    justifyContent: 'center',
   },
   inputWrapperFocused: {
     borderWidth: 1,
@@ -83,6 +105,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   input: {
+    flex: 1,
     fontSize: pixelFont(14),
     color: COLORS.textDark,
     padding: 0,
