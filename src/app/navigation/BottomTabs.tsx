@@ -44,6 +44,7 @@ function MainTabs() {
         tabBarInactiveTintColor: COLORS.textSecondary,
         tabBarLabelStyle: TYPOGRAPHY.tabBarLabel,
         tabBarStyle: styles.tabBar,
+        tabBarHideOnKeyboard: true,
       }}>
       <Tab.Screen
         name="Home"

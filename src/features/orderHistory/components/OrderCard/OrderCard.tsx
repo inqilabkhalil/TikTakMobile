@@ -76,15 +76,15 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Roboto',
     fontSize: pixelFont(14),
-    color: COLORS.textSecondary,
+    color: COLORS.textPrimary,
     marginBottom: gapVertical(4),
     fontWeight: '400',
   },
   value: {
     fontFamily: 'Roboto',
-    fontSize: pixelFont(14),
     color: COLORS.textPrimary,
-    fontWeight: '400',
+    fontSize: pixelFont(16),
+    fontWeight: '300',
   },
 });
 
