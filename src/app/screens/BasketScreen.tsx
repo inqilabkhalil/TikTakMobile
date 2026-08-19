@@ -48,9 +48,9 @@ function BasketScreen() {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      {isLoading ? (
+      {isLoading && items.length === 0 ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#4FC76E" />
+          <ActivityIndicator size="large" color="#76CB4F" />
         </View>
       ) : items.length === 0 ? (
         <EmptyBasket />

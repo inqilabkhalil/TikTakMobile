@@ -1,16 +1,20 @@
+import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { AuthStackParamList } from '@/shared/types/navigation';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import * as Yup from 'yup';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import { AuthStackParamList } from '@/shared/types/navigation';
 import FormInput from '@/shared/components/FormInput/FormInput';
-import { LAYOUT } from '@/shared/constants/layout';
-import { COLORS } from '@/shared/constants/theme';
-import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 import FormScreenContainer from '@/shared/components/FormScreenContainer';
+import { COLORS } from '@/shared/constants/theme';
+import { LAYOUT } from '@/shared/constants/layout';
+import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 import { authService } from '../services/authService';
 import { useUserStore } from '@/shared/store/userStore';
-import axios from 'axios';
+
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
 const registerSchema = Yup.object({
@@ -24,27 +28,24 @@ const registerSchema = Yup.object({
 });
 
 function RegisterScreen({ navigation }: Props) {
+  const isLoading = useUserStore(state => state.isLoading);
+  const setLoading = useUserStore(state => state.setLoading);
+  const setError = useUserStore(state => state.setError);
+  const setTokens = useUserStore(state => state.setTokens);
+  const setUser = useUserStore(state => state.setUser);
+
   return (
     <FormScreenContainer>
       <View style={styles.container}>
         <Text style={styles.title}>Qeydiyyatdan keç</Text>
-
         <Text style={styles.description}>
           Hesab yaratmaq üçün məlumatlarınızı daxil edin
         </Text>
+
         <Formik
-          initialValues={{
-            full_name: '',
-            phone: '',
-            password: '',
-          }}
+          initialValues={{ full_name: '', phone: '', password: '' }}
           validationSchema={registerSchema}
           onSubmit={async (values, { setSubmitting }) => {
-            const setLoading = useUserStore.getState().setLoading;
-            const setError = useUserStore.getState().setError;
-            const setTokens = useUserStore.getState().setTokens;
-            const setUser = useUserStore.getState().setUser;
-
             try {
               setLoading(true);
               setError(null);
@@ -56,69 +57,67 @@ function RegisterScreen({ navigation }: Props) {
                   result.tokens.access_token,
                   result.tokens.refresh_token ?? '',
                 );
-
                 setUser(result.profile);
+
+                Toast.show({
+                  type: 'success',
+                  text1: 'Qeydiyyat uğurludur',
+                  text2: `Xoş gəldiniz, ${result.profile.full_name}!`,
+                  position: 'top',
+                });
               } else {
+                Toast.show({
+                  type: 'success',
+                  text1: 'Qeydiyyat tamamlandı',
+                  text2: 'Zəhmət olmasa daxil olun.',
+                  position: 'top',
+                });
                 navigation.navigate('Login');
               }
             } catch (error) {
+              let message = 'Qeydiyyat zamanı xəta baş verdi.';
+
               if (axios.isAxiosError(error)) {
                 const status = error.response?.status;
                 const data = error.response?.data;
 
                 if (status === 409) {
-                  setError('Bu telefon nömrəsi artıq qeydiyyatdan keçib.');
+                  message = 'Bu telefon nömrəsi artıq qeydiyyatdan keçib.';
                 } else if (status === 422) {
                   const result = data?.result;
-                  const message = data?.message;
                   if (result) {
                     if (Array.isArray(result)) {
-                      setError(
-                        result
-                          .map(r =>
-                            r?.message ? String(r.message) : JSON.stringify(r),
-                          )
-                          .join('\n'),
-                      );
+                      message = result
+                        .map((r: any) =>
+                          r?.message ? String(r.message) : JSON.stringify(r),
+                        )
+                        .join('\n');
                     } else if (typeof result === 'object') {
                       const first = Object.values(result)[0];
-                      if (Array.isArray(first)) setError(first.join('\n'));
-                      else setError(String(first));
+                      message = Array.isArray(first)
+                        ? first.join('\n')
+                        : String(first);
                     } else {
-                      setError(String(result));
+                      message = String(result);
                     }
-                  } else if (message) {
-                    setError(String(message));
+                  } else if (data?.message) {
+                    message = String(data.message);
                   } else {
-                    setError(
-                      'Doğrulama xətası. Zəhmət olmasa məlumatları yoxlayın.',
-                    );
+                    message = 'Doğrulama xətası. Məlumatları yoxlayın.';
                   }
                 } else if (data?.message) {
-                  setError(String(data.message));
-                } else {
-                  setError(
-                    'Qeydiyyat zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.',
-                  );
+                  message = String(data.message);
                 }
-              } else {
-                setError('Qeydiyyat zamanı gözlənilməz xəta meydana gəldi.');
               }
+
+              showError(message);
             } finally {
               setLoading(false);
               setSubmitting(false);
             }
           }}
         >
-          {({
-            handleChange,
-
-            handleSubmit,
-            values,
-            errors,
-            touched,
-            isSubmitting,
-          }) => (
+          {({ handleChange, handleSubmit, values, errors, touched, isSubmitting }) => (
             <View style={styles.form}>
               <FormInput
                 label="Ad və soyad"
@@ -133,6 +132,7 @@ function RegisterScreen({ navigation }: Props) {
                 value={values.phone}
                 onChangeText={handleChange('phone')}
                 error={touched.phone ? errors.phone : undefined}
+                keyboardType="phone-pad"
               />
               <FormInput
                 label="Şifrə"
@@ -145,23 +145,18 @@ function RegisterScreen({ navigation }: Props) {
               <Pressable
                 style={styles.registerButton}
                 onPress={() => handleSubmit()}
-                disabled={isSubmitting || useUserStore.getState().isLoading}
+                disabled={isSubmitting || isLoading}
               >
                 <Text style={styles.registerButtonText}>
-                  {isSubmitting || useUserStore.getState().isLoading
-                    ? 'Yüklənir...'
-                    : 'Qeydiyyatdan keç'}
+                  {isSubmitting || isLoading ? 'Yüklənir...' : 'Qeydiyyatdan keç'}
                 </Text>
               </Pressable>
             </View>
           )}
         </Formik>
-        {useUserStore.getState().error ? (
-          <Text style={styles.errorText}>{useUserStore.getState().error}</Text>
-        ) : null}
+
         <View style={styles.loginRow}>
           <Text style={styles.loginText}>Hesabınız varsa</Text>
-
           <Pressable onPress={() => navigation.navigate('Login')}>
             <Text style={styles.loginLink}>Daxil olun</Text>
           </Pressable>
@@ -169,6 +164,16 @@ function RegisterScreen({ navigation }: Props) {
       </View>
     </FormScreenContainer>
   );
+
+  function showError(message: string) {
+    setError(message);
+    Toast.show({
+      type: 'error',
+      text1: 'Xəta',
+      text2: message,
+      position: 'top',
+    });
+  }
 }
 
 const styles = StyleSheet.create({
@@ -177,7 +182,6 @@ const styles = StyleSheet.create({
     marginTop: pixelVertical(120),
     paddingHorizontal: LAYOUT.screenPaddingHorizontal,
   },
-
   title: {
     fontFamily: 'Roboto-Bold',
     fontSize: pixelFont(28),
@@ -185,7 +189,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '700',
   },
-
   description: {
     marginTop: pixelVertical(25),
     fontFamily: 'Roboto-Regular',
@@ -193,7 +196,6 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     textAlign: 'center',
   },
-
   form: {
     marginTop: pixelVertical(35),
     gap: pixelHorizontal(10),
@@ -206,7 +208,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   registerButtonText: {
     color: COLORS.white,
     fontFamily: 'Roboto-Bold',
@@ -218,24 +219,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: pixelVertical(15),
   },
-
   loginText: {
     color: COLORS.textPrimary,
     fontFamily: 'Roboto-Regular',
     fontSize: pixelFont(12),
   },
-
   loginLink: {
     color: COLORS.primary,
     fontFamily: 'Roboto-Medium',
     fontSize: pixelFont(12),
     marginLeft: pixelHorizontal(4),
-  },
-
-  errorText: {
-    color: COLORS.primary,
-    textAlign: 'center',
-    marginTop: pixelVertical(8),
   },
 });
 

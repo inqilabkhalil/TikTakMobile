@@ -46,12 +46,9 @@ function FormInput({
           placeholder={placeholder}
           placeholderTextColor={COLORS.textSecondary}
           secureTextEntry={secureTextEntry && !isPasswordVisible}
-          keyboardType={
-            secureTextEntry && Platform.OS === 'android'
-              ? 'visible-password'
-              : keyboardType
-          }
+          keyboardType={keyboardType}
           textContentType={secureTextEntry ? 'password' : undefined}
+          autoComplete={secureTextEntry ? 'password' : 'off'}
           autoCorrect={!secureTextEntry}
           editable={editable}
           maxLength={maxLength}
