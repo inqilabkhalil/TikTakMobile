@@ -2,6 +2,8 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { AuthStackParamList } from '@/shared/types/navigation';
@@ -12,7 +14,6 @@ import { LAYOUT } from '@/shared/constants/layout';
 import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 import { authService } from '../services/authService';
 import { useUserStore } from '@/shared/store/userStore';
-import axios from 'axios';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -22,23 +23,21 @@ const loginSchema = Yup.object({
 });
 
 function LoginScreen({ navigation }: Props) {
+  const isLoading = useUserStore(state => state.isLoading);
+  const setLoading = useUserStore(state => state.setLoading);
+  const setError = useUserStore(state => state.setError);
+  const setTokens = useUserStore(state => state.setTokens);
+  const setUser = useUserStore(state => state.setUser);
+
   return (
     <FormScreenContainer>
       <View style={styles.container}>
         <Text style={styles.title}>Daxil ol</Text>
 
         <Formik
-          initialValues={{
-            phone: '+994',
-            password: '',
-          }}
+          initialValues={{ phone: '+994', password: '' }}
           validationSchema={loginSchema}
           onSubmit={async (values, { setSubmitting }) => {
-            const setLoading = useUserStore.getState().setLoading;
-            const setError = useUserStore.getState().setError;
-            const setTokens = useUserStore.getState().setTokens;
-            const setUser = useUserStore.getState().setUser;
-
             try {
               setLoading(true);
               setError(null);
@@ -51,66 +50,60 @@ function LoginScreen({ navigation }: Props) {
                   result.tokens.refresh_token ?? '',
                 );
                 setUser(result.profile);
+
+                Toast.show({
+                  type: 'success',
+                  text1: 'Uğurlu giriş',
+                  text2: `Xoş gəldiniz, ${result.profile.full_name}!`,
+                  position: 'top',
+                });
               } else {
-                setError('Giriş uğursuz oldu.');
+                showError('Giriş uğursuz oldu.');
               }
             } catch (error) {
+              let message = 'Giriş zamanı xəta baş verdi.';
+
               if (axios.isAxiosError(error)) {
                 const status = error.response?.status;
                 const data = error.response?.data;
 
                 if (status === 401) {
-                  setError('Telefon nömrəsi və ya şifrə yanlışdır.');
+                  message = 'Telefon nömrəsi və ya şifrə yanlışdır.';
                 } else if (status === 422) {
                   const result = data?.result;
-                  const message = data?.message;
                   if (result) {
                     if (Array.isArray(result)) {
-                      setError(
-                        result
-                          .map(r =>
-                            r?.message ? String(r.message) : JSON.stringify(r),
-                          )
-                          .join('\n'),
-                      );
+                      message = result
+                        .map((r: any) =>
+                          r?.message ? String(r.message) : JSON.stringify(r),
+                        )
+                        .join('\n');
                     } else if (typeof result === 'object') {
                       const first = Object.values(result)[0];
-                      if (Array.isArray(first)) setError(first.join('\n'));
-                      else setError(String(first));
+                      message = Array.isArray(first)
+                        ? first.join('\n')
+                        : String(first);
                     } else {
-                      setError(String(result));
+                      message = String(result);
                     }
-                  } else if (message) {
-                    setError(String(message));
+                  } else if (data?.message) {
+                    message = String(data.message);
                   } else {
-                    setError(
-                      'Doğrulama xətası. Zəhmət olmasa məlumatları yoxlayın.',
-                    );
+                    message = 'Doğrulama xətası. Məlumatları yoxlayın.';
                   }
                 } else if (data?.message) {
-                  setError(String(data.message));
-                } else {
-                  setError(
-                    'Giriş zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.',
-                  );
+                  message = String(data.message);
                 }
-              } else {
-                setError('Giriş zamanı gözlənilməz xəta meydana gəldi.');
               }
+
+              showError(message);
             } finally {
               setLoading(false);
               setSubmitting(false);
             }
           }}
         >
-          {({
-            handleChange,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-            isSubmitting,
-          }) => (
+          {({ handleChange, handleSubmit, values, errors, touched, isSubmitting }) => (
             <>
               <View style={styles.form}>
                 <FormInput
@@ -137,19 +130,16 @@ function LoginScreen({ navigation }: Props) {
                     pressed && styles.buttonPressed,
                   ]}
                   onPress={() => handleSubmit()}
-                  disabled={isSubmitting || useUserStore.getState().isLoading}
+                  disabled={isSubmitting || isLoading}
                 >
                   <Text style={styles.loginButtonText}>
-                    {isSubmitting || useUserStore.getState().isLoading
-                      ? 'Yüklənir...'
-                      : 'Daxil ol'}
+                    {isSubmitting || isLoading ? 'Yüklənir...' : 'Daxil ol'}
                   </Text>
                 </Pressable>
               </View>
 
               <View style={styles.registerRow}>
                 <Text style={styles.registerText}>Hesabınız yoxdursa</Text>
-
                 <Pressable onPress={() => navigation.navigate('Register')}>
                   <Text style={styles.registerLink}>Qeydiyyatdan keç</Text>
                 </Pressable>
@@ -157,12 +147,19 @@ function LoginScreen({ navigation }: Props) {
             </>
           )}
         </Formik>
-        {useUserStore.getState().error ? (
-          <Text style={styles.errorText}>{useUserStore.getState().error}</Text>
-        ) : null}
       </View>
     </FormScreenContainer>
   );
+
+  function showError(message: string) {
+    setError(message);
+    Toast.show({
+      type: 'error',
+      text1: 'Xəta',
+      text2: message,
+      position: 'top',
+    });
+  }
 }
 
 const styles = StyleSheet.create({
@@ -171,11 +168,10 @@ const styles = StyleSheet.create({
     marginTop: pixelVertical(130),
     paddingHorizontal: LAYOUT.screenPaddingHorizontal,
   },
-
   title: {
     fontFamily: 'Roboto-Bold',
     fontSize: pixelFont(28),
-    fontWeight: 700,
+    fontWeight: '700',
     lineHeight: pixelVertical(24),
     color: COLORS.textPrimary,
     textAlign: 'center',
@@ -184,7 +180,6 @@ const styles = StyleSheet.create({
     marginTop: pixelVertical(35),
     gap: pixelHorizontal(10),
   },
-
   loginButton: {
     width: '100%',
     height: pixelVertical(48),
@@ -194,41 +189,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   buttonPressed: {
     opacity: 0.75,
   },
-
   loginButtonText: {
     color: COLORS.white,
     fontFamily: 'Roboto-Bold',
     fontSize: pixelFont(14),
   },
-
   registerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: pixelVertical(15),
   },
-
   registerText: {
     color: COLORS.textPrimary,
     fontFamily: 'Roboto-Regular',
     fontSize: pixelFont(12),
   },
-
   registerLink: {
     color: COLORS.primary,
     fontFamily: 'Roboto-Regular',
     fontSize: pixelFont(12),
     marginLeft: pixelHorizontal(4),
-  },
-
-  errorText: {
-    color: COLORS.primary,
-    textAlign: 'center',
-    marginTop: pixelVertical(8),
   },
 });
 

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     minWidth: pixelHorizontal(18),
     height: pixelHorizontal(18),
     borderRadius: pixelHorizontal(9),
-    backgroundColor: COLORS.error,
+    backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: pixelHorizontal(4),

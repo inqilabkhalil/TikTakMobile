@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { BasketItem as BasketItemType } from '../types/basket';
 import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
+import { COLORS } from '@/shared/constants/theme';
 
 type Props = {
   item: BasketItemType;
@@ -92,18 +93,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   decrementButton: {
-    backgroundColor: '#4FC76E',
+    backgroundColor: COLORS.primary,
   },
   incrementButton: {
-    backgroundColor: '#4FC76E',
+    backgroundColor: COLORS.primary,
   },
   controlText: {
     fontSize: pixelFont(18),
     color: '#FFFFFF',
   },
   qty: {
-    marginHorizontal: pixelHorizontal(8),
+    marginHorizontal: pixelHorizontal(14),
     fontSize: pixelFont(15),
+    minWidth: pixelHorizontal(20),
+    textAlign: 'center',
   },
 });
 
