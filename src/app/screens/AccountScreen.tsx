@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import ScreenContainer from '../../shared/components/ScreenContainer';
 import BackNavigate from '../../shared/components/BackNavigate';
 import ProfileCard from '../../features/account/components/ProfileCard';
@@ -9,9 +9,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AccountStackParamList } from '@/shared/types/navigation';
 import { useNavigation } from '@react-navigation/native';
 import { useProfile } from '@/features/account/hooks/useProfile';
+import { useAccountActions } from '@/features/account/hooks/useAccountActions';
 import { MENU_ITEMS } from '@/features/account/constants/menuItems';
-import { useUserStore } from '@/shared/store';
-import Toast from 'react-native-toast-message';
 
 type AccountNavigationProp = NativeStackNavigationProp<AccountStackParamList>;
 
@@ -19,45 +18,8 @@ function AccountScreen() {
   const navigation = useNavigation<AccountNavigationProp>();
   const { user, isLoading } = useProfile();
   const showSpinner = isLoading && !user;
+  const { handleMenuPress } = useAccountActions(navigation);
 
-  const handleLogout = () => {
-    Alert.alert(
-      'Çıxış',
-      'Hesabdan çıxmaq istədiyinizə əminsiniz?',
-      [
-        { text: 'Ləğv et', style: 'cancel' },
-        {
-          text: 'Çıxış',
-          style: 'destructive',
-          onPress: () => {
-            useUserStore.getState().clearUser();
-            Toast.show({
-              type: 'success',
-              text1: 'Uğurlu',
-              text2: 'Hesabdan çıxış edildi',
-            });
-          },
-        },
-      ],
-    );
-  };
-
-  const handleMenuPress = (id: string) => {
-    switch (id) {
-      case 'account-info':
-        navigation.navigate('PersonalInfo');
-        break;
-      case 'favorites':
-        navigation.navigate('Favorites');
-        break;
-      case 'order-history':
-        navigation.navigate('OrderHistory');
-        break;
-      case 'logout':
-        handleLogout();
-        break;
-    }
-  };
   return (
     <ScreenContainer style={styles.container} edges={['bottom', 'left', 'right']}>
       <BackNavigate title="Hesabım" showBack={false} />

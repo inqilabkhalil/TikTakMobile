@@ -4,7 +4,7 @@ export interface FavoriteState {
   favorites: Product[];
   isLoading: boolean;
   error: string | null;
-  fetchFavorites: () => Promise<void>;
+  fetchFavorites: (signal?: AbortSignal) => Promise<void>;
   toggleFavorite: (productId: number) => Promise<void>;
   isFavorite: (productId: number) => boolean;
 }

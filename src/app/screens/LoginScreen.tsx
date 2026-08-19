@@ -2,8 +2,6 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Toast from 'react-native-toast-message';
-import axios from 'axios';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { AuthStackParamList } from '@/shared/types/navigation';
@@ -12,8 +10,8 @@ import FormScreenContainer from '@/shared/components/FormScreenContainer';
 import { COLORS } from '@/shared/constants/theme';
 import { LAYOUT } from '@/shared/constants/layout';
 import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
-import { authService } from '../services/authService';
 import { useUserStore } from '@/shared/store/userStore';
+import { useLoginSubmit } from '@/features/auth/hooks/useLoginSubmit';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -24,10 +22,8 @@ const loginSchema = Yup.object({
 
 function LoginScreen({ navigation }: Props) {
   const isLoading = useUserStore(state => state.isLoading);
-  const setLoading = useUserStore(state => state.setLoading);
-  const setError = useUserStore(state => state.setError);
-  const setTokens = useUserStore(state => state.setTokens);
-  const setUser = useUserStore(state => state.setUser);
+  const error = useUserStore(state => state.error);
+  const { handleSubmit: onLoginSubmit } = useLoginSubmit();
 
   return (
     <FormScreenContainer>
@@ -37,71 +33,7 @@ function LoginScreen({ navigation }: Props) {
         <Formik
           initialValues={{ phone: '+994', password: '' }}
           validationSchema={loginSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            try {
-              setLoading(true);
-              setError(null);
-
-              const result = await authService.login(values);
-
-              if (result.tokens && result.profile) {
-                setTokens(
-                  result.tokens.access_token,
-                  result.tokens.refresh_token ?? '',
-                );
-                setUser(result.profile);
-
-                Toast.show({
-                  type: 'success',
-                  text1: 'Uğurlu giriş',
-                  text2: `Xoş gəldiniz, ${result.profile.full_name}!`,
-                  position: 'top',
-                });
-              } else {
-                showError('Giriş uğursuz oldu.');
-              }
-            } catch (error) {
-              let message = 'Giriş zamanı xəta baş verdi.';
-
-              if (axios.isAxiosError(error)) {
-                const status = error.response?.status;
-                const data = error.response?.data;
-
-                if (status === 401) {
-                  message = 'Telefon nömrəsi və ya şifrə yanlışdır.';
-                } else if (status === 422) {
-                  const result = data?.result;
-                  if (result) {
-                    if (Array.isArray(result)) {
-                      message = result
-                        .map((r: any) =>
-                          r?.message ? String(r.message) : JSON.stringify(r),
-                        )
-                        .join('\n');
-                    } else if (typeof result === 'object') {
-                      const first = Object.values(result)[0];
-                      message = Array.isArray(first)
-                        ? first.join('\n')
-                        : String(first);
-                    } else {
-                      message = String(result);
-                    }
-                  } else if (data?.message) {
-                    message = String(data.message);
-                  } else {
-                    message = 'Doğrulama xətası. Məlumatları yoxlayın.';
-                  }
-                } else if (data?.message) {
-                  message = String(data.message);
-                }
-              }
-
-              showError(message);
-            } finally {
-              setLoading(false);
-              setSubmitting(false);
-            }
-          }}
+          onSubmit={onLoginSubmit}
         >
           {({ handleChange, handleSubmit, values, errors, touched, isSubmitting }) => (
             <>
@@ -133,7 +65,9 @@ function LoginScreen({ navigation }: Props) {
                   disabled={isSubmitting || isLoading}
                 >
                   <Text style={styles.loginButtonText}>
-                    {isSubmitting || isLoading ? 'Yüklənir...' : 'Daxil ol'}
+                    {isSubmitting || isLoading
+                      ? 'Yüklənir...'
+                      : 'Daxil ol'}
                   </Text>
                 </Pressable>
               </View>
@@ -147,19 +81,12 @@ function LoginScreen({ navigation }: Props) {
             </>
           )}
         </Formik>
+        {error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : null}
       </View>
     </FormScreenContainer>
   );
-
-  function showError(message: string) {
-    setError(message);
-    Toast.show({
-      type: 'error',
-      text1: 'Xəta',
-      text2: message,
-      position: 'top',
-    });
-  }
 }
 
 const styles = StyleSheet.create({
@@ -213,6 +140,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
     fontSize: pixelFont(12),
     marginLeft: pixelHorizontal(4),
+  },
+  errorText: {
+    color: COLORS.primary,
+    textAlign: 'center',
+    marginTop: pixelVertical(8),
   },
 });
 

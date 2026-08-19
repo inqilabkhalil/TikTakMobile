@@ -1,14 +1,14 @@
-import { create } from 'zustand';
+gimport { create } from 'zustand';
 import { favoriteService } from '@/features/favorites/services/favoriteService';
 import { INITIAL_FAVORITE_STATE, type FavoriteState } from '../types/favoriteStore';
 
 export const useFavoriteStore = create<FavoriteState>((set, get) => ({
   ...INITIAL_FAVORITE_STATE,
 
-  fetchFavorites: async () => {
+  fetchFavorites: async signal => {
     set({ isLoading: true, error: null });
     try {
-      const favorites = await favoriteService.getFavorites();
+      const favorites = await favoriteService.getFavorites(signal);
       set({ favorites, isLoading: false });
     } catch {
       set({ error: 'Sevimlilər yüklənmədi', isLoading: false });
