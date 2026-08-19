@@ -18,6 +18,7 @@ import ScreenContainer from '@/shared/components/ScreenContainer';
 import Header from '@/shared/components/Header';
 import EmptyState from '@/shared/components/EmptyState';
 import { useSearchStore } from '@/shared/store/searchStore';
+import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue';
 import { COLORS } from '@/shared/constants/theme';
 import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 
@@ -29,20 +30,16 @@ function SearchScreen() {
 
   const { results, isLoading, error, searchProducts, clearSearch } = useSearchStore();
 
-  useEffect(() => {
-    const trimmed = searchText.trim();
+  const debouncedSearchText = useDebouncedValue(searchText.trim(), 400);
 
-    if (!trimmed) {
+  useEffect(() => {
+    if (!debouncedSearchText) {
       clearSearch();
       return;
     }
 
-    const timeoutId = setTimeout(() => {
-      searchProducts(trimmed);
-    }, 400);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchText, searchProducts, clearSearch]);
+    searchProducts(debouncedSearchText);
+  }, [debouncedSearchText, searchProducts, clearSearch]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

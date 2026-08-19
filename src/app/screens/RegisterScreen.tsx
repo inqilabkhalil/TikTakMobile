@@ -2,8 +2,6 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Toast from 'react-native-toast-message';
-import axios from 'axios';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { AuthStackParamList } from '@/shared/types/navigation';
@@ -12,8 +10,8 @@ import FormScreenContainer from '@/shared/components/FormScreenContainer';
 import { COLORS } from '@/shared/constants/theme';
 import { LAYOUT } from '@/shared/constants/layout';
 import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
-import { authService } from '../services/authService';
 import { useUserStore } from '@/shared/store/userStore';
+import { useRegisterSubmit } from '@/features/auth/hooks/useRegisterSubmit';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
@@ -29,10 +27,8 @@ const registerSchema = Yup.object({
 
 function RegisterScreen({ navigation }: Props) {
   const isLoading = useUserStore(state => state.isLoading);
-  const setLoading = useUserStore(state => state.setLoading);
-  const setError = useUserStore(state => state.setError);
-  const setTokens = useUserStore(state => state.setTokens);
-  const setUser = useUserStore(state => state.setUser);
+  const error = useUserStore(state => state.error);
+  const { handleSubmit: onRegisterSubmit } = useRegisterSubmit(navigation);
 
   return (
     <FormScreenContainer>
@@ -45,77 +41,7 @@ function RegisterScreen({ navigation }: Props) {
         <Formik
           initialValues={{ full_name: '', phone: '', password: '' }}
           validationSchema={registerSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            try {
-              setLoading(true);
-              setError(null);
-
-              const result = await authService.register(values);
-
-              if (result.tokens && result.profile) {
-                setTokens(
-                  result.tokens.access_token,
-                  result.tokens.refresh_token ?? '',
-                );
-                setUser(result.profile);
-
-                Toast.show({
-                  type: 'success',
-                  text1: 'Qeydiyyat uğurludur',
-                  text2: `Xoş gəldiniz, ${result.profile.full_name}!`,
-                  position: 'top',
-                });
-              } else {
-                Toast.show({
-                  type: 'success',
-                  text1: 'Qeydiyyat tamamlandı',
-                  text2: 'Zəhmət olmasa daxil olun.',
-                  position: 'top',
-                });
-                navigation.navigate('Login');
-              }
-            } catch (error) {
-              let message = 'Qeydiyyat zamanı xəta baş verdi.';
-
-              if (axios.isAxiosError(error)) {
-                const status = error.response?.status;
-                const data = error.response?.data;
-
-                if (status === 409) {
-                  message = 'Bu telefon nömrəsi artıq qeydiyyatdan keçib.';
-                } else if (status === 422) {
-                  const result = data?.result;
-                  if (result) {
-                    if (Array.isArray(result)) {
-                      message = result
-                        .map((r: any) =>
-                          r?.message ? String(r.message) : JSON.stringify(r),
-                        )
-                        .join('\n');
-                    } else if (typeof result === 'object') {
-                      const first = Object.values(result)[0];
-                      message = Array.isArray(first)
-                        ? first.join('\n')
-                        : String(first);
-                    } else {
-                      message = String(result);
-                    }
-                  } else if (data?.message) {
-                    message = String(data.message);
-                  } else {
-                    message = 'Doğrulama xətası. Məlumatları yoxlayın.';
-                  }
-                } else if (data?.message) {
-                  message = String(data.message);
-                }
-              }
-
-              showError(message);
-            } finally {
-              setLoading(false);
-              setSubmitting(false);
-            }
-          }}
+          onSubmit={onRegisterSubmit}
         >
           {({ handleChange, handleSubmit, values, errors, touched, isSubmitting }) => (
             <View style={styles.form}>
@@ -148,13 +74,17 @@ function RegisterScreen({ navigation }: Props) {
                 disabled={isSubmitting || isLoading}
               >
                 <Text style={styles.registerButtonText}>
-                  {isSubmitting || isLoading ? 'Yüklənir...' : 'Qeydiyyatdan keç'}
+                  {isSubmitting || isLoading
+                    ? 'Yüklənir...'
+                    : 'Qeydiyyatdan keç'}
                 </Text>
               </Pressable>
             </View>
           )}
         </Formik>
-
+        {error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : null}
         <View style={styles.loginRow}>
           <Text style={styles.loginText}>Hesabınız varsa</Text>
           <Pressable onPress={() => navigation.navigate('Login')}>
@@ -164,16 +94,6 @@ function RegisterScreen({ navigation }: Props) {
       </View>
     </FormScreenContainer>
   );
-
-  function showError(message: string) {
-    setError(message);
-    Toast.show({
-      type: 'error',
-      text1: 'Xəta',
-      text2: message,
-      position: 'top',
-    });
-  }
 }
 
 const styles = StyleSheet.create({
@@ -229,6 +149,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
     fontSize: pixelFont(12),
     marginLeft: pixelHorizontal(4),
+  },
+  errorText: {
+    color: COLORS.primary,
+    textAlign: 'center',
+    marginTop: pixelVertical(8),
   },
 });
 

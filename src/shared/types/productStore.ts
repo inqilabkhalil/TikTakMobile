@@ -4,7 +4,7 @@ export interface ProductState {
   products: Product[];
   isLoading: boolean;
   error: string | null;
-  fetchProductsByCategory: (categoryId: number) => Promise<void>;
+  fetchProductsByCategory: (categoryId: number, signal?: AbortSignal) => Promise<void>;
 }
 
 export const INITIAL_PRODUCT_STATE: Pick<ProductState, 'products' | 'isLoading' | 'error'> = {

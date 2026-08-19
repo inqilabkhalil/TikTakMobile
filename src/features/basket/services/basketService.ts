@@ -3,11 +3,11 @@ import type { ApiResponse } from '@/shared/types/api';
 import type { BasketApiData } from '../types/basket';
 
 export const basketService = {
-  getBasket: () =>
-    api.get<ApiResponse<BasketApiData>>('/basket').then(res => res.data.data),
+  getBasket: (signal?: AbortSignal) =>
+    api.get<ApiResponse<BasketApiData>>('/basket', { signal }).then(res => res.data.data),
 
-  addToBasket: (productId: number) =>
-    api.post(`/basket/${productId}/add`).then(res => res.data),
+  addToBasket: (productId: number, signal?: AbortSignal) =>
+    api.post(`/basket/${productId}/add`, null, { signal }).then(res => res.data),
 
-  clearBasket: () => api.delete('/basket/clear').then(res => res.data),
+  clearBasket: (signal?: AbortSignal) => api.delete('/basket/clear', { signal }).then(res => res.data),
 };

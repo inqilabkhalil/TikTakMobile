@@ -5,10 +5,10 @@ import { INITIAL_CATEGORY_STATE, type CategoryState } from '../types/categorySto
 export const useCategoryStore = create<CategoryState>(set => ({
   ...INITIAL_CATEGORY_STATE,
 
-  fetchCategories: async () => {
+  fetchCategories: async signal => {
     set({ isLoading: true, error: null });
     try {
-      const categories = await categoryService.getCategories();
+      const categories = await categoryService.getCategories(signal);
       set({ categories, isLoading: false });
     } catch {
       set({ error: 'Kateqoriyalar yüklənmədi', isLoading: false });

@@ -1,15 +1,13 @@
-import { lazy } from 'react';
+import { useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { withSuspense } from '@/shared/utils/withSuspense';
 import HomeNavigator from './HomeNavigator';
 import AccountNavigator from './AccountNavigator';
+import SearchScreen from '../screens/SearchScreen';
 import { COLORS } from '../../shared/constants/theme';
 import { TYPOGRAPHY } from '../../shared/constants/typography';
 import type { MainTabParamList } from '../../shared/types/navigation';
-
-const SearchScreen = withSuspense(lazy(() => import('../screens/SearchScreen')));
 
 // Not exported — purely an internal detail of the 3 icon renderers below.
 type TabIconProps = { focused: boolean; color: string; size: number };
@@ -35,41 +33,72 @@ function AccountTabIcon({ focused, color, size }: TabIconProps) {
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 function MainTabs() {
+  const tabScreenOptions = useMemo(
+    () => ({
+      headerShown: false,
+      tabBarActiveTintColor: COLORS.primary,
+      tabBarInactiveTintColor: COLORS.textSecondary,
+      tabBarLabelStyle: TYPOGRAPHY.tabBarLabel,
+      tabBarStyle: styles.tabBar,
+      tabBarHideOnKeyboard: true,
+    }),
+    [],
+  );
+
+  const homeTabOptions = useMemo(
+    () => ({
+      tabBarLabel: 'Əsas',
+      tabBarIcon: HomeTabIcon,
+    }),
+    [],
+  );
+
+  const searchTabOptions = useMemo(
+    () => ({
+      tabBarLabel: 'Axtar',
+      tabBarIcon: SearchTabIcon,
+    }),
+    [],
+  );
+
+  const accountTabOptions = useMemo(
+    () => ({
+      tabBarLabel: 'Hesabım',
+      tabBarIcon: AccountTabIcon,
+    }),
+    [],
+  );
+
+  const homeListeners = useCallback(({ navigation }: { navigation: any }) => ({
+    tabPress: () => {
+      navigation.navigate('Home', { screen: 'HomeMain' });
+    },
+  }), []);
+
+  const accountListeners = useCallback(({ navigation }: { navigation: any }) => ({
+    tabPress: () => {
+      navigation.navigate('Account', { screen: 'AccountHome' });
+    },
+  }), []);
+
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.textSecondary,
-        tabBarLabelStyle: TYPOGRAPHY.tabBarLabel,
-        tabBarStyle: styles.tabBar,
-        tabBarHideOnKeyboard: true,
-      }}>
+    <Tab.Navigator initialRouteName="Home" screenOptions={tabScreenOptions}>
       <Tab.Screen
         name="Home"
         component={HomeNavigator}
-        options={{ tabBarLabel: 'Əsas', tabBarIcon: HomeTabIcon }}
-        listeners={({ navigation }) => ({
-          tabPress: () => {
-            navigation.navigate('Home', { screen: 'HomeMain' });
-          },
-        })}
+        options={homeTabOptions}
+        listeners={homeListeners}
       />
       <Tab.Screen
         name="Search"
         component={SearchScreen}
-        options={{ tabBarLabel: 'Axtar', tabBarIcon: SearchTabIcon }}
+        options={searchTabOptions}
       />
       <Tab.Screen
         name="Account"
         component={AccountNavigator}
-        options={{ tabBarLabel: 'Hesabım', tabBarIcon: AccountTabIcon }}
-        listeners={({ navigation }) => ({
-          tabPress: () => {
-            navigation.navigate('Account', { screen: 'AccountHome' });
-          },
-        })}
+        options={accountTabOptions}
+        listeners={accountListeners}
       />
     </Tab.Navigator>
   );

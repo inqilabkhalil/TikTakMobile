@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
@@ -14,7 +14,8 @@ import EmptyState from '@/shared/components/EmptyState';
 import { useProductStore } from '@/shared/store/productStore';
 import { useFavoriteStore } from '@/shared/store/favoriteStore';
 import { useCategoryStore } from '@/shared/store/categoryStore';
-import { useBasketStore } from '@/shared/store';
+import { useBasketActions } from '@/shared/hooks/useBasketActions';
+import { useProductDetailSheet } from '@/features/products/hooks/useProductDetailSheet';
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
 import { gapVertical, pixelWidth } from '@/shared/utils/metrics';
@@ -31,15 +32,17 @@ function ProductsScreen() {
   const { products, isLoading, error, fetchProductsByCategory } = useProductStore();
   const { isFavorite, toggleFavorite, fetchFavorites } = useFavoriteStore();
   const { categories, fetchCategories } = useCategoryStore();
-  const basketItems = useBasketStore(state => state.items);
-  const getBasket = useBasketStore(state => state.getBasket);
-  const addToBasket = useBasketStore(state => state.addToBasket);
-  const incrementBasket = useBasketStore(state => state.increment);
-  const decrementBasket = useBasketStore(state => state.decrement);
+  const {
+    itemCount,
+    totalPrice,
+    getQuantity,
+    handleAdd,
+    handleIncrement,
+    handleDecrement,
+  } = useBasketActions();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(categoryId);
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
-  const detailSheetRef = useRef<ComponentRef<typeof ProductDetailSheet>>(null);
+  const { selectedProduct, detailSheetRef, handleCardPress } = useProductDetailSheet(products);
 
   useEffect(() => {
     setSelectedCategoryId(categoryId);
@@ -57,10 +60,6 @@ function ProductsScreen() {
     fetchFavorites();
   }, [fetchFavorites]);
 
-  useEffect(() => {
-    getBasket();
-  }, [getBasket]);
-
   const categoryChips = useMemo(
     () => categories.map(category => ({ id: String(category.id), label: category.name })),
     [categories],
@@ -70,42 +69,6 @@ function ProductsScreen() {
     setSelectedCategoryId(Number(id));
   }, []);
 
-  const getQuantity = useCallback(
-    (id: number) => basketItems.find(item => item.id === id)?.quantity ?? 0,
-    [basketItems],
-  );
-
-  const selectedProduct = useMemo(
-    () => products.find(item => item.id === selectedProductId) ?? null,
-    [products, selectedProductId],
-  );
-
-  const handleAdd = useCallback(
-    (id: number) => {
-      addToBasket(id);
-    },
-    [addToBasket],
-  );
-
-  const handleIncrement = useCallback(
-    (id: number) => {
-      incrementBasket(id);
-    },
-    [incrementBasket],
-  );
-
-  const handleDecrement = useCallback(
-    (id: number) => {
-      decrementBasket(id);
-    },
-    [decrementBasket],
-  );
-
-  const handleCardPress = useCallback((id: number) => {
-    setSelectedProductId(id);
-    detailSheetRef.current?.present();
-  }, []);
-
   const handleCategoriesPress = useCallback(() => {
     navigation.navigate('Main', { screen: 'Home', params: { screen: 'HomeMain' } });
   }, [navigation]);
@@ -113,12 +76,6 @@ function ProductsScreen() {
   const handleBasketPress = useCallback(() => {
     navigation.navigate('Basket', { screen: 'BasketHome' });
   }, [navigation]);
-
-  const itemCount = basketItems.length;
-  const totalPrice = useMemo(
-    () => basketItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    [basketItems],
-  );
 
   return (
     <View style={styles.root}>

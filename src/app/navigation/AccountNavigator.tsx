@@ -1,13 +1,10 @@
-import { lazy } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { withSuspense } from '@/shared/utils/withSuspense';
 import type { AccountStackParamList } from '@/shared/types/navigation';
-
-const AccountScreen = withSuspense(lazy(() => import('../screens/AccountScreen')));
-const PersonalInfoScreen = withSuspense(lazy(() => import('../screens/PersonalInfoScreen')));
-const OrderHistoryScreen = withSuspense(lazy(() => import('../screens/OrderHistoryScreen')));
-const OrderDetailScreen = withSuspense(lazy(() => import('../screens/OrderDetailScreen')));
-const FavoritesScreen = withSuspense(lazy(() => import('../screens/FavoritesScreen')));
+import AccountScreen from '../screens/AccountScreen';
+import PersonalInfoScreen from '../screens/PersonalInfoScreen';
+import OrderHistoryScreen from '../screens/OrderHistoryScreen';
+import OrderDetailScreen from '../screens/OrderDetailScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
 
 const Stack = createNativeStackNavigator<AccountStackParamList>();
 

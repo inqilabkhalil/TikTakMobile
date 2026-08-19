@@ -1,10 +1,7 @@
-import { lazy } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { withSuspense } from '@/shared/utils/withSuspense';
 import type { HomeStackParamList } from '@/shared/types/navigation';
-
-const CategoryScreen = withSuspense(lazy(() => import('../screens/CategoryScreen')));
-const ProductsScreen = withSuspense(lazy(() => import('../screens/ProductsScreen')));
+import CategoryScreen from '../screens/CategoryScreen';
+import ProductsScreen from '../screens/ProductsScreen';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
