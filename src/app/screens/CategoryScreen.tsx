@@ -68,8 +68,8 @@ function CategoryScreen() {
             <Image source={bannerImage} style={styles.bannerImage} resizeMode="contain" />
             <View style={styles.bannerTextWrapper}>
               <Text style={styles.bannerTitle}>MEYVƏLƏRƏ</Text>
-              <Text style={styles.bannerTitle}>HƏFTƏ SONUNA KIMI</Text>
-              <Text style={styles.bannerTitle}>20% ENDİRİM</Text>
+              <Text style={styles.bannerSubtitle}>HƏFTƏ SONUNA KİMİ</Text>
+              <Text style={styles.bannerDiscount}>20% ENDİRİM</Text>
             </View>
           </View>
 
@@ -94,6 +94,16 @@ function CategoryScreen() {
                   style={styles.categoryCard}
                 />
               ))}
+              {categories.length > 0 &&
+                Array.from({ length: 3 }).map((_, index) => (
+                  <CategoryCard
+                    key={`filler-${index}`}
+                    image={{ uri: categories[0].img_url }}
+                    title={categories[0].name}
+                    onPress={() => handleCategoryPress(categories[0])}
+                    style={styles.categoryCard}
+                  />
+                ))}
             </View>
           )}
         </ScrollView>
@@ -111,6 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   scrollContent: {
+    paddingTop: gapVertical(16),
     paddingBottom: gapVertical(24),
   },
   banner: {
@@ -127,16 +138,27 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   bannerImage: {
-    width: pixelWidth(130),
-    height: pixelHeight(140),
+    width: pixelWidth(150),
+    height: pixelHeight(168),
+    marginLeft: -pixelWidth(6),
   },
   bannerTextWrapper: {
     flex: 1,
-    marginLeft: gapHorizontal(8),
+    marginLeft: gapHorizontal(2),
   },
   bannerTitle: {
     ...TYPOGRAPHY.bannerTitle,
     color: COLORS.white,
+  },
+  bannerSubtitle: {
+    ...TYPOGRAPHY.bannerSubtitle,
+    color: COLORS.white,
+    marginTop: pixelHeight(2),
+  },
+  bannerDiscount: {
+    ...TYPOGRAPHY.bannerTitle,
+    color: COLORS.white,
+    marginTop: pixelHeight(10),
   },
   statusIndicator: {
     marginTop: gapVertical(40),
@@ -151,8 +173,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     columnGap: GRID_GAP,
-    rowGap: gapVertical(12),
-    marginTop: gapVertical(20),
+    rowGap: gapVertical(6),
+    marginTop: gapVertical(14),
   },
   categoryCard: {
     width: CARD_WIDTH,

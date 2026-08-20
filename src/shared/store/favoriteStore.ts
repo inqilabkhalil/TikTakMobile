@@ -1,4 +1,4 @@
-gimport { create } from 'zustand';
+import { create } from 'zustand';
 import { favoriteService } from '@/features/favorites/services/favoriteService';
 import { INITIAL_FAVORITE_STATE, type FavoriteState } from '../types/favoriteStore';
 
@@ -7,6 +7,7 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
 
   fetchFavorites: async signal => {
     set({ isLoading: true, error: null });
+
     try {
       const favorites = await favoriteService.getFavorites(signal);
       set({ favorites, isLoading: false });
@@ -20,5 +21,6 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
     await get().fetchFavorites();
   },
 
-  isFavorite: productId => get().favorites.some(product => product.id === productId),
+  isFavorite: productId =>
+    get().favorites.some(product => product.id === productId),
 }));
