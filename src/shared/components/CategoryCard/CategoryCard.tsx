@@ -21,19 +21,24 @@ function CategoryCard({ image, title, onPress, style }: CategoryCardProps) {
 const styles = StyleSheet.create({
   container: {
     width: pixelWidth(156),
-    height: pixelHeight(153),
+    aspectRatio: 1.15,
     backgroundColor: COLORS.white,
     borderRadius: pixelWidth(12),
     borderWidth: 1,
     borderColor: COLORS.border,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: pixelWidth(8),
+    padding: pixelWidth(6),
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
   },
   image: {
     width: '70%',
-    height: '65%',
-    marginBottom: pixelHeight(8),
+    height: '48%',
+    marginBottom: pixelHeight(3),
   },
   title: {
     ...TYPOGRAPHY.categoryLabel,
