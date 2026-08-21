@@ -5,6 +5,7 @@ export interface UserState {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
+  hasLoggedInBefore: boolean;
   isLoading: boolean;
   error: string | null;
 }
@@ -23,7 +24,7 @@ export type UserStore = UserState & UserActions;
 
 export type PersistedUserState = Pick<
   UserState,
-  'user' | 'accessToken' | 'refreshToken' | 'isAuthenticated'
+  'user' | 'accessToken' | 'refreshToken' | 'isAuthenticated' | 'hasLoggedInBefore'
 >;
 
 export const INITIAL_USER_STATE: UserState = {
@@ -31,6 +32,7 @@ export const INITIAL_USER_STATE: UserState = {
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
+  hasLoggedInBefore: false,
   isLoading: false,
   error: null,
 };

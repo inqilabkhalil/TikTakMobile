@@ -20,8 +20,8 @@ function CategoryCard({ image, title, onPress, style }: CategoryCardProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: pixelWidth(156),
-    aspectRatio: 1.15,
+    width: pixelWidth(105),
+    height: pixelHeight(105),
     backgroundColor: COLORS.white,
     borderRadius: pixelWidth(12),
     borderWidth: 1,

@@ -8,31 +8,17 @@ import ScreenContainer from '@/shared/components/ScreenContainer';
 import CategoryCard from '@/shared/components/CategoryCard';
 import DeliveryAddress from '@/features/home/components/DeliveryAddress';
 import { useProfile } from '@/features/account/hooks/useProfile';
-import { useUserAddress } from '@/shared/store';
+import { useUserAddress, useUserStore } from '@/shared/store';
 import { useCategoryStore } from '@/shared/store/categoryStore';
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
-import { LAYOUT } from '@/shared/constants/layout';
-import {
-  deviceWidth,
-  pixelWidth,
-  pixelHeight,
-  gapHorizontal,
-  gapVertical,
-} from '@/shared/utils/metrics';
+import { pixelWidth, pixelHeight, gapHorizontal, gapVertical } from '@/shared/utils/metrics';
 import type { Category } from '@/shared/types/category';
 import type { HomeStackParamList } from '@/shared/types/navigation';
 
 type CategoryNavigationProp = NativeStackNavigationProp<HomeStackParamList>;
 
-// The Figma category-card width (156) doesn't fit 3-per-row on top of the
-// screen padding — it was overflowing the container. Computed here instead
-// so 3 columns always fit inside the available content width.
-const GRID_COLUMNS = 3;
 const GRID_GAP = gapHorizontal(12);
-const CARD_WIDTH =
-  (deviceWidth - LAYOUT.screenPaddingHorizontal * 2 - GRID_GAP * (GRID_COLUMNS - 1)) /
-  GRID_COLUMNS;
 
 const bannerImage = require('@/shared/assets/images/maxfr.png');
 
@@ -41,6 +27,13 @@ function CategoryScreen() {
   const { categories, isLoading, error, fetchCategories } = useCategoryStore();
   useProfile();
   const address = useUserAddress();
+
+  useEffect(() => {
+    const { accessToken, clearTokens } = useUserStore.getState();
+    if (!accessToken) {
+      clearTokens();
+    }
+  }, []);
 
   useEffect(() => {
     fetchCategories();
@@ -91,7 +84,6 @@ function CategoryScreen() {
                   image={{ uri: category.img_url }}
                   title={category.name}
                   onPress={() => handleCategoryPress(category)}
-                  style={styles.categoryCard}
                 />
               ))}
               {categories.length > 0 &&
@@ -101,7 +93,6 @@ function CategoryScreen() {
                     image={{ uri: categories[0].img_url }}
                     title={categories[0].name}
                     onPress={() => handleCategoryPress(categories[0])}
-                    style={styles.categoryCard}
                   />
                 ))}
             </View>
@@ -138,8 +129,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   bannerImage: {
-    width: pixelWidth(150),
-    height: pixelHeight(168),
+    width: pixelWidth(156),
+    height: pixelHeight(153),
     marginLeft: -pixelWidth(6),
   },
   bannerTextWrapper: {
@@ -172,12 +163,10 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'center',
     columnGap: GRID_GAP,
-    rowGap: gapVertical(6),
+    rowGap: gapVertical(16),
     marginTop: gapVertical(14),
-  },
-  categoryCard: {
-    width: CARD_WIDTH,
   },
 });
 

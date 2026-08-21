@@ -59,6 +59,7 @@ function FavoritesScreen() {
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={styles.row}
             contentContainerStyle={styles.listContent}
+            ListFooterComponent={<View style={styles.listFooter} />}
             renderItem={({ item }) => {
               const quantity = getQuantity(item.id);
               return (
@@ -115,6 +116,9 @@ const styles = StyleSheet.create({
   listContent: {
     paddingTop: gapVertical(16),
     paddingBottom: gapVertical(80),
+  },
+  listFooter: {
+    height: gapVertical(80),
   },
   row: {
     justifyContent: 'center',

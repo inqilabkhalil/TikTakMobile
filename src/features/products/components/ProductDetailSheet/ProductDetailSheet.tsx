@@ -1,7 +1,8 @@
 import { forwardRef, type ComponentRef } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { BottomSheetModal, BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AppBottomSheet from '@/shared/components/AppBottomSheet';
 import Button from '@/shared/components/Button';
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
@@ -34,29 +35,22 @@ const ProductDetailSheet = forwardRef<
     },
     ref,
   ) => {
-    const { dismiss } = useBottomSheetModal();
-
     return (
-      <BottomSheetModal ref={ref}>
-        <BottomSheetView style={styles.container}>
-          <View style={styles.topRow}>
-            <TouchableOpacity
-              onPress={() => dismiss()}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Text style={styles.closeIcon}>✕</Text>
-            </TouchableOpacity>
-            {onToggleFavorite && (
+      <AppBottomSheet ref={ref} snapPoints={[pixelHeight(468)]}>
+        <View style={styles.container}>
+          {onToggleFavorite && (
+            <View style={styles.topRow}>
               <TouchableOpacity
                 onPress={onToggleFavorite}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
                 <Ionicons
                   name={isFavorite ? 'heart' : 'heart-outline'}
-                  size={pixelWidth(22)}
+                  size={24}
                   color={isFavorite ? COLORS.error : COLORS.textDark}
                 />
               </TouchableOpacity>
-            )}
-          </View>
+            </View>
+          )}
           <Image source={image} style={styles.image} resizeMode="contain" />
           <Text style={styles.title} numberOfLines={2}>
             {title}
@@ -66,7 +60,9 @@ const ProductDetailSheet = forwardRef<
               {description}
             </Text>
           ) : null}
-          <Text style={styles.price}>{price.toFixed(2)} AZN</Text>
+          <Text style={styles.price} numberOfLines={1}>
+            {price.toFixed(2)} AZN
+          </Text>
 
           {inBasket ? (
             <View style={styles.stepper}>
@@ -85,29 +81,28 @@ const ProductDetailSheet = forwardRef<
               </TouchableOpacity>
             </View>
           ) : (
-            <Button title="Səbətə əlavə et" type="primary" onPress={onAdd} />
+            <Button title="Səbətə əlavə et" type="primary" size="large" onPress={onAdd} />
           )}
-        </BottomSheetView>
-      </BottomSheetModal>
+        </View>
+      </AppBottomSheet>
     );
   },
 );
 
+ProductDetailSheet.displayName = 'ProductDetailSheet';
+
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    width: '100%',
     paddingHorizontal: pixelWidth(16),
     paddingBottom: gapVertical(24),
   },
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     width: '100%',
-  },
-  closeIcon: {
-    fontSize: pixelFont(18),
-    color: COLORS.textDark,
   },
   image: {
     width: pixelWidth(180),
@@ -130,7 +125,6 @@ const styles = StyleSheet.create({
   },
   price: {
     ...TYPOGRAPHY.productSheetPrice,
-    width: pixelWidth(95),
     color: COLORS.textDark,
     textAlign: 'center',
     marginTop: gapVertical(16),

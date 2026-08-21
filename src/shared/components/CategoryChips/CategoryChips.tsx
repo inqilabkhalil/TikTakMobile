@@ -1,7 +1,6 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../../constants/theme';
-import { TYPOGRAPHY } from '../../constants/typography';
-import { gapHorizontal, gapVertical } from '../../utils/metrics';
+import { gapHorizontal, gapVertical, pixelFont } from '../../utils/metrics';
 import type { CategoryChipsProps } from '../../types/categoryChips';
 
 const CHIP_BORDER = '#E0E0E0';
@@ -11,7 +10,12 @@ function CategoryChips({ categories, selectedId, onSelect }: CategoryChipsProps)
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.listContent}>
+      directionalLockEnabled
+      decelerationRate="fast"
+      bounces
+      nestedScrollEnabled
+      contentContainerStyle={styles.listContent}
+      style={styles.scrollView}>
       {categories.map(item => {
         const isSelected = item.id === selectedId;
         return (
@@ -30,6 +34,10 @@ function CategoryChips({ categories, selectedId, onSelect }: CategoryChipsProps)
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flexGrow: 0,
+    marginBottom: gapVertical(12),
+  },
   listContent: {
     alignItems: 'center',
   },
@@ -37,21 +45,23 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     borderWidth: 1,
     borderColor: CHIP_BORDER,
-    borderRadius: gapHorizontal(15),
-    paddingVertical: gapVertical(8),
-    paddingHorizontal: gapHorizontal(16),
+    borderRadius: gapHorizontal(10),
+    paddingVertical: gapVertical(12),
+    paddingHorizontal: gapHorizontal(20),
     backgroundColor: COLORS.white,
-    marginRight: gapHorizontal(8),
+    marginRight: gapHorizontal(12),
   },
   chipSelected: {
     backgroundColor: COLORS.primary,
     borderColor: COLORS.primary,
   },
   chipText: {
-    ...TYPOGRAPHY.filterTag,
+    fontFamily: 'Roboto-Medium',
+    fontSize: pixelFont(13),
     color: COLORS.textPrimary,
   },
   chipTextSelected: {
+    fontFamily: 'Roboto-Medium',
     color: COLORS.white,
   },
 });

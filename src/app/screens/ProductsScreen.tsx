@@ -90,6 +90,7 @@ function ProductsScreen() {
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={styles.row}
           contentContainerStyle={styles.listContent}
+          ListFooterComponent={<View style={styles.listFooter} />}
           ListHeaderComponent={
             <View style={styles.listHeader}>
               <CategoriesBanner onPress={handleCategoriesPress} />
@@ -174,7 +175,10 @@ const styles = StyleSheet.create({
     marginTop: gapVertical(16),
   },
   listContent: {
-    paddingBottom: gapVertical(80),
+    paddingBottom: gapVertical(140),
+  },
+  listFooter: {
+    height: gapVertical(80),
   },
   row: {
     justifyContent: 'center',
