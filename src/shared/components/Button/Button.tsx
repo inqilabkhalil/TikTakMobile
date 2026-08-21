@@ -5,12 +5,13 @@ function Button({
   title,
   onPress,
   type = 'primary',
+  size = 'default',
   loading = false,
   disabled = false,
 }: ButtonProps) {
-  const isPrimary = type === 'primary';
   const isGhost = type === 'ghost';
   const isWarning = type === 'warning';
+  const isLarge = size === 'large';
 
   const buttonStyle = isGhost
     ? styles.ghost
@@ -31,10 +32,13 @@ function Button({
       style={({ pressed }) => [
         styles.base,
         buttonStyle,
+        isLarge && styles.baseLarge,
         (disabled || loading) && styles.disabled,
         pressed && !disabled && !loading && styles.pressed,
       ]}>
-      <Text style={[styles.label, labelStyle]}>{loading ? 'Loading...' : title}</Text>
+      <Text style={[styles.label, labelStyle, isLarge && styles.labelLarge]}>
+        {loading ? 'Loading...' : title}
+      </Text>
     </Pressable>
   );
 }
@@ -46,6 +50,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  baseLarge: {
+    width: 243,
+    height: 50,
+    borderRadius: 10,
   },
   primary: {
     backgroundColor: '#76CB4F',
@@ -66,6 +75,9 @@ const styles = StyleSheet.create({
   },
   label: {
     fontWeight: '600',
+  },
+  labelLarge: {
+    fontSize: 15,
   },
   primaryLabel: {
     color: '#FFFFFF',

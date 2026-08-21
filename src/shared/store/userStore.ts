@@ -16,6 +16,7 @@ export const useUserStore = create<UserStore>()(
         set({
           user,
           isAuthenticated: true,
+          hasLoggedInBefore: true,
           error: null,
         }),
 
@@ -24,13 +25,14 @@ export const useUserStore = create<UserStore>()(
           user: state.user ? { ...state.user, ...partial } : null,
         })),
 
-      clearUser: () => set(INITIAL_USER_STATE),
+      clearUser: () => set({ ...INITIAL_USER_STATE, hasLoggedInBefore: true }),
 
       setTokens: (accessToken, refreshToken) =>
         set({
           accessToken,
           refreshToken,
           isAuthenticated: true,
+          hasLoggedInBefore: true,
         }),
 
       clearTokens: () =>
@@ -52,6 +54,7 @@ export const useUserStore = create<UserStore>()(
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
+        hasLoggedInBefore: state.hasLoggedInBefore,
       }),
     },
   ),
@@ -70,3 +73,6 @@ export const useUserPhone = () =>
 
 export const useIsAuthenticated = () =>
   useUserStore(state => state.isAuthenticated);
+
+export const useHasLoggedInBefore = () =>
+  useUserStore(state => state.hasLoggedInBefore);
