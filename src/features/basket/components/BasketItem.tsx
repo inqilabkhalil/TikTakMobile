@@ -1,11 +1,16 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { BasketItem as BasketItemType } from '../types/basket';
-import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
+import {
+  pixelFont,
+  pixelHorizontal,
+  pixelVertical,
+} from '@/shared/utils/metrics';
 
 import DeleteIcon from '@/shared/assets/icons/deleteIcon.svg';
 import MinusIcon from '@/shared/assets/icons/minusIcon.svg';
 import PlusIcon from '@/shared/assets/icons/plusIcon.svg';
+import { COLORS } from '@/shared/constants/theme';
 
 type Props = {
   item: BasketItemType;
@@ -14,7 +19,8 @@ type Props = {
 };
 
 function BasketItem({ item, onIncrement, onDecrement }: Props) {
-  const imageSource = typeof item.image === 'string' ? { uri: item.image } : item.image;
+  const imageSource =
+    typeof item.image === 'string' ? { uri: item.image } : item.image;
   const isLastQuantity = item.quantity === 1;
 
   return (
@@ -26,7 +32,9 @@ function BasketItem({ item, onIncrement, onDecrement }: Props) {
       )}
 
       <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>{item.name}</Text>
+        <Text style={styles.name} numberOfLines={1}>
+          {item.name}
+        </Text>
         <Text style={styles.price}>{item.price.toFixed(2)} AZN</Text>
       </View>
 
@@ -103,17 +111,21 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
+    paddingLeft: pixelVertical(10),
     paddingRight: pixelHorizontal(8),
+    fontFamily: 'Roboto',
+    letterSpacing: 0,
   },
   name: {
-    fontSize: pixelFont(15),
-    fontWeight: '600',
-    color: '#1A1A1A',
+    fontSize: pixelFont(16),
+    fontWeight: '700',
+    color: COLORS.labelText,
   },
   price: {
     marginTop: pixelVertical(6),
-    fontSize: pixelFont(13),
-    color: '#8E8E93',
+    fontSize: pixelFont(14),
+    fontWeight: '400',
+    color: COLORS.labelText,
   },
   counterContainer: {
     width: pixelHorizontal(115),

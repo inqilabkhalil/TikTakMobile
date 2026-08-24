@@ -6,7 +6,7 @@ export const COLORS = {
   textDark: '#101142',
   border: '#E5E5EA',
   white: '#FFFFFF',
-  emptyText: '#E6E6E6',
+  emptyText: '#8c8a8a',
   labelText: '#000000',
   inputBackground: '#F6F5FB',
   inputButton: '#76CB4F',

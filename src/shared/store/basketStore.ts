@@ -5,7 +5,7 @@ import type { BasketItem } from '@/features/basket/types/basket';
 
 type BasketStore = {
   items: BasketItem[];
-  isLoading: boolean;  
+  isLoading: boolean;
   isUpdating: boolean;
   error: string | null;
 
@@ -13,7 +13,7 @@ type BasketStore = {
   addToBasket: (productId: number) => Promise<void>;
   increment: (productId: number) => Promise<void>;
   decrement: (id: number) => Promise<void>;
-  removeFromBasket: (id: number) => void;
+  removeFromBasket: (id: number) => Promise<void>;
   clearBasket: () => Promise<void>;
 };
 
@@ -103,21 +103,54 @@ export const useBasketStore = create<BasketStore>((set, get) => ({
   },
 
   decrement: async (id: number) => {
+    const prevItems = get().items;
+    const currentItem = prevItems.find(item => item.id === id);
+    if (!currentItem) return;
+
     set(state => ({
       items: state.items
         .map(item =>
           item.id === id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item,
+           ? { ...item, quantity: item.quantity - 1 } 
+           : item,
         )
         .filter(item => item.quantity > 0),
+      isUpdating: true,
+      error: null,
     }));
+
+    try {
+      await basketService.decreaseItem(id);
+      set({ isUpdating: false });
+    } catch (error: unknown) {
+      set({
+        items: prevItems,
+        isUpdating: false,
+        error: getErrorMessage(error, 'Məhsul azaldılmadı'),
+      });
+    }
   },
 
-  removeFromBasket: (id: number) =>
+  removeFromBasket: async (id: number) => {
+    const prevItems = get().items;
+
     set(state => ({
       items: state.items.filter(item => item.id !== id),
-    })),
+      isUpdating: true,
+      error: null,
+    }));
+
+    try {
+      await basketService.removeItem(id);
+      set({ isUpdating: false });
+    } catch (error: unknown) {
+      set({
+        items: prevItems,
+        isUpdating: false,
+        error: getErrorMessage(error, 'Məhsul silinmədi'),
+      });
+    }
+  },
 
   // DELETE /api/tiktak/basket/clear
   clearBasket: async () => {

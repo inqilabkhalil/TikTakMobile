@@ -9,6 +9,7 @@ import {
   pixelHorizontal,
   pixelVertical,
 } from '@/shared/utils/metrics';
+import { COLORS } from '@/shared/constants/theme';
 
 type Props = {
   items: BasketItem[];
@@ -58,7 +59,7 @@ function BasketSummary({ items, onCheckout }: Props) {
 const styles = StyleSheet.create({
  container: {
     padding: pixelHorizontal(16),
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.white,
     borderTopWidth: 1,
     borderTopColor: '#F2F2F2',
   },
@@ -81,12 +82,16 @@ const styles = StyleSheet.create({
     marginBottom: pixelVertical(8),
   },
   label: {
-    color: '#000000',
-    fontSize: pixelFont(13),
+    fontFamily: 'Roboto',
+    color: COLORS.labelText,
+    fontSize: pixelFont(14),
+    fontWeight: '400',
   },
   boldValue: {
-    color: '#000000',
-    fontWeight: '500',
+    fontFamily: 'Roboto',
+    color: COLORS.labelText,
+    fontSize: pixelFont(14),
+    fontWeight: '400',
   },
   rowTotal: {
     flexDirection: 'row',
@@ -95,14 +100,16 @@ const styles = StyleSheet.create({
     marginBottom: pixelVertical(12),
   },
   totalLabel: {
-    fontSize: pixelFont(13),
-    fontWeight: '700',
-    color: '#000000',
-  },
-  totalValue: {
+    fontFamily: 'Roboto',
     fontSize: pixelFont(16),
     fontWeight: '700',
-    color: '#000000',
+    color: COLORS.labelText,
+  },
+  totalValue: {
+    fontFamily: 'Roboto',
+    fontSize: pixelFont(16),
+    fontWeight: '700',
+    color: COLORS.labelText,
   },
   modalOverlay: {
     flex: 1,
@@ -112,7 +119,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '84%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.white,
     borderRadius: pixelHorizontal(12),
     padding: pixelHorizontal(20),
     alignItems: 'center',
@@ -149,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalButtonText: {
-    color: '#FFFFFF',
+    color: COLORS.white,
     fontWeight: '700',
   },
 });
