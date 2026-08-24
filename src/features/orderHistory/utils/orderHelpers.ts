@@ -1,21 +1,21 @@
 import { COLORS } from '@/shared/constants/theme';
-import { OrderStatus, PaymentMethod } from '@/shared/types/order';;
+import { OrderStatus, PaymentMethod } from '@/shared/types/order';
 
 export function getStatusText(status: OrderStatus): string {
   switch (status) {
-    case 'PENDING':
+    case OrderStatus.PENDING:
       return 'Sifariş qəbul edilib';
-    case 'CONFIRMED':
+    case OrderStatus.CONFIRMED:
       return 'Təsdiqləndi';
-    case 'PREPARING':
+    case OrderStatus.PREPARING:
       return 'Hazırlanır';
-    case 'READY':
+    case OrderStatus.READY:
       return 'Hazırdır';
-    case 'ON_THE_WAY':
+    case OrderStatus.ON_THE_WAY:
       return 'Yoldadır';
-    case 'DELIVERED':
+    case OrderStatus.DELIVERED:
       return 'Çatdırıldı';
-    case 'CANCELLED':
+    case OrderStatus.CANCELLED:
       return 'Ləğv edildi';
     default:
       return status;
@@ -24,19 +24,19 @@ export function getStatusText(status: OrderStatus): string {
 
 export function getStatusColor(status: OrderStatus): string {
   switch (status) {
-    case 'PENDING':
+    case OrderStatus.PENDING:
       return '#F5A623';
-    case 'CONFIRMED':
+    case OrderStatus.CONFIRMED:
       return '#2196F3';
-    case 'PREPARING':
+    case OrderStatus.PREPARING:
       return '#4A90E2';
-    case 'READY':
+    case OrderStatus.READY:
       return '#FF9800';
-    case 'ON_THE_WAY':
+    case OrderStatus.ON_THE_WAY:
       return '#9013FE';
-    case 'DELIVERED':
+    case OrderStatus.DELIVERED:
       return '#76CB4F';
-    case 'CANCELLED':
+    case OrderStatus.CANCELLED:
       return '#F4333C';
     default:
       return COLORS.textSecondary;
@@ -71,9 +71,9 @@ export function formatDeliveryFee(fee: string): string {
 
 export function getPaymentMethodText(method: PaymentMethod): string {
   switch (method) {
-    case 'CARD':
+    case PaymentMethod.CARD:
       return 'Kart';
-    case 'CASH':
+    case PaymentMethod.CASH:
       return 'Nağd';
   }
 }

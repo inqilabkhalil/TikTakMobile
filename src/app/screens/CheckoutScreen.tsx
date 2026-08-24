@@ -12,6 +12,7 @@ import ScreenContainer from '@/shared/components/ScreenContainer';
 import BackNavigate from '@/shared/components/BackNavigate';
 
 import { useCheckout } from '@/features/checkout/hooks/useCheckout';
+import { PaymentMethod } from '@/shared/types/order';
 import { COLORS } from '@/shared/constants/theme';
 import {
   pixelHorizontal,
@@ -72,21 +73,21 @@ function CheckoutScreen() {
         <View style={styles.radioRow}>
           <TouchableOpacity
             style={styles.radioItem}
-            onPress={() => setPayment('CASH')}
+            onPress={() => setPayment(PaymentMethod.CASH)}
             activeOpacity={0.7}
           >
             <View
               style={[
                 styles.radioCircle,
-                payment === 'CASH' && styles.radioCircleChecked,
+                payment === PaymentMethod.CASH && styles.radioCircleChecked,
               ]}
             >
-              {payment === 'CASH' && <View style={styles.radioInnerDot} />}
+              {payment === PaymentMethod.CASH && <View style={styles.radioInnerDot} />}
             </View>
             <Text
               style={[
                 styles.radioLabel,
-                payment === 'CASH' && styles.radioLabelChecked,
+                payment === PaymentMethod.CASH && styles.radioLabelChecked,
               ]}
             >
               Qapıda nağd
@@ -95,21 +96,21 @@ function CheckoutScreen() {
 
           <TouchableOpacity
             style={styles.radioItem}
-            onPress={() => setPayment('CARD')}
+            onPress={() => setPayment(PaymentMethod.CARD)}
             activeOpacity={0.7}
           >
             <View
               style={[
                 styles.radioCircle,
-                payment === 'CARD' && styles.radioCircleChecked,
+                payment === PaymentMethod.CARD && styles.radioCircleChecked,
               ]}
             >
-              {payment === 'CARD' && <View style={styles.radioInnerDot} />}
+              {payment === PaymentMethod.CARD && <View style={styles.radioInnerDot} />}
             </View>
             <Text
               style={[
                 styles.radioLabel,
-                payment === 'CARD' && styles.radioLabelChecked,
+                payment === PaymentMethod.CARD && styles.radioLabelChecked,
               ]}
             >
               Qapıda kart
