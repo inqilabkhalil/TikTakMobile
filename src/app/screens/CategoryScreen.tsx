@@ -1,19 +1,22 @@
 import { useCallback, useEffect } from 'react';
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Header from '@/shared/components/Header';
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import CategoryCard from '@/shared/components/CategoryCard';
+import CampaignCarousel from '@/shared/components/CampaignCarousel';
 import DeliveryAddress from '@/features/home/components/DeliveryAddress';
 import { useProfile } from '@/features/account/hooks/useProfile';
 import { useUserAddress, useUserStore } from '@/shared/store';
 import { useCategoryStore } from '@/shared/store/categoryStore';
+import { useCampaignStore } from '@/shared/store/campaignStore';
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
-import { pixelWidth, pixelHeight, gapHorizontal, gapVertical } from '@/shared/utils/metrics';
+import { gapHorizontal, gapVertical } from '@/shared/utils/metrics';
 import type { Category } from '@/shared/types/category';
+import type { Campaign } from '@/shared/types/campaign';
 import type { HomeStackParamList } from '@/shared/types/navigation';
 
 type CategoryNavigationProp = NativeStackNavigationProp<HomeStackParamList>;
@@ -25,6 +28,7 @@ const bannerImage = require('@/shared/assets/images/maxfr.png');
 function CategoryScreen() {
   const navigation = useNavigation<CategoryNavigationProp>();
   const { categories, isLoading, error, fetchCategories } = useCategoryStore();
+  const { campaigns, fetchCampaigns } = useCampaignStore();
   useProfile();
   const address = useUserAddress();
 
@@ -39,9 +43,25 @@ function CategoryScreen() {
     fetchCategories();
   }, [fetchCategories]);
 
+  useEffect(() => {
+    fetchCampaigns();
+  }, [fetchCampaigns]);
+
   const handleCategoryPress = useCallback(
     (category: Category) => {
       navigation.navigate('Products', { categoryId: category.id, categoryName: category.name });
+    },
+    [navigation],
+  );
+
+  const handleBannerPress = useCallback(
+    (_campaign?: Campaign) => {
+      const { accessToken, clearTokens } = useUserStore.getState();
+      if (accessToken) {
+        navigation.navigate('HomeMain');
+      } else {
+        clearTokens();
+      }
     },
     [navigation],
   );
@@ -57,14 +77,11 @@ function CategoryScreen() {
           contentContainerStyle={styles.scrollContent}>
           <DeliveryAddress address={address} />
 
-          <View style={styles.banner}>
-            <Image source={bannerImage} style={styles.bannerImage} resizeMode="contain" />
-            <View style={styles.bannerTextWrapper}>
-              <Text style={styles.bannerTitle}>MEYVƏLƏRƏ</Text>
-              <Text style={styles.bannerSubtitle}>HƏFTƏ SONUNA KİMİ</Text>
-              <Text style={styles.bannerDiscount}>20% ENDİRİM</Text>
-            </View>
-          </View>
+          <CampaignCarousel
+            campaigns={campaigns}
+            onPress={handleBannerPress}
+            fallbackImage={bannerImage}
+          />
 
           {isLoading && (
             <ActivityIndicator
@@ -114,42 +131,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: gapVertical(16),
     paddingBottom: gapVertical(24),
-  },
-  banner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: pixelWidth(345),
-    height: pixelHeight(159),
-    paddingHorizontal: pixelWidth(16),
-    paddingVertical: pixelHeight(8),
-    borderRadius: pixelWidth(10),
-    backgroundColor: COLORS.bannerPurple,
-    alignSelf: 'center',
-    marginTop: pixelHeight(22),
-    overflow: 'hidden',
-  },
-  bannerImage: {
-    width: pixelWidth(156),
-    height: pixelHeight(153),
-    marginLeft: -pixelWidth(6),
-  },
-  bannerTextWrapper: {
-    flex: 1,
-    marginLeft: gapHorizontal(2),
-  },
-  bannerTitle: {
-    ...TYPOGRAPHY.bannerTitle,
-    color: COLORS.white,
-  },
-  bannerSubtitle: {
-    ...TYPOGRAPHY.bannerSubtitle,
-    color: COLORS.white,
-    marginTop: pixelHeight(2),
-  },
-  bannerDiscount: {
-    ...TYPOGRAPHY.bannerTitle,
-    color: COLORS.white,
-    marginTop: pixelHeight(10),
   },
   statusIndicator: {
     marginTop: gapVertical(40),
