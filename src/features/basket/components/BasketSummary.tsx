@@ -4,7 +4,11 @@ import Button from '@/shared/components/Button';
 import type { BasketItem } from '../types/basket';
 import { calculateSubtotal } from '../utils/basketCalculations';
 import { useNavigation } from '@react-navigation/native';
-import { pixelFont, pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
+import {
+  pixelFont,
+  pixelHorizontal,
+  pixelVertical,
+} from '@/shared/utils/metrics';
 
 type Props = {
   items: BasketItem[];
@@ -14,28 +18,34 @@ type Props = {
 function BasketSummary({ items, onCheckout }: Props) {
   const navigation = useNavigation();
   const subtotal = calculateSubtotal(items);
-  const delivery = subtotal > 0 ? 0.0 : 0.0;
+  const delivery: number = 0;
   const total = subtotal + delivery;
 
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
-        <Text style={styles.label}>Ümumi:</Text>
-        <Text style={styles.value}>{subtotal.toFixed(2)} AZN</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Çatdırılma:</Text>
-        <Text style={styles.value}>{delivery.toFixed(2)} AZN</Text>
-      </View>
-      <View style={styles.rowTotal}>
-        <Text style={styles.totalLabel}>Yekun məbləğ</Text>
-        <Text style={styles.totalValue}>{total.toFixed(2)} AZN</Text>
+      <View style={styles.summaryRow}>
+        <View style={styles.leftCol}>
+          <Text style={styles.label}>
+            Ümumi:{' '}
+            <Text style={styles.boldValue}>{subtotal.toFixed(2)} AZN</Text>
+          </Text>
+          <Text style={styles.label}>
+            Çatdırılma:{' '}
+            <Text style={styles.boldValue}>
+              {delivery === 0 ? 'Pulsuz' : `${delivery.toFixed(2)} AZN`}
+            </Text>
+          </Text>
+        </View>
+
+        <View style={styles.rightCol}>
+          <Text style={styles.totalLabel}>Yekun məbləğ:</Text>
+          <Text style={styles.totalValue}>{total.toFixed(2)} AZN</Text>
+        </View>
       </View>
 
       <Button
-        title="Sifarişi tamamlə"
+        title="Sifarişi tamamla"
         onPress={() => {
-          // Open Checkout screen first
           // @ts-ignore navigation type
           navigation.navigate('Checkout');
           if (onCheckout) onCheckout();
@@ -46,11 +56,24 @@ function BasketSummary({ items, onCheckout }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+ container: {
     padding: pixelHorizontal(16),
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#F2F2F2',
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: pixelVertical(16),
+  },
+  leftCol: {
+    gap: pixelVertical(4),
+  },
+  rightCol: {
+    alignItems: 'flex-end',
+    gap: pixelVertical(2),
   },
   row: {
     flexDirection: 'row',
@@ -58,11 +81,12 @@ const styles = StyleSheet.create({
     marginBottom: pixelVertical(8),
   },
   label: {
-    color: '#8E8E93',
+    color: '#000000',
+    fontSize: pixelFont(13),
   },
-  value: {
-    color: '#1A1A1A',
-    fontWeight: '600',
+  boldValue: {
+    color: '#000000',
+    fontWeight: '500',
   },
   rowTotal: {
     flexDirection: 'row',
@@ -71,10 +95,14 @@ const styles = StyleSheet.create({
     marginBottom: pixelVertical(12),
   },
   totalLabel: {
+    fontSize: pixelFont(13),
     fontWeight: '700',
+    color: '#000000',
   },
   totalValue: {
+    fontSize: pixelFont(16),
     fontWeight: '700',
+    color: '#000000',
   },
   modalOverlay: {
     flex: 1,
@@ -115,7 +143,7 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     width: '100%',
-    backgroundColor: '#4FC76E',
+    backgroundColor: '#92D871',
     paddingVertical: pixelVertical(12),
     borderRadius: pixelHorizontal(10),
     alignItems: 'center',
