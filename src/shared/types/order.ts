@@ -1,9 +1,20 @@
 import { Product } from "@/shared/types/product";
 import { Category } from "@/shared/types/category";
 
-export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'ON_THE_WAY' | 'DELIVERED' | 'CANCELLED';
+export enum OrderStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  PREPARING = 'PREPARING',
+  READY = 'READY',
+  ON_THE_WAY = 'ON_THE_WAY',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED',
+}
 
-export type PaymentMethod = 'CARD' | 'CASH';
+export enum PaymentMethod {
+  CARD = 'CARD',
+  CASH = 'CASH',
+}
 
 // Order line items carry the full category object, unlike the lightweight
 // {id,name} summary the product catalog endpoints return.

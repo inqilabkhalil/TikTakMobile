@@ -12,7 +12,7 @@ import {
 import { useCheckoutStore } from '../store/checkoutStore';
 
 import type { BasketStackParamList } from '@/shared/types/navigation';
-import type { PaymentMethod } from '@/shared/types/order';
+import { PaymentMethod } from '@/shared/types/order';
 
 type NavigationProp = NativeStackNavigationProp<
   BasketStackParamList,
@@ -33,7 +33,7 @@ export function useCheckout() {
   const isLoading = useCheckoutStore(state => state.isLoading);
 
   const [note, setNote] = useState('');
-  const [payment, setPayment] = useState<PaymentMethod>('CASH');
+  const [payment, setPayment] = useState<PaymentMethod>(PaymentMethod.CASH);
 
   const { subtotal, delivery, total } = useMemo(() => {
     const sub = items.reduce(
