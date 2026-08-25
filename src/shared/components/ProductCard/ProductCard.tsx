@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../../constants/theme';
 import { gapHorizontal, gapVertical, pixelFont, pixelWidth, pixelHeight } from '../../utils/metrics';
 import type { ProductCardProps } from '../../types/productCard';
@@ -15,8 +14,6 @@ function ProductCard({
   onIncrement,
   onDecrement,
   onPress,
-  isFavorite,
-  onToggleFavorite,
 }: ProductCardProps) {
   return (
     <TouchableOpacity
@@ -26,18 +23,6 @@ function ProductCard({
       disabled={!onPress}>
       <View style={styles.imageWrapper}>
         <Image source={image} style={styles.image} resizeMode="cover" />
-        {onToggleFavorite && (
-          <TouchableOpacity
-            style={styles.favoriteButton}
-            onPress={onToggleFavorite}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Ionicons
-              name={isFavorite ? 'heart' : 'heart-outline'}
-              size={pixelFont(16)}
-              color={isFavorite ? COLORS.error : COLORS.textDark}
-            />
-          </TouchableOpacity>
-        )}
       </View>
       <Text style={styles.title} numberOfLines={2}>
         {title}
@@ -91,21 +76,11 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: gapVertical(6),
   },
-  favoriteButton: {
-    position: 'absolute',
-    top: gapVertical(4),
-    right: gapHorizontal(4),
-    width: pixelWidth(24),
-    height: pixelWidth(24),
-    borderRadius: pixelWidth(12),
-    backgroundColor: COLORS.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   image: {
     width: '100%',
     height: pixelFont(100),
     borderRadius: gapHorizontal(8),
+    backgroundColor: '#F5F5F5',
   },
   title: {
     fontSize: pixelFont(13),
