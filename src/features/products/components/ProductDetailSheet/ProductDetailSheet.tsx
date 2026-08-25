@@ -46,7 +46,7 @@ const ProductDetailSheet = forwardRef<
                 <Ionicons
                   name={isFavorite ? 'heart' : 'heart-outline'}
                   size={24}
-                  color={isFavorite ? COLORS.error : COLORS.textDark}
+                  color={isFavorite ? COLORS.primary : COLORS.textDark}
                 />
               </TouchableOpacity>
             </View>
