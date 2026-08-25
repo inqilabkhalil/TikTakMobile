@@ -1,6 +1,11 @@
 import { EmptyStateProps } from '@/shared/types/emptyState';
 import EmptyIcon from '@/shared/assets/images/empty-state.svg';
-import { gapHorizontal, gapVertical, pixelFont, pixelHorizontal } from '@/shared/utils/metrics';
+import {
+  gapHorizontal,
+  gapVertical,
+  pixelFont,
+  pixelHorizontal,
+} from '@/shared/utils/metrics';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '@/shared/constants/theme';
 
@@ -13,7 +18,11 @@ function EmptyState({
 }: EmptyStateProps) {
   return (
     <View style={styles.container}>
-      <Icon width={pixelHorizontal(136)} height={pixelHorizontal(136)} style={styles.Empimage} />
+      <Icon
+        width={pixelHorizontal(136)}
+        height={pixelHorizontal(136)}
+        style={styles.Empimage}
+      />
       <Text style={styles.subtitle}>{title}</Text>
       {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
 
@@ -44,6 +53,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     fontSize: pixelFont(18),
     fontWeight: '500',
+    lineHeight: pixelFont(18),
+    letterSpacing: 0,
+    marginBottom: gapVertical(8),
     color: COLORS.emptyText,
     textAlign: 'center',
   },

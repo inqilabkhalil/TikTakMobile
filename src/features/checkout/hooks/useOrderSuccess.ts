@@ -56,7 +56,10 @@ export function useOrderSuccess() {
                 {
                   name: 'Account',
                   state: {
-                    routes: [{ name: 'OrderHistory' }],
+                    routes: [
+                      { name: 'AccountHome' },
+                      { name: 'OrderHistory' },
+                    ],
                   },
                 },
               ],

@@ -9,5 +9,12 @@ export const basketService = {
   addToBasket: (productId: number, signal?: AbortSignal) =>
     api.post(`/basket/${productId}/add`, null, { signal }).then(res => res.data),
 
-  clearBasket: (signal?: AbortSignal) => api.delete('/basket/clear', { signal }).then(res => res.data),
+  decreaseItem: (productId: number, signal?: AbortSignal) => 
+    api.post(`/basket/${productId}/remove`, null, { signal }).then(res => res.data),
+
+  removeItem: (productId: number, signal?: AbortSignal) =>
+    api.delete(`/basket/${productId}/remove-all`, { signal }).then(res => res.data),
+
+  clearBasket: (signal?: AbortSignal) => 
+    api.delete('/basket/clear', { signal }).then(res => res.data),
 };

@@ -118,14 +118,14 @@ function CheckoutScreen() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.summaryCard}>
+        <View style={styles.productsContainer}>
           <ScrollView
             style={styles.productsScroll}
-            nestedScrollEnabled
+            nestedScrollEnabled={true}
             showsVerticalScrollIndicator={true}
           >
             {items.map(item => (
-              <View key={item.id} style={styles.summaryRow}>
+              <View key={item.id} style={styles.productRow}>
                 <Text style={styles.productText} numberOfLines={2}>
                   {item.quantity} x {item.name}
                 </Text>
@@ -135,30 +135,6 @@ function CheckoutScreen() {
               </View>
             ))}
           </ScrollView>
-
-          <View style={styles.divider} />
-
-          <View style={styles.totalsRow}>
-            <View style={styles.totalsColLeft}>
-              <View style={styles.smallRow}>
-                <Text style={styles.smallLabel}>Ümumi: </Text>
-                <Text style={styles.smallValue}>
-                  {subtotal.toFixed(2)} AZN
-                </Text>
-              </View>
-              <View style={styles.smallRow}>
-                <Text style={styles.smallLabel}>Çatdırılma: </Text>
-                <Text style={styles.smallValue}>
-                  {delivery === 0 ? 'Pulsuz' : `${delivery.toFixed(2)} AZN`}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.totalsColRight}>
-              <Text style={styles.totalLabel}>Yekun məbləğ:</Text>
-              <Text style={styles.totalValue}>{total.toFixed(2)} AZN</Text>
-            </View>
-          </View>
         </View>
 
         {(!address || !phone) && (
@@ -168,7 +144,27 @@ function CheckoutScreen() {
         )}
       </ScrollView>
 
-      <View style={styles.submitWrapper}>
+      <View style={styles.bottomSection}>
+        <View style={styles.totalsRow}>
+          <View style={styles.totalsColLeft}>
+            <View style={styles.smallRow}>
+              <Text style={styles.smallLabel}>Ümumi: </Text>
+              <Text style={styles.smallValue}>{subtotal.toFixed(2)} AZN</Text>
+            </View>
+            <View style={styles.smallRow}>
+              <Text style={styles.smallLabel}>Çatdırılma: </Text>
+              <Text style={styles.smallValue}>
+                {delivery === 0 ? 'Pulsuz' : `${delivery.toFixed(2)} AZN`}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.totalsColRight}>
+            <Text style={styles.totalLabel}>Yekun məbləğ:</Text>
+            <Text style={styles.totalValue}>{total.toFixed(2)} AZN</Text>
+          </View>
+        </View>
+
         <TouchableOpacity
           style={[styles.submitButton, !canSubmit && styles.submitDisabled]}
           onPress={handleSubmit}
@@ -196,30 +192,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: pixelHorizontal(16),
+    paddingHorizontal: pixelHorizontal(20),
     paddingBottom: pixelVertical(24),
   },
 
   label: {
     fontFamily: 'Roboto',
-    marginTop: pixelVertical(20),
-    marginBottom: pixelVertical(10),
-    fontSize: pixelFont(16),
+    marginTop: pixelVertical(18),
+    marginBottom: pixelVertical(8),
+    fontSize: pixelFont(15),
     fontWeight: '700',
     color: COLORS.textPrimary,
   },
   value: {
     fontFamily: 'Roboto',
     fontSize: pixelFont(14),
-    fontWeight: '300',
+    fontWeight: '400',
     color: COLORS.textPrimary,
   },
 
   textArea: {
-    height: pixelVertical(100),
-    borderRadius: pixelHorizontal(10),
+    height: pixelVertical(90),
+    borderRadius: pixelHorizontal(12),
     backgroundColor: COLORS.inputBackground,
-    paddingHorizontal: pixelHorizontal(12),
+    paddingHorizontal: pixelHorizontal(14),
     paddingTop: pixelVertical(12),
     paddingBottom: pixelVertical(12),
     fontSize: pixelFont(14),
@@ -237,10 +233,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   radioCircle: {
-    width: pixelHorizontal(18),
-    height: pixelHorizontal(18),
-    borderRadius: pixelHorizontal(9),
-    borderWidth: 1,
+    width: pixelHorizontal(20),
+    height: pixelHorizontal(20),
+    borderRadius: pixelHorizontal(10),
+    borderWidth: 1.5,
     borderColor: COLORS.border,
     marginRight: pixelHorizontal(8),
     justifyContent: 'center',
@@ -258,24 +254,25 @@ const styles = StyleSheet.create({
   radioLabel: {
     fontSize: pixelFont(14),
     color: COLORS.textPrimary,
+    fontWeight: '600',
   },
   radioLabelChecked: {
     color: COLORS.primary,
     fontWeight: '600',
   },
-
-  summaryCard: {
-    marginTop: pixelVertical(20),
+  productsContainer: {
+    marginTop: pixelVertical(24),
+    marginBottom: pixelVertical(12),
   },
   productsScroll: {
     maxHeight: pixelVertical(140),
   },
-  summaryRow: {
+  productRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: pixelVertical(8),
-    gap: pixelHorizontal(12),
+    marginBottom: pixelVertical(10),
+    paddingRight: pixelHorizontal(4),
   },
   productText: {
     flex: 1,
@@ -288,16 +285,25 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     flexShrink: 0,
   },
-  divider: {
-    height: 1,
-    backgroundColor: COLORS.border,
-    marginVertical: pixelVertical(12),
+
+  warning: {
+    marginTop: pixelVertical(12),
+    color: COLORS.error,
+    fontSize: pixelFont(12),
+    textAlign: 'center',
   },
 
+  bottomSection: {
+    paddingHorizontal: pixelHorizontal(20),
+    paddingTop: pixelVertical(16),
+    paddingBottom: pixelVertical(20),
+    backgroundColor: COLORS.white,
+  },
   totalsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'flex-end',
+    marginBottom: pixelVertical(16),
   },
   totalsColLeft: {
     flex: 1,
@@ -329,21 +335,6 @@ const styles = StyleSheet.create({
     marginTop: pixelVertical(2),
   },
 
-  warning: {
-    marginTop: pixelVertical(12),
-    color: COLORS.error,
-    fontSize: pixelFont(12),
-    textAlign: 'center',
-  },
-
-  submitWrapper: {
-    paddingHorizontal: pixelHorizontal(16),
-    paddingTop: pixelVertical(12),
-    paddingBottom: pixelVertical(20),
-    backgroundColor: COLORS.white,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-  },
   submitButton: {
     backgroundColor: COLORS.primary,
     paddingVertical: pixelVertical(14),

@@ -16,6 +16,7 @@ import BasketSummary from '@/features/basket/components/BasketSummary';
 import type { BasketItem as BasketItemType } from '@/features/basket/types/basket';
 import { useBasketStore } from '@/shared/store';
 import { pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
+import EmptyState from '@/shared/components/EmptyState';
 
 function BasketScreen() {
   const isFocused = useIsFocused();
@@ -53,7 +54,7 @@ function BasketScreen() {
           <ActivityIndicator size="large" color="#76CB4F" />
         </View>
       ) : items.length === 0 ? (
-        <EmptyBasket />
+        <EmptyState title='Səbətinizdə məhsul yoxdur'/>
       ) : (
         <View style={styles.content}>
           <FlatList
