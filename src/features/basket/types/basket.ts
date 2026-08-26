@@ -16,3 +16,8 @@ export interface BasketApiItem {
 export interface BasketApiData {
   items: BasketApiItem[];
 }
+
+export interface Props {
+  items: BasketItem[];
+  onCheckout: () => void;
+};

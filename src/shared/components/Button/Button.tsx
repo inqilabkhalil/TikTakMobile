@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 import type { ButtonProps } from '../../types/button';
+import { pixelHorizontal, pixelVertical } from '@/shared/utils/metrics';
 
 function Button({
   title,
@@ -16,14 +17,14 @@ function Button({
   const buttonStyle = isGhost
     ? styles.ghost
     : isWarning
-      ? styles.warning
-      : styles.primary;
+    ? styles.warning
+    : styles.primary;
 
   const labelStyle = isGhost
     ? styles.ghostLabel
     : isWarning
-      ? styles.warningLabel
-      : styles.primaryLabel;
+    ? styles.warningLabel
+    : styles.primaryLabel;
 
   return (
     <Pressable
@@ -35,7 +36,8 @@ function Button({
         isLarge && styles.baseLarge,
         (disabled || loading) && styles.disabled,
         pressed && !disabled && !loading && styles.pressed,
-      ]}>
+      ]}
+    >
       <Text style={[styles.label, labelStyle, isLarge && styles.labelLarge]}>
         {loading ? 'Loading...' : title}
       </Text>
@@ -58,6 +60,9 @@ const styles = StyleSheet.create({
   },
   primary: {
     backgroundColor: '#76CB4F',
+    paddingVertical: pixelVertical(14),
+    borderRadius: pixelHorizontal(10),
+    alignItems: 'center',
   },
   ghost: {
     backgroundColor: 'transparent',

@@ -11,6 +11,7 @@ export interface ProfileCardProps {
     fullName: string;
     phone: string;
     imgUrl?: string;
+    onAvatarChange?: (uri: string) => void;
 }
 
 export interface ProfileFormValues {

@@ -5,12 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  ActivityIndicator,
 } from 'react-native';
-
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import BackNavigate from '@/shared/components/BackNavigate';
-
 import { useCheckout } from '@/features/checkout/hooks/useCheckout';
 import { PaymentMethod } from '@/shared/types/order';
 import { COLORS } from '@/shared/constants/theme';
@@ -19,6 +16,7 @@ import {
   pixelVertical,
   pixelFont,
 } from '@/shared/utils/metrics';
+import PriceSummaryBar from '@/shared/components/PriceSummaryBar/PriceSummaryBar';
 
 function CheckoutScreen() {
   const {
@@ -39,7 +37,10 @@ function CheckoutScreen() {
   } = useCheckout();
 
   return (
-    <ScreenContainer style={styles.container} edges={['bottom', 'left', 'right']}>
+    <ScreenContainer
+      style={styles.container}
+      edges={['bottom', 'left', 'right']}
+    >
       <BackNavigate title="Sifarişi tamamla" />
 
       <ScrollView
@@ -82,7 +83,9 @@ function CheckoutScreen() {
                 payment === PaymentMethod.CASH && styles.radioCircleChecked,
               ]}
             >
-              {payment === PaymentMethod.CASH && <View style={styles.radioInnerDot} />}
+              {payment === PaymentMethod.CASH && (
+                <View style={styles.radioInnerDot} />
+              )}
             </View>
             <Text
               style={[
@@ -105,7 +108,9 @@ function CheckoutScreen() {
                 payment === PaymentMethod.CARD && styles.radioCircleChecked,
               ]}
             >
-              {payment === PaymentMethod.CARD && <View style={styles.radioInnerDot} />}
+              {payment === PaymentMethod.CARD && (
+                <View style={styles.radioInnerDot} />
+              )}
             </View>
             <Text
               style={[
@@ -143,41 +148,15 @@ function CheckoutScreen() {
           </Text>
         )}
       </ScrollView>
-
-      <View style={styles.bottomSection}>
-        <View style={styles.totalsRow}>
-          <View style={styles.totalsColLeft}>
-            <View style={styles.smallRow}>
-              <Text style={styles.smallLabel}>Ümumi: </Text>
-              <Text style={styles.smallValue}>{subtotal.toFixed(2)} AZN</Text>
-            </View>
-            <View style={styles.smallRow}>
-              <Text style={styles.smallLabel}>Çatdırılma: </Text>
-              <Text style={styles.smallValue}>
-                {delivery === 0 ? 'Pulsuz' : `${delivery.toFixed(2)} AZN`}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.totalsColRight}>
-            <Text style={styles.totalLabel}>Yekun məbləğ:</Text>
-            <Text style={styles.totalValue}>{total.toFixed(2)} AZN</Text>
-          </View>
-        </View>
-
-        <TouchableOpacity
-          style={[styles.submitButton, !canSubmit && styles.submitDisabled]}
-          onPress={handleSubmit}
-          disabled={!canSubmit}
-          activeOpacity={0.8}
-        >
-          {isLoading ? (
-            <ActivityIndicator color={COLORS.white} />
-          ) : (
-            <Text style={styles.submitText}>Sifarişi tamamla</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+      <PriceSummaryBar
+        subtotal={subtotal}
+        delivery={delivery}
+        total={total}
+        buttonTitle="Sifarişi tamamla"
+        onButtonPress={handleSubmit}
+        isLoading={isLoading}
+        disabled={!canSubmit}
+      />
     </ScreenContainer>
   );
 }
@@ -291,63 +270,6 @@ const styles = StyleSheet.create({
     color: COLORS.error,
     fontSize: pixelFont(12),
     textAlign: 'center',
-  },
-
-  bottomSection: {
-    paddingHorizontal: pixelHorizontal(20),
-    paddingTop: pixelVertical(16),
-    paddingBottom: pixelVertical(20),
-    backgroundColor: COLORS.white,
-  },
-  totalsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    marginBottom: pixelVertical(16),
-  },
-  totalsColLeft: {
-    flex: 1,
-  },
-  totalsColRight: {
-    alignItems: 'flex-end',
-  },
-  smallRow: {
-    flexDirection: 'row',
-    marginBottom: pixelVertical(4),
-  },
-  smallLabel: {
-    fontSize: pixelFont(13),
-    color: COLORS.labelText,
-  },
-  smallValue: {
-    fontSize: pixelFont(13),
-    color: COLORS.labelText,
-  },
-  totalLabel: {
-    fontSize: pixelFont(14),
-    fontWeight: '700',
-    color: COLORS.textPrimary,
-  },
-  totalValue: {
-    fontSize: pixelFont(14),
-    fontWeight: '700',
-    color: COLORS.textPrimary,
-    marginTop: pixelVertical(2),
-  },
-
-  submitButton: {
-    backgroundColor: COLORS.primary,
-    paddingVertical: pixelVertical(14),
-    borderRadius: pixelHorizontal(10),
-    alignItems: 'center',
-  },
-  submitDisabled: {
-    opacity: 0.5,
-  },
-  submitText: {
-    color: COLORS.white,
-    fontWeight: '700',
-    fontSize: pixelFont(16),
   },
 });
 
