@@ -22,6 +22,12 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
+    if (config.data instanceof FormData) {
+      config.timeout = 60000;
+      delete config.headers['Content-Type'];
+      config.transformRequest = [(data) => data];
+    }
+
     return config;
   },
   error => Promise.reject(error),

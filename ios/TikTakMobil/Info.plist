@@ -33,6 +33,10 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Profil şəkli seçmək üçün qalereyaya daxil olmağa icazə verin.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Profil şəkli çəkmək üçün kameraya daxil olmağa icazə verin.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>RCTNewArchEnabled</key>

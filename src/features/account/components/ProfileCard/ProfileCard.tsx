@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ProfileCardProps } from '../../types/account';
 import AvatarDefault from '../../../../shared/assets/images/avatar.svg';
 import {
@@ -8,26 +8,39 @@ import {
   pixelVertical,
 } from '../../../../shared/utils/metrics';
 import { COLORS } from '../../../../shared/constants/theme';
-function ProfileCard({ fullName, phone, imgUrl }: ProfileCardProps) {
+import { useAvatarPicker } from '../../hooks/useAvatarPicker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+function ProfileCard({ fullName, phone, imgUrl, onAvatarChange }: ProfileCardProps) {
+  const { avatarUri, pickAvatar } = useAvatarPicker(imgUrl, onAvatarChange);
+  const avatarSize = pixelHorizontal(152);
+
   return (
     <View style={styles.container}>
-      <View style={styles.avatarWrapper}>
-        {imgUrl ? (
+      <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={pickAvatar}
+      style={styles.avatarWrapper}
+      >
+        {avatarUri ? (
           <Image
-          source={{ uri: imgUrl }}
+          source={{ uri: avatarUri }}
           style={{
-            width: pixelHorizontal(152),
-            height: pixelHorizontal(152),
-            borderRadius: pixelHorizontal(76),
+            width: avatarSize,
+            height: avatarSize,
+            borderRadius: avatarSize / 2,
           }}
           />
         ) : (
           <AvatarDefault
-          width={pixelHorizontal(152)}
-          height={pixelHorizontal(152)}
+          width={avatarSize}
+          height={avatarSize}
         />
         )}
-      </View>
+        <View style={styles.cameraBadge}>
+          <Ionicons name='camera' size={pixelHorizontal(20)} color={COLORS.white}/>
+        </View>
+        </TouchableOpacity>
+
       <Text style={styles.name}>{fullName}</Text>
       <Text style={styles.phone}>{phone}</Text>
     </View>
@@ -41,6 +54,25 @@ const styles = StyleSheet.create({
   },
   avatarWrapper: {
     marginBottom: gapVertical(12),
+    position: 'relative',
+  },
+  cameraBadge: {
+    position: 'absolute',
+    bottom: pixelVertical(4),
+    right: pixelHorizontal(4),
+    backgroundColor: COLORS.primary,
+    width: pixelHorizontal(40),
+    height: pixelHorizontal(40),
+    borderRadius: pixelHorizontal(20),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: COLORS.white,
+    elevation: 4,
+    shadowColor: COLORS.labelText,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
   name: {
     fontFamily: 'Roboto',
