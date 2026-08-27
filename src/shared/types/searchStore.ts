@@ -5,7 +5,7 @@ export interface SearchState {
   results: Product[];
   isLoading: boolean;
   error: string | null;
-  searchProducts: (query: string) => Promise<void>;
+  searchProducts: (query: string, signal?: AbortSignal) => Promise<void>;
   clearSearch: () => void;
 }
 

@@ -1,4 +1,5 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 import { ProfileCardProps } from '../../types/account';
 import AvatarDefault from '../../../../shared/assets/images/avatar.svg';
 import {
@@ -22,7 +23,7 @@ function ProfileCard({ fullName, phone, imgUrl, onAvatarChange }: ProfileCardPro
       style={styles.avatarWrapper}
       >
         {avatarUri ? (
-          <Image
+          <FastImage
           source={{ uri: avatarUri }}
           style={{
             width: avatarSize,

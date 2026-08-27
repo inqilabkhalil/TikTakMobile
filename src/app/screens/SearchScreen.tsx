@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -13,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 
 import ScreenContainer from '@/shared/components/ScreenContainer';
 import Header from '@/shared/components/Header';
@@ -38,7 +38,10 @@ function SearchScreen() {
       return;
     }
 
-    searchProducts(debouncedSearchText);
+    const controller = new AbortController();
+    searchProducts(debouncedSearchText, controller.signal);
+
+    return () => controller.abort();
   }, [debouncedSearchText, searchProducts, clearSearch]);
 
   return (
@@ -90,9 +93,10 @@ function SearchScreen() {
               }
               renderItem={({ item }) => (
                 <View style={styles.productItem}>
-                  <Image
+                  <FastImage
                     source={item.img_url ? { uri: item.img_url } : placeholderImage}
                     style={styles.productImage}
+                    resizeMode={FastImage.resizeMode.cover}
                   />
 
                   <View style={styles.productInfo}>

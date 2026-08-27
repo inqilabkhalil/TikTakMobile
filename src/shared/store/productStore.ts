@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { create } from 'zustand';
 import { productService } from '@/features/products/services/productService';
 import {
@@ -19,7 +20,11 @@ export const useProductStore = create<ProductState>(set => ({
         product => product.category.id === categoryId,
       );
       set({ products: filtered, isLoading: false });
-    } catch {
+    } catch (error: unknown) {
+      // A newer category selection superseded this one — the caller already
+      // owns the current loading/error state, so don't clobber it here.
+      if (axios.isCancel(error)) return;
+
       set({ error: 'Məhsullar yüklənmədi', isLoading: false });
     }
   },

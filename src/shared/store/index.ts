@@ -5,6 +5,7 @@ export {
   useUserFullName,
   useUserPhone,
   useIsAuthenticated,
+  useHasHydrated,
 } from './userStore';
 
 export { useBasketStore } from './basketStore';

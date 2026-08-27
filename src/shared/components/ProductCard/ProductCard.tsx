@@ -1,5 +1,6 @@
 import { memo } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 import { COLORS } from '../../constants/theme';
 import { gapHorizontal, gapVertical, pixelFont, pixelWidth, pixelHeight } from '../../utils/metrics';
 import type { ProductCardProps } from '../../types/productCard';
@@ -22,7 +23,7 @@ function ProductCard({
       activeOpacity={onPress ? 0.85 : 1}
       disabled={!onPress}>
       <View style={styles.imageWrapper}>
-        <Image source={image} style={styles.image} resizeMode="cover" />
+        <FastImage source={image} style={styles.image} resizeMode={FastImage.resizeMode.cover} />
       </View>
       <Text style={styles.title} numberOfLines={2}>
         {title}

@@ -1,7 +1,7 @@
-import type { ImageSourcePropType } from 'react-native';
+import type { FastImageProps } from '@d11/react-native-fast-image';
 
 export interface ProductCardProps {
-  image: ImageSourcePropType;
+  image: FastImageProps['source'];
   title: string;
   price: string;
   inBasket: boolean;

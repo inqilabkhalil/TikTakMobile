@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 import type { BasketItem as BasketItemType } from '../types/basket';
 import {
   pixelFont,
@@ -26,7 +27,7 @@ function BasketItem({ item, onIncrement, onDecrement }: Props) {
   return (
     <View style={styles.container}>
       {item.image ? (
-        <Image source={imageSource} style={styles.image} />
+        <FastImage source={imageSource} style={styles.image} />
       ) : (
         <View style={styles.imagePlaceholder} />
       )}

@@ -1,4 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 import OrangeIcon from '@/shared/assets/images/orange.svg';
 import { COLORS } from '@/shared/constants/theme';
 import {
@@ -17,10 +18,10 @@ function OrderProductItem({ item }: OrderProductItemProps) {
     <View style={styles.container}>
       <View style={styles.imageColumn}>
         {hasImage ? (
-          <Image 
-          source={{ uri: item.product.img_url }} 
-          style={styles.image} 
-          resizeMode='cover'
+          <FastImage
+          source={{ uri: item.product.img_url }}
+          style={styles.image}
+          resizeMode={FastImage.resizeMode.cover}
           />
         ) : (
           <OrangeIcon
