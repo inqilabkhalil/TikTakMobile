@@ -8,6 +8,7 @@ export interface UserState {
   hasLoggedInBefore: boolean;
   isLoading: boolean;
   error: string | null;
+  hasHydrated: boolean;
 }
 
 export interface UserActions {
@@ -18,6 +19,7 @@ export interface UserActions {
   clearTokens: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
 }
 
 export type UserStore = UserState & UserActions;
@@ -35,4 +37,5 @@ export const INITIAL_USER_STATE: UserState = {
   hasLoggedInBefore: false,
   isLoading: false,
   error: null,
+  hasHydrated: false,
 };

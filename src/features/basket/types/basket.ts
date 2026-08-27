@@ -1,10 +1,10 @@
-import type { ImageSourcePropType } from 'react-native';
+import type { FastImageProps } from '@d11/react-native-fast-image';
 
 export type BasketItem = {
   id: number;
   name: string;
   price: number;
-  image: string | ImageSourcePropType;
+  image: string | FastImageProps['source'];
   quantity: number;
 };
 

@@ -12,15 +12,26 @@ import { NavigationContainer } from '@react-navigation/native';
 import BootSplash from 'react-native-bootsplash';
 import Toast from 'react-native-toast-message';
 import { RootNavigator } from './src/app/navigation';
+import { useHasHydrated } from './src/shared/store';
 
 enableScreens();
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+  const hasHydrated = useHasHydrated();
 
   useEffect(() => {
-    BootSplash.hide({ fade: true });
-  }, []);
+    // Wait for the MMKV-backed user store to rehydrate before hiding the splash —
+    // otherwise RootNavigator can briefly route on the default (logged-out) state
+    // and the login screen flashes even though the user is still authenticated.
+    if (hasHydrated) {
+      BootSplash.hide({ fade: true });
+    }
+  }, [hasHydrated]);
+
+  if (!hasHydrated) {
+    return null;
+  }
 
   return (
     <GestureHandlerRootView style={styles.container}>

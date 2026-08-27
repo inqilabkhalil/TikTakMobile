@@ -49,7 +49,10 @@ function ProductsScreen() {
   }, [categoryId]);
 
   useEffect(() => {
-    fetchProductsByCategory(selectedCategoryId);
+    const controller = new AbortController();
+    fetchProductsByCategory(selectedCategoryId, controller.signal);
+
+    return () => controller.abort();
   }, [selectedCategoryId, fetchProductsByCategory]);
 
   useEffect(() => {

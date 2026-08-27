@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
 import {
-  Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -9,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 import { COLORS } from '../../constants/theme';
 import { gapHorizontal, gapVertical, pixelHeight, pixelWidth } from '../../utils/metrics';
 import type { CampaignCarouselProps } from '../../types/campaignCarousel';
@@ -40,7 +40,7 @@ function CampaignCarousel({
           activeOpacity={0.9}
           onPress={() => onPress?.()}>
           {fallbackImage ? (
-            <Image source={fallbackImage} style={styles.fallbackImage} resizeMode="cover" />
+            <FastImage source={fallbackImage} style={styles.fallbackImage} resizeMode={FastImage.resizeMode.cover} />
           ) : null}
           <View style={styles.overlay} />
           <View style={styles.textWrapper}>
@@ -71,7 +71,7 @@ function CampaignCarousel({
             style={styles.card}
             activeOpacity={0.9}
             onPress={() => onPress?.(campaign)}>
-            <Image source={{ uri: campaign.img_url }} style={styles.image} resizeMode="cover" />
+            <FastImage source={{ uri: campaign.img_url }} style={styles.image} resizeMode={FastImage.resizeMode.cover} />
             <View style={styles.overlay} />
             <View style={styles.textWrapper}>
               <Text style={styles.title} numberOfLines={2}>

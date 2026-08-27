@@ -1,4 +1,5 @@
-import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 import { COLORS } from '../../constants/theme';
 import { TYPOGRAPHY } from '../../constants/typography';
 import { pixelWidth, pixelHeight } from '../../utils/metrics';
@@ -10,7 +11,7 @@ function CategoryCard({ image, title, onPress, style }: CategoryCardProps) {
       style={[styles.container, style]}
       onPress={onPress}
       activeOpacity={0.85}>
-      <Image source={image} style={styles.image} resizeMode="contain" />
+      <FastImage source={image} style={styles.image} resizeMode={FastImage.resizeMode.contain} />
       <Text style={styles.title} numberOfLines={2}>
         {title}
       </Text>

@@ -1,5 +1,6 @@
 import { forwardRef, type ComponentRef } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppBottomSheet from '@/shared/components/AppBottomSheet';
@@ -51,7 +52,7 @@ const ProductDetailSheet = forwardRef<
               </TouchableOpacity>
             </View>
           )}
-          <Image source={image} style={styles.image} resizeMode="contain" />
+          <FastImage source={image} style={styles.image} resizeMode={FastImage.resizeMode.contain} />
           <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>

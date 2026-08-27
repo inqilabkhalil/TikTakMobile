@@ -25,7 +25,8 @@ export const useUserStore = create<UserStore>()(
           user: state.user ? { ...state.user, ...partial } : null,
         })),
 
-      clearUser: () => set({ ...INITIAL_USER_STATE, hasLoggedInBefore: true }),
+      clearUser: () =>
+        set({ ...INITIAL_USER_STATE, hasLoggedInBefore: true, hasHydrated: true }),
 
       setTokens: (accessToken, refreshToken) =>
         set({
@@ -45,6 +46,8 @@ export const useUserStore = create<UserStore>()(
       setLoading: isLoading => set({ isLoading }),
 
       setError: error => set({ error }),
+
+      setHasHydrated: hasHydrated => set({ hasHydrated }),
     }),
     {
       name: 'user-storage',
@@ -56,6 +59,11 @@ export const useUserStore = create<UserStore>()(
         isAuthenticated: state.isAuthenticated,
         hasLoggedInBefore: state.hasLoggedInBefore,
       }),
+      onRehydrateStorage: () => state => {
+        // Runs after MMKV state has been merged in, regardless of success/failure —
+        // navigation must not decide Main vs Auth before this fires (see RootNavigator).
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );
@@ -76,3 +84,5 @@ export const useIsAuthenticated = () =>
 
 export const useHasLoggedInBefore = () =>
   useUserStore(state => state.hasLoggedInBefore);
+
+export const useHasHydrated = () => useUserStore(state => state.hasHydrated);
