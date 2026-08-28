@@ -8,13 +8,9 @@ function getStorage(): MMKV | null {
   try {
     storageInstance = new MMKV({ id: 'tiktak-storage' });
     return storageInstance;
-  } catch (error) {
+  } catch {
     // MMKV initialization can fail when remote JS debugger is active (no JSI).
     // Fall back to in-memory Map for development/testing only.
-    console.warn(
-      '[MMKV] Initialization failed — falling back to memory store.',
-      error,
-    );
     return null;
   }
 }
