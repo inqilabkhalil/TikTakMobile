@@ -1,4 +1,22 @@
+import { NativeModules } from 'react-native';
 import { MMKV } from 'react-native-mmkv';
+
+type MMKVNativeModule = {
+  install?: (rootDirectory: string | null) => boolean;
+};
+
+let jsiBindingsInstallAttempted = false;
+
+function installMMKVJSIBindings(): void {
+  if (jsiBindingsInstallAttempted) return;
+  jsiBindingsInstallAttempted = true;
+
+  const nativeMMKV = NativeModules.MMKV as MMKVNativeModule | undefined;
+  try {
+    nativeMMKV?.install?.(null);
+  } catch {
+  }
+}
 
 let storageInstance: MMKV | null = null;
 const _memoryStore = new Map<string, string>();
@@ -6,11 +24,10 @@ const _memoryStore = new Map<string, string>();
 function getStorage(): MMKV | null {
   if (storageInstance) return storageInstance;
   try {
+    installMMKVJSIBindings();
     storageInstance = new MMKV({ id: 'tiktak-storage' });
     return storageInstance;
   } catch {
-    // MMKV initialization can fail when remote JS debugger is active (no JSI).
-    // Fall back to in-memory Map for development/testing only.
     return null;
   }
 }
