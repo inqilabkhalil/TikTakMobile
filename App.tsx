@@ -2,56 +2,24 @@
  * @format
  */
 
-import { useEffect } from 'react';
-import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar, useColorScheme } from 'react-native';
 import { enableScreens } from 'react-native-screens';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { NavigationContainer } from '@react-navigation/native';
-import BootSplash from 'react-native-bootsplash';
 import Toast from 'react-native-toast-message';
-import { RootNavigator } from './src/app/navigation';
-import { useHasHydrated } from './src/shared/store';
+import Providers from './src/app/Providers';
+import { AppRoutes } from './src/app/navigation';
 
 enableScreens();
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
-  const hasHydrated = useHasHydrated();
-
-  useEffect(() => {
-    // Wait for the MMKV-backed user store to rehydrate before hiding the splash —
-    // otherwise RootNavigator can briefly route on the default (logged-out) state
-    // and the login screen flashes even though the user is still authenticated.
-    if (hasHydrated) {
-      BootSplash.hide({ fade: true });
-    }
-  }, [hasHydrated]);
-
-  if (!hasHydrated) {
-    return null;
-  }
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <SafeAreaProvider>
-        <BottomSheetModalProvider>
-          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-          <NavigationContainer>
-            <RootNavigator />
-          </NavigationContainer>
-          <Toast />
-        </BottomSheetModalProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <Providers>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <AppRoutes />
+      <Toast />
+    </Providers>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
