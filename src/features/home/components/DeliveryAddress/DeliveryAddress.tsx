@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { TYPOGRAPHY } from '../../../../shared/constants/typography';
 import { COLORS } from '../../../../shared/constants/theme';
-import { pixelWidth, pixelHeight } from '../../../../shared/utils/metrics';
+import { pixelHeight, pixelVertical, pixelHorizontal } from '../../../../shared/utils/metrics';
 import type { DeliveryAddressProps } from '../../types/deliveryAddress';
 
 function DeliveryAddress({ address, label = 'Çatdırılma ünvanı:' }: DeliveryAddressProps) {
@@ -19,13 +19,15 @@ function DeliveryAddress({ address, label = 'Çatdırılma ünvanı:' }: Deliver
 
 const styles = StyleSheet.create({
   container: {
-    width: pixelWidth(345),
-    height: pixelHeight(50),
-    borderRadius: pixelWidth(10),
+    width: '100%',
+    paddingVertical: pixelVertical(10),
+    minHeight: pixelVertical(50),         
+    borderRadius: pixelHorizontal(10),      
+    marginTop: pixelVertical(8),
     backgroundColor: COLORS.inputBackground,
     alignSelf: 'center',
     justifyContent: 'center',
-    paddingHorizontal: pixelWidth(12),
+    paddingHorizontal: pixelHorizontal(12),
   },
   label: {
     ...TYPOGRAPHY.deliveryLabel,

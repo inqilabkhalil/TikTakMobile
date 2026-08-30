@@ -103,15 +103,6 @@ function CategoryScreen() {
                   onPress={() => handleCategoryPress(category)}
                 />
               ))}
-              {categories.length > 0 &&
-                Array.from({ length: 3 }).map((_, index) => (
-                  <CategoryCard
-                    key={`filler-${index}`}
-                    image={{ uri: categories[0].img_url }}
-                    title={categories[0].name}
-                    onPress={() => handleCategoryPress(categories[0])}
-                  />
-                ))}
             </View>
           )}
         </ScrollView>

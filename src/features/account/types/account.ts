@@ -22,3 +22,8 @@ export interface ProfileFormValues {
     password: string;
     password_repeat: string;
 }
+export interface MenuItemData {
+  id: string;
+  Icon: FC<SvgProps>;
+  title: string;
+}

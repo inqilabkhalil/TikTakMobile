@@ -10,7 +10,7 @@ function AuthNavigator() {
 
   return (
     <AuthStack.Navigator
-      initialRouteName={hasLoggedInBefore ? 'Login' : 'Welcome'}
+      initialRouteName="Welcome"
       screenOptions={{ headerShown: false }}>
       <AuthStack.Screen name="Welcome" component={WelcomeScreen} />
       <AuthStack.Screen name="Login" component={LoginScreen} />

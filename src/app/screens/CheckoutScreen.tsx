@@ -71,7 +71,7 @@ function CheckoutScreen() {
         />
 
         <Text style={styles.label}>Ödəniş üsulu</Text>
-        <View style={styles.radioRow}>
+        <View style={styles.radioCol}>
           <TouchableOpacity
             style={styles.radioItem}
             onPress={() => setPayment(PaymentMethod.CASH)}
@@ -172,21 +172,23 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: pixelHorizontal(20),
-    paddingBottom: pixelVertical(24),
+    paddingBottom: pixelVertical(8),
   },
 
   label: {
     fontFamily: 'Roboto',
-    marginTop: pixelVertical(18),
-    marginBottom: pixelVertical(8),
-    fontSize: pixelFont(15),
+    marginTop: pixelVertical(25),
+    marginBottom: pixelVertical(9),
+    fontSize: pixelFont(16),
+    lineHeight: pixelFont(16),
     fontWeight: '700',
     color: COLORS.textPrimary,
   },
   value: {
     fontFamily: 'Roboto',
     fontSize: pixelFont(14),
-    fontWeight: '400',
+    fontWeight: '300',
+    lineHeight: pixelFont(16),
     color: COLORS.textPrimary,
   },
 
@@ -202,10 +204,9 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
 
-  radioRow: {
-    flexDirection: 'row',
+  radioCol: {
     marginTop: pixelVertical(4),
-    gap: pixelHorizontal(24),
+    gap: pixelVertical(19),
   },
   radioItem: {
     flexDirection: 'row',
@@ -231,20 +232,25 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   radioLabel: {
-    fontSize: pixelFont(14),
+    fontFamily: 'Roboto',
+    fontSize: pixelFont(16),
+    lineHeight: pixelFont(16),
     color: COLORS.textPrimary,
-    fontWeight: '600',
+    fontWeight: '400',
   },
   radioLabelChecked: {
     color: COLORS.primary,
     fontWeight: '600',
   },
+
   productsContainer: {
-    marginTop: pixelVertical(24),
-    marginBottom: pixelVertical(12),
+    marginTop: pixelVertical(14),
+    paddingTop: pixelVertical(10),
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
   },
   productsScroll: {
-    maxHeight: pixelVertical(140),
+    maxHeight: pixelVertical(180),
   },
   productRow: {
     flexDirection: 'row',
@@ -266,7 +272,7 @@ const styles = StyleSheet.create({
   },
 
   warning: {
-    marginTop: pixelVertical(12),
+    marginTop: pixelVertical(8),
     color: COLORS.error,
     fontSize: pixelFont(12),
     textAlign: 'center',
