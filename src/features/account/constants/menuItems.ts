@@ -1,16 +1,8 @@
-import type { FC } from 'react';
-import type { SvgProps } from 'react-native-svg';
-
 import InfoIcon from '../../../shared/assets/icons/info.svg';
 import FavoritesIcon from '../../../shared/assets/icons/favorites.svg';
 import HistoryIcon from '../../../shared/assets/icons/history.svg';
 import LogoutIcon from '../../../shared/assets/icons/logout.svg';
-
-export interface MenuItemData {
-  id: string;
-  Icon: FC<SvgProps>;
-  title: string;
-}
+import type { MenuItemData } from '../types/account';
 
 export const MENU_ITEMS: MenuItemData[] = [
   {

@@ -63,7 +63,7 @@ function SearchScreen() {
                 autoFocus={false}
                 value={searchText}
                 onChangeText={setSearchText}
-                placeholder="Alma"
+                placeholder="Search"
                 placeholderTextColor="#8E8E93"
                 style={styles.searchInput}
               />
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     marginTop: pixelVertical(16),
     marginBottom: pixelVertical(24),
     marginHorizontal: pixelHorizontal(16),
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.inputBackground,
     borderRadius: pixelHorizontal(16),
     paddingHorizontal: pixelHorizontal(16),
     paddingTop: pixelVertical(16),

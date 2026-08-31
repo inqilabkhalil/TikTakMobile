@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from '@d11/react-native-fast-image';
 import { COLORS } from '../../constants/theme';
-import { gapHorizontal, gapVertical, pixelFont, pixelWidth, pixelHeight } from '../../utils/metrics';
+import { gapHorizontal, gapVertical, pixelFont, pixelWidth, pixelHeight, pixelHorizontal } from '../../utils/metrics';
 import type { ProductCardProps } from '../../types/productCard';
 
 function ProductCard({
@@ -61,74 +61,86 @@ function ProductCard({
 
 const styles = StyleSheet.create({
   container: {
-    width: pixelWidth(165),
-    height: pixelHeight(188),
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    borderRadius: pixelWidth(20),
-    shadowColor: 'rgba(0, 0, 0, 0.2)',
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: pixelWidth(10),
-    shadowOpacity: 1,
-    elevation: 6,
-    padding: gapHorizontal(8),
+    flex: 1,
+    maxWidth: '48%',
+    width: pixelWidth(165), 
+    height: pixelHeight(210),  
+    backgroundColor: '#FFFFFF',
+    borderRadius: pixelHorizontal(10), 
+    padding: gapHorizontal(10),
     alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.11,
+    shadowRadius: 10,
+    elevation: 3,                       
   },
   imageWrapper: {
     width: '100%',
-    marginBottom: gapVertical(6),
+    height: pixelHeight(90),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: '100%',
-    height: pixelFont(100),
-    borderRadius: gapHorizontal(8),
-    backgroundColor: '#F5F5F5',
+    height: '100%',
+    borderRadius: pixelHorizontal(6),
+  },
+  detailsContainer: {
+    alignItems: 'center',
+    width: '100%',
   },
   title: {
     fontSize: pixelFont(13),
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#2B3043',
     textAlign: 'center',
-    marginBottom: gapVertical(4),
+    marginBottom: gapVertical(2),
   },
   price: {
-    fontSize: pixelFont(13),
+    fontSize: pixelFont(12),
+    fontWeight: '600',
     color: '#2B3043',
-    marginBottom: gapVertical(8),
+    textAlign: 'center',
   },
   quantityLabel: {
-    fontSize: pixelFont(13),
+    fontSize: pixelFont(12),
+    fontWeight: '600',
     color: '#2B3043',
-    marginBottom: gapVertical(8),
+    textAlign: 'center',
+  },
+  quantityHighlight: {
+    color: COLORS.error,                
+    fontWeight: '700',
   },
   addButton: {
     backgroundColor: COLORS.primary,
-    borderRadius: gapHorizontal(10),
-    width: pixelWidth(120),
-    height: pixelHeight(27),
+    borderRadius: pixelHorizontal(8),
+    width: '100%',                      
+    height: pixelHeight(32),
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 'auto',
   },
   addButtonText: {
     color: COLORS.white,
-    fontSize: pixelFont(11),
+    fontSize: pixelFont(12),
     fontWeight: '600',
   },
   stepper: {
     flexDirection: 'row',
     width: '100%',
-    gap: gapHorizontal(8),
-    marginTop: 'auto',
+    gap: gapHorizontal(6),
   },
   stepperButton: {
-    borderRadius: gapHorizontal(10),
-    paddingVertical: gapVertical(6),
+    height: pixelHeight(32),
+    borderRadius: pixelHorizontal(8),
     alignItems: 'center',
     justifyContent: 'center',
   },
   decrementButton: {
     backgroundColor: COLORS.error,
-    width: gapHorizontal(32),
+    width: pixelWidth(32),
   },
   incrementButton: {
     backgroundColor: COLORS.primary,
@@ -136,12 +148,13 @@ const styles = StyleSheet.create({
   },
   stepperIcon: {
     color: COLORS.white,
-    fontSize: pixelFont(14),
+    fontSize: pixelFont(16),
     fontWeight: '700',
+    marginTop: -2,
   },
   incrementText: {
     color: COLORS.white,
-    fontSize: pixelFont(11),
+    fontSize: pixelFont(12),
     fontWeight: '600',
   },
 });

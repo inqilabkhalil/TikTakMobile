@@ -1,7 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  type RouteProp,
+} from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Header from '@/shared/components/Header';
 import ScreenContainer from '@/shared/components/ScreenContainer';
@@ -19,7 +29,10 @@ import { useProductDetailSheet } from '@/features/products/hooks/useProductDetai
 import { COLORS } from '@/shared/constants/theme';
 import { TYPOGRAPHY } from '@/shared/constants/typography';
 import { gapVertical, pixelWidth } from '@/shared/utils/metrics';
-import type { HomeStackParamList, RootStackParamList } from '@/shared/types/navigation';
+import type {
+  HomeStackParamList,
+  RootStackParamList,
+} from '@/shared/types/navigation';
 
 type ProductsNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type ProductsRouteProp = RouteProp<HomeStackParamList, 'Products'>;
@@ -29,7 +42,8 @@ function ProductsScreen() {
   const { params } = useRoute<ProductsRouteProp>();
   const { categoryId } = params;
 
-  const { products, isLoading, error, fetchProductsByCategory } = useProductStore();
+  const { products, isLoading, error, fetchProductsByCategory } =
+    useProductStore();
   const { isFavorite, toggleFavorite, fetchFavorites } = useFavoriteStore();
   const { categories, fetchCategories } = useCategoryStore();
   const {
@@ -42,7 +56,8 @@ function ProductsScreen() {
   } = useBasketActions();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(categoryId);
-  const { selectedProduct, detailSheetRef, handleCardPress } = useProductDetailSheet(products);
+  const { selectedProduct, detailSheetRef, handleCardPress } =
+    useProductDetailSheet(products);
 
   useEffect(() => {
     setSelectedCategoryId(categoryId);
@@ -64,7 +79,11 @@ function ProductsScreen() {
   }, [fetchFavorites]);
 
   const categoryChips = useMemo(
-    () => categories.map(category => ({ id: String(category.id), label: category.name })),
+    () =>
+      categories.map(category => ({
+        id: String(category.id),
+        label: category.name,
+      })),
     [categories],
   );
 
@@ -73,7 +92,10 @@ function ProductsScreen() {
   }, []);
 
   const handleCategoriesPress = useCallback(() => {
-    navigation.navigate('Main', { screen: 'Home', params: { screen: 'HomeMain' } });
+    navigation.navigate('Main', {
+      screen: 'Home',
+      params: { screen: 'HomeMain' },
+    });
   }, [navigation]);
 
   const handleBasketPress = useCallback(() => {
@@ -116,7 +138,10 @@ function ProductsScreen() {
             ) : error ? (
               <Text style={styles.errorText}>{error}</Text>
             ) : (
-              <EmptyState title="Hazırda məhsul yoxdur" subtitle="Məhsullar burada görünəcək" />
+              <EmptyState
+                title="Hazırda məhsul yoxdur"
+                subtitle="Məhsullar burada görünəcək"
+              />
             )
           }
           renderItem={({ item }) => {
@@ -127,7 +152,9 @@ function ProductsScreen() {
                 title={item.title}
                 price={`${item.price} AZN`}
                 inBasket={quantity > 0}
-                quantityLabel={`${quantity} kq = ${(Number(item.price) * quantity).toFixed(2)} AZN`}
+                quantityLabel={`${quantity} kq = ${(
+                  Number(item.price) * quantity
+                ).toFixed(2)} AZN`}
                 onAdd={() => handleAdd(item.id)}
                 onIncrement={() => handleIncrement(item.id)}
                 onDecrement={() => handleDecrement(item.id)}
@@ -139,7 +166,11 @@ function ProductsScreen() {
           }}
         />
         <View style={styles.summaryBarWrapper}>
-          <OrderSummaryBar itemCount={itemCount} totalPrice={totalPrice} onPress={handleBasketPress} />
+          <OrderSummaryBar
+            itemCount={itemCount}
+            totalPrice={totalPrice}
+            onPress={handleBasketPress}
+          />
         </View>
       </ScreenContainer>
       {selectedProduct && (
@@ -173,20 +204,22 @@ const styles = StyleSheet.create({
   listHeader: {
     marginTop: gapVertical(16),
     marginBottom: gapVertical(16),
+    paddingHorizontal: pixelWidth(4),
   },
   filterTags: {
     marginTop: gapVertical(16),
   },
   listContent: {
     paddingBottom: gapVertical(140),
+    paddingTop: gapVertical(4),
   },
   listFooter: {
     height: gapVertical(80),
   },
-  row: {
-    justifyContent: 'center',
-    gap: pixelWidth(10),
-    marginBottom: gapVertical(15),
+   row: {
+    justifyContent: 'space-between',
+    paddingHorizontal: pixelWidth(4),
+    marginBottom: gapVertical(16),
   },
   statusIndicator: {
     marginTop: gapVertical(40),
