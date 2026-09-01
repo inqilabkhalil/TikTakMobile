@@ -17,8 +17,10 @@ import {
   pixelFont,
 } from '@/shared/utils/metrics';
 import PriceSummaryBar from '@/shared/components/PriceSummaryBar/PriceSummaryBar';
+import { useKeyboardAwareScroll } from '@/shared/hooks/useKeyboardAwareScroll';
 
 function CheckoutScreen() {
+  const { scrollRef, onScroll } = useKeyboardAwareScroll();
   const {
     fullName,
     address,
@@ -44,8 +46,12 @@ function CheckoutScreen() {
       <BackNavigate title="Sifarişi tamamla" />
 
       <ScrollView
+        ref={scrollRef}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         style={styles.scrollView}
         contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.label}>Adınız</Text>

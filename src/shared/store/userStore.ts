@@ -1,11 +1,23 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { zustandMMKVStorage } from './mmkv';
+import { isLocalFileUri, resolveMediaUrl } from '../utils/mediaUrl';
 import {
   INITIAL_USER_STATE,
   type PersistedUserState,
   type UserStore,
 } from '../types/userStore';
+import type { UserProfile } from '../types/user';
+
+function normalizeUserForState(user: UserProfile): UserProfile {
+  return { ...user, img_url: resolveMediaUrl(user?.img_url) ?? '' };
+}
+
+function stripLocalImage(user: UserProfile | null): UserProfile | null {
+  if (!user) return null;
+  if (!isLocalFileUri(user.img_url)) return user;
+  return { ...user, img_url: '' };
+}
 
 export const useUserStore = create<UserStore>()(
   persist(
@@ -14,16 +26,25 @@ export const useUserStore = create<UserStore>()(
 
       setUser: user =>
         set({
-          user,
+          user: normalizeUserForState(user),
           isAuthenticated: true,
           hasLoggedInBefore: true,
           error: null,
         }),
 
       updateUser: partial =>
-        set(state => ({
-          user: state.user ? { ...state.user, ...partial } : null,
-        })),
+        set(state => {
+          if (!state.user) return { user: null };
+
+          const next = { ...state.user, ...partial };
+
+          return {
+            user:
+              partial.img_url !== undefined
+                ? { ...next, img_url: resolveMediaUrl(partial.img_url) ?? '' }
+                : next,
+          };
+        }),
 
       clearUser: () =>
         set({ ...INITIAL_USER_STATE, hasLoggedInBefore: true, hasHydrated: true }),
@@ -53,15 +74,13 @@ export const useUserStore = create<UserStore>()(
       name: 'user-storage',
       storage: createJSONStorage(() => zustandMMKVStorage),
       partialize: (state): PersistedUserState => ({
-        user: state.user,
+        user: stripLocalImage(state.user),
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
         hasLoggedInBefore: state.hasLoggedInBefore,
       }),
       onRehydrateStorage: () => state => {
-        // Runs after MMKV state has been merged in, regardless of success/failure —
-        // navigation must not decide Main vs Auth before this fires (see RootNavigator).
         state?.setHasHydrated(true);
       },
     },
