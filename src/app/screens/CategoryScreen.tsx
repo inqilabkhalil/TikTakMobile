@@ -21,7 +21,6 @@ import type { HomeStackParamList } from '@/shared/types/navigation';
 
 type CategoryNavigationProp = NativeStackNavigationProp<HomeStackParamList>;
 
-const GRID_GAP = gapHorizontal(8);
 
 const bannerImage = require('@/shared/assets/images/maxfr.png');
 
@@ -136,9 +135,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    columnGap: GRID_GAP,
-    rowGap: gapVertical(8),
-    marginTop: gapVertical(8),
+    columnGap: gapHorizontal(14),
+    rowGap: gapVertical(15),
+    marginTop: gapVertical(12),
   },
 });
 

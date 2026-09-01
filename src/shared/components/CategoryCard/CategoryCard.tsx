@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import FastImage from '@d11/react-native-fast-image';
 import { COLORS } from '../../constants/theme';
 import { TYPOGRAPHY } from '../../constants/typography';
-import { pixelWidth, pixelHeight } from '../../utils/metrics';
+import { pixelWidth, pixelHeight, pixelVertical, pixelHorizontal } from '../../utils/metrics';
 import type { CategoryCardProps } from '../../types/categoryCard';
 
 function CategoryCard({ image, title, onPress, style }: CategoryCardProps) {
@@ -21,16 +21,16 @@ function CategoryCard({ image, title, onPress, style }: CategoryCardProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: pixelWidth(105),
-    height: pixelHeight(105),
+    width: pixelHorizontal(111),
+    height: pixelVertical(105),
     backgroundColor: COLORS.white,
-    borderRadius: pixelWidth(12),
+    borderRadius: pixelHorizontal(12),
     borderWidth: 1,
     borderColor: COLORS.border,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: pixelWidth(6),
-    shadowColor: '#000000',
+    padding: pixelHorizontal(6),
+    shadowColor: COLORS.labelText,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
