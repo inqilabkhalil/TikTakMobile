@@ -25,7 +25,6 @@ export function useAvatarPicker(
     const response = await launchImageLibrary({
       mediaType: 'photo',
       quality: 0.8,
-      includeBase64: true,
       maxWidth: 1024,
       maxHeight: 1024,
       selectionLimit: 1,
