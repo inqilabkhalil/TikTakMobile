@@ -1,5 +1,6 @@
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useCallback, useState } from 'react';
+import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useUserStore } from '@/shared/store/userStore';
 import { uploadService } from '@/shared/services/uploadService';
@@ -28,6 +29,7 @@ export function useAvatarPicker(
       maxWidth: 1024,
       maxHeight: 1024,
       selectionLimit: 1,
+      includeBase64: Platform.OS === 'android',
     });
 
     if (response.didCancel) return;
