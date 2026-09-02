@@ -23,7 +23,7 @@ export interface AuthApiData {
 
 export interface AuthApiResponse {
   message: string;
-  data: AuthApiData;
+  data: AuthApiData | null;
   result: boolean;
 }
 

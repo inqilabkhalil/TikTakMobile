@@ -5,13 +5,17 @@ import { pixelHeight, pixelVertical, pixelHorizontal } from '../../../../shared/
 import type { DeliveryAddressProps } from '../../types/deliveryAddress';
 
 function DeliveryAddress({ address, label = 'Çatdırılma ünvanı:' }: DeliveryAddressProps) {
+  // Ünvan hələ doldurulmayıbsa (qeydiyyatdan sonra `address` boş olur) sətir
+  // tamamilə boş görünməsin.
+  const displayAddress = address?.trim() ? address : 'Qeyd olunmayıb';
+
   return (
     <View style={styles.container}>
       <Text style={styles.label} numberOfLines={1}>
         {label}
       </Text>
       <Text style={styles.address} numberOfLines={1}>
-        {address}
+        {displayAddress}
       </Text>
     </View>
   );

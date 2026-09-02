@@ -10,9 +10,9 @@ import type {
 function normalizeResponse(
   response: AxiosResponse<AuthApiResponse>,
 ): AuthResult {
-  const { tokens, profile } = response.data.data;
+  const data = response.data?.data;
 
-  return { tokens, profile };
+  return { tokens: data?.tokens, profile: data?.profile ?? null };
 }
 
 export const authService = {
@@ -39,7 +39,6 @@ export const authService = {
   },
 
   logout: async (): Promise<void> => {
-    // If backend logout endpoint exists, call it here. For now just resolve.
     return Promise.resolve();
   },
 };
